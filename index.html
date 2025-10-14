@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    /* === NAVIGATION === */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 1px solid var(--gray); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: underline;
+      color: black;
+      font-size: 1.2rem;
+      font-family: "Instrument Serif", serif;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover { color: var(--red1); }
+
+    h1 {
+      font-weight: 400;
+      font-style: italic;
+      font-size: 3rem;
+      text-align: center;
+      margin: 0 2rem;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+    }
+
+    h1.shrunk { font-size: 2.4rem; }
+    h1.fade { opacity: 0; }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 1px;
+      height: 2.5rem;
+      background-color: var(--gray);
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    /* === HERO SECTION === */
+    .hero-section {
+      position: relative;
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--cream);
+      overflow: hidden;
+    }
+
+    .map-container {
+      position: relative;
+      display: inline-block;
+      overflow: visible;
+    }
+
+    .map-container img {
+      width: 900px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* === STAR ICONS === */
+    .map-star {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      fill: var(--red1);
+      stroke: white;
+      stroke-width: 1.5px;
+      cursor: pointer;
+      transform-origin: center;
+      animation: star-spin 3s ease-in-out infinite alternate;
+      transition: transform 0.25s ease, fill 0.25s ease;
+      z-index: 3;
+    }
+
+    .map-star:hover {
+      transform: scale(1.5) rotate(0deg);
+      fill: white;
+      stroke: black;
+    }
+
+    .map-star.active {
+      fill: white;
+      stroke: black;
+      transform: scale(1.4);
+    }
+
+    @keyframes star-spin {
+      0% { transform: rotate(-10deg); }
+      100% { transform: rotate(10deg); }
+    }
+
+    /* === OVERLAY BOX === */
+    .hero-overlay {
+      position: absolute;
+      top: 50%;
+      left: -10%;
+      transform: translateY(-50%);
+      background-color: black;
+      color: white;
+      border: 1px solid white;
+      padding: 2rem 2.5rem;
+      width: 400px;
+      font-family: "Instrument Serif", serif;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+      transition: left 0.3s ease;
+    }
+
+    .hero-overlay.fade h2,
+    .hero-overlay.fade p {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .hero-overlay h2 {
+      font-size: 2.5rem;
+      font-style: italic;
+      font-weight: 400;
+      margin: 0 0 0.8rem;
+      transition: opacity 0.3s ease;
+    }
+
+    .hero-overlay p {
+      font-size: 1rem;
+      margin: 0;
+      line-height: 1.4;
+      font-family: monospace;
+      font-weight: lighter;
+      transition: opacity 0.3s ease;
+    }
+
+    /* === AUDIO PLAYER === */
+    .audio-player {
+      display: none;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .audio-player.visible { display: flex; }
+
+    .play-btn {
+      background: none;
+      border: 1px solid white;
+      color: white;
+      font-size: 1rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .play-btn:hover { background: var(--red1); }
+
+    .progress-container {
+      flex: 1;
+      height: 4px;
+      background: white;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      background: var(--red1);
+      transition: width 0.2s linear;
+    }
+
+    .timestamp {
+      font-size: 0.9rem;
+      font-family: helvetica;
+    }
+
+    @media (max-width: 900px) {
+      .hero-overlay { left: 0; }
+    }
+
+    /* === ABOUT SECTION === */
+    .about-wrapper {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+      scroll-margin-top: 140px;
+    }
+
+    .page-title {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-size: 3rem;
+      color: var(--red1);
+      margin-bottom: 3rem;
+      text-align: left;
+    }
+
+    .about-block {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .about-block:nth-child(even) { flex-direction: row-reverse; }
+
+    .about-text { flex: 1; }
+
+    .about-text h3 {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--red1);
+      margin: 0 0 1rem;
+    }
+
+    .about-text p {
+      font-family: "Bodoni Moda", serif;
+      color: black;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .about-img {
+      width: 300px;
+      height: 200px;
+      background-color: #ddd;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a href="news.html">NEWS</a></li>
+        <li><a href="resources.html">RESOURCES</a></li>
+      </ul>
+    </div>
+    <div class="separator" id="left-sep"></div>
+    <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    <div class="separator" id="right-sep"></div>
+    <div class="nav-right">
+      <ul>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="contact.html">CONTACT</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero-section">
+    <div class="map-container">
+      <img src="map.svg" alt="Map showing cultural food regions">
+
+      <svg class="map-star" data-id="1" viewBox="0 0 24 24" style="top: 46%; left: 61%;">
+        <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
+      </svg>
+      <svg class="map-star" data-id="2" viewBox="0 0 24 24" style="top: 57%; left: 62%;">
+        <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
+      </svg>
+      <svg class="map-star" data-id="3" viewBox="0 0 24 24" style="top: 77%; left: 63%;">
+        <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
+      </svg>
+
+      <div class="hero-overlay" id="overlay-box">
+        <h2>Along the Mississippi</h2>
+        <p>Click on a star to hear that city's episode...</p>
+
+        <div class="audio-player" id="audio-player">
+          <button class="play-btn" id="play-btn">►</button>
+          <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+          <span class="timestamp" id="timestamp">0:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-wrapper" id="about">
+    <h2 class="page-title">ABOUT</h2>
+    <div class="about-block">
+      <div class="about-text">
+        <h3>Our Mission</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis urna sit amet dignissim finibus. Curabitur a massa vel odio sagittis ultrices.</p>
+      </div>
+      <div class="about-img"></div>
+    </div>
+    <div class="about-block">
+      <div class="about-text">
+        <h3>Our Approach</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla suscipit erat nec odio suscipit, in accumsan sapien mattis. Aenean non metus id justo pharetra porttitor.</p>
+      </div>
+      <div class="about-img"></div>
+    </div>
+    <div class="about-block">
+      <div class="about-text">
+        <h3>Our Team</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at dui nec erat varius sodales. Quisque non lorem sit amet nisl cursus efficitur sed sit amet nulla.</p>
+      </div>
+      <div class="about-img"></div>
+    </div>
+  </div>
+
+  <script>
+    const overlayBox = document.getElementById("overlay-box");
+    const overlayTitle = overlayBox.querySelector("h2");
+    const overlayText = overlayBox.querySelector("p");
+    const audioPlayer = document.getElementById("audio-player");
+    const playBtn = document.getElementById("play-btn");
+    const progressBar = document.getElementById("progress-bar");
+    const timestamp = document.getElementById("timestamp");
+    const stars = document.querySelectorAll(".map-star");
+
+    const starData = {
+      1: { title: "St. Louis, Missouri", text: "Home to soul food, barbecue, and riverfront jazz culture." },
+      2: { title: "Memphis, Tennessee", text: "Where blues, ribs, and Southern grit meet history." },
+      3: { title: "New Orleans, Louisiana", text: "Creole flavor, Cajun spice, and centuries of fusion." }
+    };
+
+    let activeStar = null;
+
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        const id = star.getAttribute("data-id");
+
+        // If same star clicked again — untoggle
+        if (activeStar === id) {
+          star.classList.remove("active");
+          activeStar = null;
+          fadeOverlay(() => {
+            overlayTitle.textContent = "Along the Mississippi";
+            overlayText.textContent = "Click on a star to hear that city's episode...";
+            audioPlayer.classList.remove("visible");
+          });
+          return;
+        }
+
+        // Activate new star
+        stars.forEach(s => s.classList.remove("active"));
+        star.classList.add("active");
+        activeStar = id;
+
+        fadeOverlay(() => {
+          overlayTitle.textContent = starData[id].title;
+          overlayText.textContent = starData[id].text;
+          audioPlayer.classList.add("visible");
+          progressBar.style.width = "0%";
+          timestamp.textContent = "0:00";
+        });
+      });
+    });
+
+    function fadeOverlay(updateFn) {
+      overlayBox.classList.add("fade");
+      setTimeout(() => {
+        updateFn();
+        overlayBox.classList.remove("fade");
+      }, 300);
+    }
+
+    // === AUDIO PLAYER ===
+    let playing = false, progress = 0, interval;
+    playBtn.addEventListener("click", () => {
+      if (!playing) {
+        playBtn.textContent = "❚❚";
+        playing = true;
+        interval = setInterval(() => {
+          if (progress >= 100) {
+            clearInterval(interval);
+            playBtn.textContent = "►";
+            playing = false;
+            progress = 0;
+          } else {
+            progress++;
+            progressBar.style.width = progress + "%";
+            timestamp.textContent = "0:" + String(Math.floor(progress / 2)).padStart(2, "0");
+          }
+        }, 100);
+      } else {
+        clearInterval(interval);
+        playBtn.textContent = "►";
+        playing = false;
+      }
+    });
+
+    // === Shrinking Nav ===
+    const nav = document.getElementById("navbar");
+    const title = document.getElementById("title");
+    const leftSep = document.getElementById("left-sep");
+    const rightSep = document.getElementById("right-sep");
+    let scrolled = false;
+
+    window.addEventListener("scroll", () => {
+      const shouldCollapse = window.scrollY > 10;
+
+      if (shouldCollapse && !scrolled) {
+        scrolled = true;
+        nav.classList.add("scrolled");
+        leftSep.classList.add("hidden");
+        rightSep.classList.add("hidden");
+        title.classList.add("fade");
+        setTimeout(() => {
+          title.innerHTML = `WHO OWNS THE <span style="color: var(--red1)">FLAVOR?</span>`;
+          title.classList.add("shrunk");
+          title.classList.remove("fade");
+        }, 100);
+      } else if (!shouldCollapse && scrolled) {
+        scrolled = false;
+        title.classList.add("fade");
+        setTimeout(() => {
+          title.innerHTML = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
+          title.classList.remove("shrunk");
+          title.classList.remove("fade");
+          leftSep.classList.remove("hidden");
+          rightSep.classList.remove("hidden");
+          nav.classList.remove("scrolled");
+        }, 100);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact — Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --red-hover: #5c0803;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: Helvetica, Arial, sans-serif;
+      color: #000;
+    }
+
+    /* Header/Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 1.2rem 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--gray);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a {
+      font-family: "Instrument Serif", serif;
+      text-decoration: underline;
+      color: black;
+      font-size: 1.2rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--red1);
+    }
+
+    h1 {
+      font-family: "Instrument Serif", serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 2.4rem;
+      text-align: center;
+      margin: 0 2rem;
+      line-height: 1;
+    }
+
+    h1 a {
+      display: inline-block;
+      color: black;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    h1 a:hover {
+      color: var(--red1);
+    }
+
+    .nav-left,
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 1px;
+      height: 2rem;
+      background-color: var(--gray);
+      margin: 0 2rem;
+    }
+
+    /* Contact section */
+    .contact-wrapper {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-size: 3rem;
+      color: var(--red1);
+      margin-bottom: 3rem;
+      text-align: left;
+    }
+
+    .contact-info {
+      font-family: "Bodoni Moda", serif;
+      color: #000;
+      font-size: 1.2rem;
+      line-height: 2;
+      margin-top: 2rem;
+    }
+
+    .contact-info strong {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      color: var(--red1);
+    }
+
+    .contact-info a {
+      color: black;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+    }
+
+    .contact-info a:hover {
+      color: var(--red1);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <nav>
+    <div class="nav-left">
+      <ul>
+        <li><a href="news.html">NEWS</a></li>
+        <li><a href="resources.html">RESOURCES</a></li>
+      </ul>
+    </div>
+
+    <div class="separator"></div>
+
+    <h1><a href="index.html">WHO OWNS THE <span style="color: var(--red1)">FLAVOR?</span></a></h1>
+
+    <div class="separator"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a href="index.html#about">ABOUT</a></li>
+        <li><a href="contact.html">CONTACT</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Contact Section -->
+  <div class="contact-wrapper">
+    <h2 class="page-title">CONTACT</h2>
+
+    <div class="contact-info">
+      <p><strong>Email:</strong> <a href="mailto:info@whoownstheflavor.com">info@whoownstheflavor.com</a></p>
+      <p><strong>Press Inquiries:</strong> <a href="mailto:press@whoownstheflavor.com">press@whoownstheflavor.com</a></p>
+      <p><strong>Editorial Office:</strong><br>
+      123 Culinary Avenue<br>
+      Brussels, Belgium 1000</p>
+      <p><strong>Social:</strong><br>
+      <a href="#">Twitter</a> / <a href="#">Instagram</a> / <a href="#">Bluesky</a></p>
+    </div>
+  </div>
+</body>
+</html>

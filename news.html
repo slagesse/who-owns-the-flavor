@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>News — Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --red-hover: #5c0803;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: Helvetica, Arial, sans-serif;
+      color: #000;
+    }
+
+    /* Header/Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 1.2rem 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a {
+      font-family: "Instrument Serif", serif;
+      text-decoration: underline;
+      color: black;
+      font-size: 1.2rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--red1);
+    }
+
+    h1 {
+      font-family: "Instrument Serif", serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 2.4rem;
+      text-align: center;
+      margin: 0 2rem;
+      line-height: 1;
+    }
+
+    h1 a {
+      display: inline-block;
+      color: black;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    h1 a:hover {
+      color: var(--red1);
+    }
+
+    .nav-left,
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 1px;
+      height: 2rem;
+      background-color: rgba(0, 0, 0, 0.25);
+      margin: 0 2rem;
+    }
+
+    /* News section */
+    .news-wrapper {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-size: 3rem;
+      color: var(--red1);
+      margin-bottom: 3rem;
+      text-align: left;
+    }
+
+    .news-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .news-item:first-child {
+      border-top: none;
+    }
+
+    .news-item img {
+      width: 220px;
+      height: 150px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background-color: #ddd;
+    }
+
+    .news-text h2 {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.8rem;
+      margin: 0 0 0.5rem;
+      line-height: 1.2;
+    }
+
+    .news-text h2 a {
+      color: var(--red1);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .news-text h2 a:hover {
+      color: var(--red-hover);
+      text-decoration: underline;
+    }
+
+    .news-text p {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      margin: 0;
+      line-height: 1.5;
+      color: #222;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <nav>
+    <div class="nav-left">
+      <ul>
+        <li><a href="news.html">NEWS</a></li>
+        <li><a href="resources.html">RESOURCES</a></li>
+      </ul>
+    </div>
+
+    <div class="separator"></div>
+
+    <h1><a href="index.html">WHO OWNS THE <span style="color: var(--red1)">FLAVOR?</span></a></h1>
+
+    <div class="separator"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a href="index.html#about">ABOUT</a></li>
+        <li><a href="contact.html">CONTACT</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- News Section -->
+  <div class="news-wrapper">
+    <h2 class="page-title">NEWS</h2>
+
+    <div class="news-item">
+      <img src="https://via.placeholder.com/220x150" alt="Story image">
+      <div class="news-text">
+        <h2><a href="index.html">Sample Headline Goes Here</a></h2>
+        <p>Subtitle or short description of the article goes here to give a bit more context.</p>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <img src="https://via.placeholder.com/220x150" alt="Story image">
+      <div class="news-text">
+        <h2><a href="index.html">Sample Headline Goes Here</a></h2>
+        <p>Subtitle or short description of the article goes here to give a bit more context.</p>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <img src="https://via.placeholder.com/220x150" alt="Story image">
+      <div class="news-text">
+        <h2><a href="index.html">Sample Headline Goes Here</a></h2>
+        <p>Subtitle or short description of the article goes here to give a bit more context.</p>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <img src="https://via.placeholder.com/220x150" alt="Story image">
+      <div class="news-text">
+        <h2><a href="index.html">Sample Headline Goes Here</a></h2>
+        <p>Subtitle or short description of the article goes here to give a bit more context.</p>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <img src="https://via.placeholder.com/220x150" alt="Story image">
+      <div class="news-text">
+        <h2><a href="index.html">Sample Headline Goes Here</a></h2>
+        <p>Subtitle or short description of the article goes here to give a bit more context.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

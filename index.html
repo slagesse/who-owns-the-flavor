@@ -43,16 +43,15 @@
     nav ul {
       list-style: none;
       display: flex;
-      gap: 2rem;
+      gap: 1rem;
       padding: 0;
       margin: 0;
       align-items: center;
     }
 
     nav a {
-      text-decoration: underline;
       color: black;
-      font-size: 1.2rem;
+      font-size: 2rem;
       font-family: "Instrument Serif", serif;
       transition: color 0.2s ease;
     }
@@ -60,11 +59,10 @@
     nav a:hover { color: var(--red1); }
 
     h1 {
-      font-weight: 400;
+      font-weight: 800;
       font-style: italic;
-      font-size: 3rem;
+      font-size: 4rem;
       text-align: center;
-      margin: 0 2rem;
       line-height: 1;
       transition: opacity 0.5s ease, font-size 0.5s ease;
     }
@@ -79,9 +77,9 @@
     }
 
     .separator {
-      width: 1px;
-      height: 2.5rem;
-      background-color: var(--gray);
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
       margin: 0 2rem;
       transition: opacity 0.4s ease;
     }
@@ -91,7 +89,8 @@
     /* === HERO SECTION === */
     .hero-section {
       position: relative;
-      height: 70vh;
+      height: auto; /* Allow the section to adjust height dynamically */
+      max-height: none; /* Remove the max height constraint */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -103,10 +102,11 @@
       position: relative;
       display: inline-block;
       overflow: visible;
+      transform: translateX(-30%); /* Adjusted to shift the map slightly to the right */
     }
 
     .map-container img {
-      width: 900px;
+      width: 1800px; /* Doubled the width */
       height: auto;
       display: block;
       object-fit: contain;
@@ -115,8 +115,8 @@
     /* === STAR ICONS === */
     .map-star {
       position: absolute;
-      width: 40px;
-      height: 40px;
+      width: 80px; /* Doubled the width */
+      height: 80px; /* Doubled the height */
       fill: var(--red1);
       stroke: white;
       stroke-width: 1.5px;
@@ -146,20 +146,20 @@
 
     /* === OVERLAY BOX === */
     .hero-overlay {
-      position: absolute;
-      top: 50%;
-      left: -10%;
-      transform: translateY(-50%);
-      background-color: black;
-      color: white;
-      border: 1px solid white;
+      position: absolute; /* Change to relative to flow beneath the hero-section */
+      transform: none; /* Remove transform */
+      left: 40%;
+      top: 40%;
+      background-color: white; /* Changed from black to white */
+      color: black; /* Changed from white to black */
+      border: 1px solid black; /* Changed from white to black */
       padding: 2rem 2.5rem;
       width: 400px;
       font-family: "Instrument Serif", serif;
       text-align: left;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       z-index: 2;
-      transition: left 0.3s ease;
+      transition: margin-top 0.3s ease;
     }
 
     .hero-overlay.fade h2,
@@ -169,19 +169,20 @@
     }
 
     .hero-overlay h2 {
-      font-size: 2.5rem;
-      font-style: italic;
-      font-weight: 400;
+      font-size: 4rem; /* Scale up heading by 1.5x */
+      font-weight: 800;
       margin: 0 0 0.8rem;
       transition: opacity 0.3s ease;
     }
 
     .hero-overlay p {
-      font-size: 1rem;
+      font-size: 2rem; /* Scale up paragraph by 1.5x */
       margin: 0;
       line-height: 1.4;
       font-family: monospace;
       font-weight: lighter;
+      font-style: italic;
+
       transition: opacity 0.3s ease;
     }
 
@@ -197,22 +198,25 @@
 
     .play-btn {
       background: none;
-      border: 1px solid white;
-      color: white;
-      font-size: 1rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 4px;
+      border: 3px solid var(--red1);
+      color: var(--red1);
+      font-size: 2rem; /* Double the font size */
+      padding: 0.6rem 1.4rem; /* Double the padding */
+      border-radius: 8px; /* Double the border radius */
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
-    .play-btn:hover { background: var(--red1); }
+    .play-btn:hover {
+      background: var(--red1);
+      color: white; /* Ensure contrast on hover */
+    }
 
     .progress-container {
       flex: 1;
-      height: 4px;
-      background: white;
-      border-radius: 2px;
+      height: 8px; /* Double the height */
+      background: gray;
+      border-radius: 4px; /* Double the border radius */
       overflow: hidden;
       position: relative;
     }
@@ -228,7 +232,7 @@
     }
 
     .timestamp {
-      font-size: 0.9rem;
+      font-size: 2rem;
       font-family: helvetica;
     }
 
@@ -312,27 +316,26 @@
     <div class="map-container">
       <img src="map.svg" alt="Map showing cultural food regions">
 
-      <svg class="map-star" data-id="1" viewBox="0 0 24 24" style="top: 46%; left: 61%;">
+      <svg class="map-star" data-id="1" viewBox="0 0 24 24" style="top: 46%; left: 62%;">
         <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
       </svg>
-      <svg class="map-star" data-id="2" viewBox="0 0 24 24" style="top: 57%; left: 62%;">
+      <svg class="map-star" data-id="2" viewBox="0 0 24 24" style="top: 57%; left: 63%;">
         <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
       </svg>
-      <svg class="map-star" data-id="3" viewBox="0 0 24 24" style="top: 77%; left: 63%;">
+      <svg class="map-star" data-id="3" viewBox="0 0 24 24" style="top: 77%; left: 64%;">
         <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
       </svg>
-
-      <div class="hero-overlay" id="overlay-box">
-        <h2>Along the Mississippi</h2>
-        <p>Click on a star to hear that city's episode...</p>
-
-        <div class="audio-player" id="audio-player">
-          <button class="play-btn" id="play-btn">►</button>
-          <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-          </div>
-          <span class="timestamp" id="timestamp">0:00</span>
+    </div>
+    <div class="hero-overlay" id="overlay-box">
+      <h2>Along the Mississippi</h2>
+      <p>Click on a star to hear that city's episode...</p>
+  
+      <div class="audio-player" id="audio-player">
+        <button class="play-btn" id="play-btn">►</button>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
         </div>
+        <span class="timestamp" id="timestamp">0:00</span>
       </div>
     </div>
   </div>

@@ -106,23 +106,49 @@
     }
 
     .map-container img {
-      width: 1800px; /* Doubled the width */
+      width: 2160px; /* Changed from 2340px to 2160px (1800 * 1.2) */
       height: auto;
       display: block;
       object-fit: contain;
     }
 
     /* === STAR ICONS === */
+    @keyframes star-spin-1 {
+      0% { transform: rotate(-15deg); }
+      100% { transform: rotate(10deg); }
+    }
+
+    @keyframes star-spin-2 {
+      0% { transform: rotate(10deg); }
+      100% { transform: rotate(-5deg); }
+    }
+
+    @keyframes star-spin-3 {
+      0% { transform: rotate(-8deg); }
+      100% { transform: rotate(15deg); }
+    }
+
+    .map-star[data-id="1"] {
+      animation: star-spin-1 2.1s ease-in-out infinite alternate; /* 2.5s -> 2.1s */
+    }
+
+    .map-star[data-id="2"] {
+      animation: star-spin-2 2.5s ease-in-out infinite alternate; /* 3s -> 2.5s */
+    }
+
+    .map-star[data-id="3"] {
+      animation: star-spin-3 2.9s ease-in-out infinite alternate; /* 3.5s -> 2.9s */
+    }
+
     .map-star {
       position: absolute;
-      width: 80px; /* Doubled the width */
-      height: 80px; /* Doubled the height */
+      width: 104px; /* Changed from 120px to 104px (80 * 1.3) */
+      height: 104px; /* Changed from 120px to 104px (80 * 1.3) */
       fill: var(--red1);
       stroke: white;
       stroke-width: 1.5px;
       cursor: pointer;
       transform-origin: center;
-      animation: star-spin 3s ease-in-out infinite alternate;
       transition: transform 0.25s ease, fill 0.25s ease;
       z-index: 3;
     }
@@ -137,29 +163,27 @@
       fill: white;
       stroke: black;
       transform: scale(1.4);
-    }
-
-    @keyframes star-spin {
-      0% { transform: rotate(-10deg); }
-      100% { transform: rotate(10deg); }
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) 
+              drop-shadow(0 0 16px rgba(255, 255, 255, 0.6))
+              drop-shadow(0 0 24px rgba(255, 255, 255, 0.4));
     }
 
     /* === OVERLAY BOX === */
     .hero-overlay {
-      position: absolute; /* Change to relative to flow beneath the hero-section */
-      transform: none; /* Remove transform */
-      left: 40%;
-      top: 40%;
+      position: absolute;
+      left: 65%;
+      top: 55%;
+      transform: translate(-50%, -50%) scaleY(0.95);
       background-color: white; /* Changed from black to white */
       color: black; /* Changed from white to black */
       border: 1px solid black; /* Changed from white to black */
       padding: 2rem 2.5rem;
-      width: 400px;
+      height: auto;
+      width: 550px;
       font-family: "Instrument Serif", serif;
-      text-align: left;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       z-index: 2;
-      transition: margin-top 0.3s ease;
+      transition: transform 0.4s ease, opacity 0.3s ease;
     }
 
     .hero-overlay.fade h2,
@@ -168,15 +192,20 @@
       transition: opacity 0.3s ease;
     }
 
+    .hero-overlay.active {
+      transform: translate(-50%, -50%) scaleY(1);
+    }
+
     .hero-overlay h2 {
       font-size: 4rem; /* Scale up heading by 1.5x */
       font-weight: 800;
       margin: 0 0 0.8rem;
       transition: opacity 0.3s ease;
+      color: var(--red1);
     }
 
     .hero-overlay p {
-      font-size: 2rem; /* Scale up paragraph by 1.5x */
+      font-size: 1.6rem; /* Scale up paragraph by 1.5x */
       margin: 0;
       line-height: 1.4;
       font-family: monospace;
@@ -192,6 +221,7 @@
       align-items: center;
       gap: 0.8rem;
       margin-top: 1rem;
+      justify-content: flex-end; /* Align audio player elements to the right */
     }
 
     .audio-player.visible { display: flex; }
@@ -243,7 +273,7 @@
     /* === ABOUT SECTION === */
     .about-wrapper {
       max-width: 900px;
-      margin: 4rem auto;
+      margin: 8rem auto; /* Increased from 4rem to 8rem */
       padding: 0 2rem;
       scroll-margin-top: 140px;
     }
@@ -251,7 +281,7 @@
     .page-title {
       font-family: "Instrument Serif", serif;
       font-style: italic;
-      font-size: 3rem;
+      font-size: 6rem; /* Increased from 3rem */
       color: var(--red1);
       margin-bottom: 3rem;
       text-align: left;
@@ -271,7 +301,7 @@
     .about-text h3 {
       font-family: "Instrument Serif", serif;
       font-style: italic;
-      font-size: 1.8rem;
+      font-size: 3rem;
       color: var(--red1);
       margin: 0 0 1rem;
     }
@@ -376,7 +406,7 @@
     const stars = document.querySelectorAll(".map-star");
 
     const starData = {
-      1: { title: "St. Louis, Missouri", text: "Home to soul food, barbecue, and riverfront jazz culture." },
+      1: { title: "St. Louis, Missouri", text: "Dive into The Hill: an Italian-American neighborhood and birthplace of toasted ravioli." },
       2: { title: "Memphis, Tennessee", text: "Where blues, ribs, and Southern grit meet history." },
       3: { title: "New Orleans, Louisiana", text: "Creole flavor, Cajun spice, and centuries of fusion." }
     };
@@ -391,11 +421,7 @@
         if (activeStar === id) {
           star.classList.remove("active");
           activeStar = null;
-          fadeOverlay(() => {
-            overlayTitle.textContent = "Along the Mississippi";
-            overlayText.textContent = "Click on a star to hear that city's episode...";
-            audioPlayer.classList.remove("visible");
-          });
+          hideOverlay();
           return;
         }
 
@@ -403,16 +429,36 @@
         stars.forEach(s => s.classList.remove("active"));
         star.classList.add("active");
         activeStar = id;
-
-        fadeOverlay(() => {
-          overlayTitle.textContent = starData[id].title;
-          overlayText.textContent = starData[id].text;
-          audioPlayer.classList.add("visible");
-          progressBar.style.width = "0%";
-          timestamp.textContent = "0:00";
-        });
+        showOverlay(id);
       });
     });
+
+    function showOverlay(id) {
+      fadeOverlay(() => {
+        overlayTitle.textContent = starData[id].title;
+        overlayText.textContent = starData[id].text;
+        audioPlayer.classList.add("visible");
+        overlayBox.classList.add("active");
+        progressBar.style.width = "0%";
+        timestamp.textContent = "0:00";
+      });
+    }
+
+    function hideOverlay() {
+      fadeOverlay(() => {
+        overlayTitle.textContent = "Along the Mississippi";
+        overlayText.textContent = "Click on a star to hear that city's episode...";
+        audioPlayer.classList.remove("visible");
+        overlayBox.classList.remove("active");
+        // Reset audio player state
+        if (playing) {
+          clearInterval(interval);
+          playing = false;
+        }
+        progress = 0;
+        playBtn.textContent = "►";
+      });
+    }
 
     function fadeOverlay(updateFn) {
       overlayBox.classList.add("fade");

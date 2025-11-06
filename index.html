@@ -284,7 +284,7 @@
       font-size: 6rem; /* Increased from 3rem */
       color: var(--red1);
       margin-bottom: 3rem;
-      text-align: left;
+      text-align: center; /* Changed from left to center */
     }
 
     .about-block {
@@ -319,6 +319,30 @@
       height: 200px;
       background-color: #ddd;
       flex-shrink: 0;
+    }
+
+    .context-image {
+      position: absolute;
+      width: 550px; /* Same as overlay box */
+      height: 300px;
+      background-color: #ddd;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 1;
+      border-radius: 15px;
+      border: 2px solid black;
+    }
+
+    .top-image {
+      bottom: calc(100% + 40px); /* 20px spacing */
+    }
+
+    .bottom-image {
+      top: calc(100% + 40px);
+    }
+
+    .context-image.visible {
+      opacity: 1;
     }
   </style>
 </head>
@@ -357,6 +381,8 @@
       </svg>
     </div>
     <div class="hero-overlay" id="overlay-box">
+      <div class="context-image top-image" id="top-image"></div>
+      <div class="context-image bottom-image" id="bottom-image"></div>
       <h2>Along the Mississippi</h2>
       <p>Click on a star to hear that city's episode...</p>
   
@@ -371,28 +397,16 @@
   </div>
 
   <div class="about-wrapper" id="about">
-    <h2 class="page-title">ABOUT</h2>
-    <div class="about-block">
-      <div class="about-text">
-        <h3>Our Mission</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis urna sit amet dignissim finibus. Curabitur a massa vel odio sagittis ultrices.</p>
-      </div>
-      <div class="about-img"></div>
-    </div>
-    <div class="about-block">
-      <div class="about-text">
-        <h3>Our Approach</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla suscipit erat nec odio suscipit, in accumsan sapien mattis. Aenean non metus id justo pharetra porttitor.</p>
-      </div>
-      <div class="about-img"></div>
-    </div>
-    <div class="about-block">
-      <div class="about-text">
-        <h3>Our Team</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at dui nec erat varius sodales. Quisque non lorem sit amet nisl cursus efficitur sed sit amet nulla.</p>
-      </div>
-      <div class="about-img"></div>
-    </div>
+    <h2 class="page-title">OUR MISSION</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: 0 auto;">
+      While cultural appropriation in food has been extensively covered from social and cultural perspectives, the business mechanics driving this phenomenon remain largely unexplored.
+      <br><br>
+      This investigation will be the first to comprehensively examine the economic infrastructure of cultural appropriation in America's food industry, revealing how the extraction of cultural capital has become a systematic business model worth billions of dollars.
+      <br><br>
+      The story centers on a fundamental question: Who profits when culture becomes commodity?
+      <br><br>
+      Through meticulous financial reporting and legal documentation, this investigation will trace the money flows that transform community food traditions into corporate revenue streams, exposing the sophisticated mechanisms by which cultural heritage is monetized while original communities are systematically excluded from the profits.
+    </p>
   </div>
 
   <script>
@@ -406,9 +420,24 @@
     const stars = document.querySelectorAll(".map-star");
 
     const starData = {
-      1: { title: "St. Louis, Missouri", text: "Dive into The Hill: an Italian-American neighborhood and birthplace of toasted ravioli." },
-      2: { title: "Memphis, Tennessee", text: "Where blues, ribs, and Southern grit meet history." },
-      3: { title: "New Orleans, Louisiana", text: "Creole flavor, Cajun spice, and centuries of fusion." }
+      1: { 
+        title: "St. Louis, Missouri", 
+        text: "Dive into The Hill: an Italian-American neighborhood and birthplace of toasted ravioli.",
+        topImage: "https://i.ibb.co/0V8XnKmD/toasted-ravs.jpg",
+        bottomImage: "https://i.ibb.co/LDx5ZQjZ/DSC09447.jpg"
+      },
+      2: { 
+        title: "Memphis, Tennessee", 
+        text: "Where blues, ribs, and Southern grit meet history.",
+        topImage: "https://i.ibb.co/wN2V8fHz/dry-ribs.jpg",
+        bottomImage: "https://i.ibb.co/XrB6frXt/bar-b-q-shop.jpg"
+      },
+      3: { 
+        title: "New Orleans, Louisiana", 
+        text: "Creole flavor, Cajun spice, and centuries of fusion.",
+        topImage: "https://i.ibb.co/1thkwCD6/nola-streets.jpg",
+        bottomImage: "https://i.ibb.co/8LdSjDkG/po-boy.jpg"
+      }
     };
 
     let activeStar = null;
@@ -419,7 +448,7 @@
 
         // If same star clicked again — untoggle
         if (activeStar === id) {
-          star.classList.remove("active");
+          stars.forEach(s => s.classList.remove("active")); // Add this line to ensure all stars are reset
           activeStar = null;
           hideOverlay();
           return;
@@ -433,18 +462,32 @@
       });
     });
 
+    const topImage = document.getElementById("top-image");
+    const bottomImage = document.getElementById("bottom-image");
+
     function showOverlay(id) {
       fadeOverlay(() => {
         overlayTitle.textContent = starData[id].title;
         overlayText.textContent = starData[id].text;
         audioPlayer.classList.add("visible");
         overlayBox.classList.add("active");
+        // Set background images
+        topImage.style.backgroundImage = starData[id].topImage ? `url(${starData[id].topImage})` : 'none';
+        bottomImage.style.backgroundImage = starData[id].bottomImage ? `url(${starData[id].bottomImage})` : 'none';
+        topImage.style.backgroundSize = 'cover';
+        bottomImage.style.backgroundSize = 'cover';
+        topImage.classList.add("visible");
+        bottomImage.classList.add("visible");
         progressBar.style.width = "0%";
         timestamp.textContent = "0:00";
       });
     }
 
     function hideOverlay() {
+      // Remove image visibility first
+      topImage.classList.remove("visible");
+      bottomImage.classList.remove("visible");
+      
       fadeOverlay(() => {
         overlayTitle.textContent = "Along the Mississippi";
         overlayText.textContent = "Click on a star to hear that city's episode...";

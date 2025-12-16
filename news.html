@@ -209,6 +209,25 @@
       }
     }
 
+    @media (max-width: 1000px) {
+    .print-wrap { width: 100%; }
+
+    .print-card { 
+      grid-template-columns: 1fr;
+    }
+
+    .print-thumb {
+      width: 100%;
+      height: 200px;      /* key: stop "cover the whole card" */
+      min-height: 0;      /* override desktop min-height */
+      object-fit: cover;
+      display: block;
+    }
+
+    .print-content { padding: 1rem; }
+  }
+
+
     /* === PRINT SECTION === */
 .print-section {
   background: var(--cream);

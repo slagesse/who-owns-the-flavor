@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Story - Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 3px solid var(--red1); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a.nav-link {
+      color: var(--red1);
+      font-size: 2.2rem;
+      font-family: "Helvetica", Arial, sans-serif;
+      text-decoration: underline;
+      transition: color 0.2s ease, font-size 0.2s ease, text-decoration 0.2s ease;
+    }
+
+    nav:not(.scrolled) a.nav-link {
+      font-size: 1.9rem;
+      text-decoration: none;
+    }
+
+    nav a.nav-link:hover { color: var(--red1); }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    .nav-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    h1 {
+      font-weight: 800;
+      font-style: italic;
+      font-size: 2rem;
+      text-align: center;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+      margin: 0;
+    }
+
+    h1.shrunk { font-size: 0rem; }
+    h1.fade { opacity: 0; }
+
+    /* === ARTICLE SECTION === */
+    .article-container {
+      max-width: 800px;
+      margin: 1rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .article-title {
+      font-family: "Instrument Serif", serif;
+      font-size: 4rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      text-align: center;
+      max-width: 24ch;
+    }
+
+    .article-subtitle {
+      font-family: "Noto Serif", serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: rgba(0,0,0,0.55);
+      text-align: center;
+      margin: 0 auto 1.6rem;
+      max-width: 100ch;
+    }
+
+    .byline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.8rem;
+      text-align: center;
+      color: var(--red1);
+      margin: 0 0 0;
+    }
+
+    .byline-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .byline-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(0,0,0,0.1);
+    }
+
+    .byline-sep {
+      color: rgba(0,0,0,0.35);
+      margin: 0 0.05rem;
+    }
+
+    .dateline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.4rem;
+      color: rgba(0,0,0,0.6);
+    }
+
+    .article-paragraph {
+      font-family: "Noto Serif";
+      font-size: 1.3rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 450px;
+      font-weight: 400;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (min-width: 1000px) {
+      html { font-size: 90%; }
+      nav { padding: 1.5rem 0; }
+      .separator { height: 3rem; margin: 0 1.5rem; }
+    }
+
+    @media (max-width: 1000px) {
+      html { font-size: 170%; }
+      .article-container { max-width: 90%; }
+      .article-paragraph { max-width: 75%; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a class="nav-link" href="../news.html">news</a></li>
+      </ul>
+    </div>
+
+    <div class="separator" id="left-sep"></div>
+
+    <a href="../index.html" class="nav-title-link" aria-label="Home">
+      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    </a>
+
+    <div class="separator" id="right-sep"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a class="nav-link" href="../about.html">about</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="article-container">
+    <h2 class="article-title">Wayne M. Baquet Sr. a keeper of creole tradition</h2>
+
+    <p class="byline">
+      <span class="byline-wrap">
+        <img class="byline-avatar" id="byline-avatar-lola" alt="Lola Jahant headshot" />
+        By Lola Jahant
+        <span class="byline-sep">•</span>
+        <span class="dateline">Dec. 15, 2025</span>
+      </span>
+    </p>
+
+    <p class="article-paragraph">
+      In a city defined by iconic, family-owned restaurants, Wayne M. Baquet Sr. stands out as a guardian of New Orleans Creole cuisine. A third-generation restaurateur born in 1947, Baquet has spent more than 50 years building, preserving and championing the dishes that shaped the city’s food culture. Today, his legacy lives on most visibly through Lil’ Dizzy’s Café in Treme.
+    </p>
+
+    <p class="article-paragraph">
+      Baquet’s culinary journey began as a teenager working part-time at Paul’s Gross’ Chicken Coop, his aunt’s restaurant in Treme. After learning the business from his father at Eddie’s Restaurant, he eventually returned with a vision to modernize the restaurant through expanding the menu by elevating Creole staples.
+    </p>
+
+    <p class="article-paragraph">
+      “That’s how we’ve been in business for so long,” Baquet said. “Putting a good product out there at a price that’s affordable… and you’ve got to keep getting more volume.”
+    </p>
+
+    <p class="article-paragraph">
+      Throughout his career, Baquet opened and operated a long list of beloved restaurants, including Café Baquet’s, Eddie’s at Krauss, Eddie’s at SUNO, Zachary’s on Oak Street and Eddie’s at Jazz Fest. While the locations changed, the food never did.
+    </p>
+
+    <p class="article-paragraph">
+      “A lot of the recipes that we have come from my mom, from my grandmother all the way back,” he said. “I know what it’s supposed to taste like. She knows how to make it taste like that.”
+    </p>
+
+    <p class="article-paragraph">
+      For Baquet, authenticity is non-negotiable. He discussed his flexibility when it comes to adding to his restaurants’ menus, but will never change anything, especially his crawfish bisque. When it comes to the menu, he is also quick to draw the line between Creole and Cajun cuisine.
+    </p>
+
+    <p class="article-paragraph">
+      “Creole comes from New Orleans — French, Spanish, African, American Indian,” he said. “Cajun comes from Canada. It’s a different culture.” Creole food, he added, relies on depth and balance, not heat: “We don’t rely on pepper to make it happen.”
+    </p>
+
+    <p class="article-paragraph">
+      Across decades in the industry, Baquet’s story is intertwined with the history of the city itself, from the old Treme establishments that shaped him to the civil rights leaders his grandmother quietly sheltered.
+    </p>
+
+    <p class="article-paragraph">
+      “New Orleans is the engine that drives all Louisiana,” he said. “We’re different.”
+    </p>
+
+    <p class="article-paragraph">
+      Today, Lil’ Dizzy’s remains the family’s flagship, now operated by the fourth generation, Wayne Jr. and his wife, Arekesha. Tourists and locals alike flock there for his signature gumbo, trout Baquet, stuffed crabs, smothered okra and fried chicken with potato salad.
+    </p>
+  </div>
+
+  <script>
+    window.HEADSHOTS = {
+      amber: "https://i.postimg.cc/KjMXZhhb/amber.jpg",
+      paige: "https://i.postimg.cc/8c681gg5/paige.jpg",
+      ron: "https://i.postimg.cc/nrD8Hff8/ron.jpg",
+      shane: "https://i.postimg.cc/D0XV233F/shane.jpg",
+      sophia: "https://i.postimg.cc/9073WHH0/sophia.jpg",
+      tanvi: "https://i.postimg.cc/nrD8Hffn/tanvi.jpg",
+      toryionna: "https://i.postimg.cc/gJ5FFkQz/toryionna.jpg",
+      lola: "https://i.postimg.cc/d0fwvBZm/lola.jpg"
+    };
+
+    const nav = document.getElementById("navbar");
+    const title = document.getElementById("title");
+    const leftSep = document.getElementById("left-sep");
+    const rightSep = document.getElementById("right-sep");
+
+    const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
+    const COLLAPSE_Y = 10;
+
+    let scrolled = false;
+
+    window.addEventListener("scroll", () => {
+      const shouldCollapse = window.scrollY > COLLAPSE_Y;
+
+      if (shouldCollapse && !scrolled) {
+        scrolled = true;
+        nav.classList.add("scrolled");
+        leftSep.classList.add("hidden");
+        rightSep.classList.add("hidden");
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = "";
+          title.classList.add("shrunk");
+        }, 100);
+      } else if (!shouldCollapse && scrolled) {
+        scrolled = false;
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = FULL_TITLE;
+          title.classList.remove("shrunk");
+          title.classList.remove("fade");
+          leftSep.classList.remove("hidden");
+          rightSep.classList.remove("hidden");
+          nav.classList.remove("scrolled");
+        }, 100);
+      }
+    });
+
+    (function() {
+      const el = document.getElementById("byline-avatar-lola");
+      if (el && window.HEADSHOTS && window.HEADSHOTS.lola) {
+        el.src = window.HEADSHOTS.lola;
+      }
+    })();
+  </script>
+</body>
+</html>

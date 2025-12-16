@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Story - Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 3px solid var(--red1); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a.nav-link {
+      color: var(--red1);
+      font-size: 2.2rem;
+      font-family: "Helvetica", Arial, sans-serif;
+      text-decoration: underline;
+      transition: color 0.2s ease, font-size 0.2s ease, text-decoration 0.2s ease;
+    }
+
+    nav:not(.scrolled) a.nav-link {
+      font-size: 1.9rem;
+      text-decoration: none;
+    }
+
+    nav a.nav-link:hover { color: var(--red1); }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    .nav-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    h1 {
+      font-weight: 800;
+      font-style: italic;
+      font-size: 2rem;
+      text-align: center;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+      margin: 0;
+    }
+
+    h1.shrunk { font-size: 0rem; }
+    h1.fade { opacity: 0; }
+
+    /* === ARTICLE SECTION === */
+    .article-container {
+      max-width: 800px;
+      margin: 1rem auto;
+      display: flex;            /* added */
+      flex-direction: column;   /* added */
+      align-items: center;      /* keeps children centered horizontally */
+    }
+
+
+    .feature-image {
+      width: 100%;
+      height: 450px;
+      background-color: #ddd;
+      margin-bottom: 2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      object-fit: cover;
+      display: block;
+    }
+
+    .feature-credit {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.6);
+      text-align: left;
+      margin: -1.3rem 0 0;
+      font-style: italic;
+    }
+
+    .feature-credit a {
+      color: rgba(0,0,0,0.6);
+    }
+
+    .article-title {
+      font-family: "Instrument Serif", serif;
+      font-size: 4rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      text-align: center;
+    }
+
+    .article-subtitle {
+      font-family: "Noto Serif", serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: rgba(0,0,0,0.55);
+      text-align: center;
+      margin: 0 auto 1.6rem;
+      max-width: 100ch;
+    }
+
+    .byline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.8rem;
+      text-align: center;
+      color: var(--red1);
+      margin: 0 0 0;
+    }
+
+    /* added: byline layout + avatar */
+    .byline-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .byline-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(0,0,0,0.1);
+    }
+
+    .dateline {
+      font-family: "Noto Serif", serif;
+      font-size: 1rem;
+      color: rgba(0,0,0,0.6);
+      font-style: italic;
+      margin-left: 0.5rem;
+    }
+
+    .article-paragraph {
+      font-family: "Noto Serif";
+      font-size: 1.3rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 450px;
+      font-weight: 400;
+      margin-left: auto;   /* added to center block */
+      margin-right: auto;  /* added to center block */
+    }
+
+    .resource {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(0,0,0,0.7);
+    }
+
+    .resource a {
+      color: var(--red1);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .byline-sep {
+      color: rgba(0,0,0,0.35);
+      margin: 0 0.05rem;
+    }
+    .dateline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.4rem;
+      color: rgba(0,0,0,0.6);
+    }
+
+    @media (min-width: 1000px) {
+      html { font-size: 90%; }
+      nav { padding: 1.5rem 0; }
+      .separator { height: 3rem; margin: 0 1.5rem; }
+    }
+
+    /* scale up text on mobile */
+    @media (max-width: 1000px) {
+      html { font-size: 170%; }
+
+      .article-container {
+        max-width: 90%;
+      }
+
+      .article-paragraph {
+        max-width: 75%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a class="nav-link" href="../news.html">news</a></li>
+      </ul>
+    </div>
+
+    <div class="separator" id="left-sep"></div>
+
+    <a href="../index.html" class="nav-title-link" aria-label="Home">
+      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    </a>
+
+    <div class="separator" id="right-sep"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a class="nav-link" href="../about.html">about</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="article-container">
+
+    <h2 class="article-title">St. Louis’ Best Example of Gentrification</h2>
+    <p class="article-subtitle">How restaurants, businesses and residents navigate change along the Delmar Divide</p>
+    <figure>
+      <img
+        class="feature-image"
+        src="https://commons.wikimedia.org/wiki/Special:FilePath/Loop_Trolley_car_001_eastbound_on_Delmar_Blvd_near_Limit_Ave,_December_2018.jpg"
+        alt="Loop Trolley car eastbound on Delmar Boulevard near Limit Avenue in St. Louis, December 2018"
+        width="100%"
+        height="450"
+        style="width:100%;height:450px;border-radius:12px;border:1px solid rgba(0,0,0,0.12)"
+      />
+      <figcaption class="feature-credit">
+        Paul Sableman, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>, via
+        <a href="https://commons.wikimedia.org/wiki/File:Loop_Trolley_car_001_eastbound_on_Delmar_Blvd_near_Limit_Ave,_December_2018.jpg">Wikimedia Commons</a>
+      </figcaption>
+    </figure>
+    <p class="byline">
+      <span class="byline-wrap">
+        <img class="byline-avatar" id="byline-avatar-lola" alt="Lola Jahant headshot" />
+        By Lola Jahant
+        <span class="byline-sep">•</span>
+        <span class="dateline">Dec. 15, 2025</span>
+      </span>
+      </span>
+
+    </p>
+
+    <p class="article-paragraph">
+      Just 5 miles north of The Hill is Delmar Boulevard, a road notoriously known for its racial and socioeconomic division in St. Louis. Better known as the “Delmar Divide,” the east-running street holds predominantly Black neighborhoods to the north and white neighborhoods to the south.
+    </p>
+
+    <p class="article-paragraph">
+      While it may not be toasted raviolis, the street is a blunt example of Jim Crow’s lingering effects on St. Louis generations after segregation ended. During the late 1930's, the Home Owners Loan Corporation, a New Deal agency, deemed Delmar a dividing line in maps of American cities it created to show "desirable" and "at risk" neighborhoods.
+    </p>
+
+    <p class="article-paragraph">
+      Today, many storefronts and homes on the north side of Delmar sit vacant. Decades of systemic racism, redlining and discriminatory housing practices have pushed residents out and left those who remain to deal with the lasting consequences.
+    </p>
+
+    <p class="article-paragraph">
+      Ben Poremba, founder, chef and owner of Bengelina Hospitality Group, has seen the firsthand effects of gentrification on neighborhoods in a different way. An Israeli native, Poremba builds his restaurants with efforts of welcoming everyone and centering around the foundation of hospitality.
+    </p>
+
+    <p class="article-paragraph">
+      “Hospitality is really embracing your guests and offering them a feeling that they are at someone's home, a feeling that they are invited and welcomed and taken care of,” Poremba said.
+    </p>
+
+    <p class="article-paragraph">
+      Poremba owns and operates seven restaurants as a part of the Bengelina Hospitality Group, including Deli Divine, a deli shop in the middle of the Delmar Divide. Opening restaurants in divided areas “breaks a lot of stigma” by bringing in people from Ladue and suburbs that wouldn't otherwise come, according to Poremba.
+    </p>
+
+    <p class="article-paragraph">
+      “Restaurants have become mini anchors for this community,” Poremba said. “They activate the community. There is movement. There is a mix of people that otherwise you wouldn't see in this part of town."
+    </p>
+
+    <p class="article-paragraph">
+      While Poremba’s restaurant efforts have brought in out-of-area residents to the Delmar Divide, the effects of gentrification have still been apparent to Poremba through his work. He recalls the difference in rebuilding efforts after a tornado, which highlights the existing resource disparity.
+    </p>
+
+    <p class="article-paragraph">
+      "It's glaring, it's obvious the kind of resources and capabilities that certain people have and certain people don't,” Poremba said.
+    </p>
+
+    <p class="article-paragraph">
+      Despite challenges, Poremba is prioritizing economic development in an attempt to avoid the negative consequences of gentrification.
+    </p>
+
+    <p class="article-paragraph">
+      "If we can create a neighborhood without erasing what the neighbors are, but at the same time provide some kind of stability, some kind of curiosity,” Poremba said.
+    </p>
+
+    <p class="article-paragraph">
+      Michael Pagano, a narrative and communications partner with Invest STL, has worked head-on with gentrification in St. Louis for years. Established as an independent nonprofit organization in 2022 and aimed to be out of operation by 2042, Invest STL invests in St. Louis neighborhoods to help build community longevity and combat displacement.
+    </p>
+
+    <p class="article-paragraph">
+      “I got drawn into the organization of Invest STL as a way of giving back to the community,” Pagano said. “I think it's more like an essential exchange in terms of connecting with the community and doing work that's related to culture shift or building culture.”
+    </p>
+
+    <p class="article-paragraph">
+      Through investing in St. Louis neighborhoods such as West End and Visitation Park, specifically by supporting Black local businesses, Pagano and the Invest STL team hope to prioritize equitable community development.
+    </p>
+
+    <p class="article-paragraph">
+      “We want to see a St. Louis where every neighborhood is worthy of being a chosen place to live and raise children,” Pagano said. “That's our benchmark — how do we help generate the tools and the political imagination and willpower to move towards that so that every neighborhood is worth a lifetime?”
+    </p>
+
+    <p class="article-paragraph">
+      Through his hands-on community work, Pagano has seen gentrification appear in everything from pandemic relief to building fire restoration.
+    </p>
+
+    <p class="article-paragraph">
+      “Gentrification is almost like a natural force because it's so overwhelming and so powerful,” Pagano said. “When there are so many gentrifying things or market pressures that do affect mobile businesses, if another hit comes along, it can be overwhelming and they can't recover.”
+    </p>
+
+    <p class="resource">
+      Resource: <a href="https://wagner.nyu.edu/rudincenter/2018/02/delmar-divide-st-louis-visualization">Delmar Divide Visualization</a>
+    </p>
+  </div>
+
+  <script>
+    
+  window.HEADSHOTS = {
+    amber: "https://i.postimg.cc/KjMXZhhb/amber.jpg",
+    paige: "https://i.postimg.cc/8c681gg5/paige.jpg",
+    ron: "https://i.postimg.cc/nrD8Hff8/ron.jpg",
+    shane: "https://i.postimg.cc/D0XV233F/shane.jpg",
+    sophia: "https://i.postimg.cc/9073WHH0/sophia.jpg",
+    tanvi: "https://i.postimg.cc/nrD8Hffn/tanvi.jpg",
+    toryionna: "https://i.postimg.cc/gJ5FFkQz/toryionna.jpg",
+    lola: "https://i.postimg.cc/d0fwvBZm/lola.jpg"
+  };
+ 
+    const nav = document.getElementById("navbar");
+    const title = document.getElementById("title");
+    const leftSep = document.getElementById("left-sep");
+    const rightSep = document.getElementById("right-sep");
+
+    const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
+    const COLLAPSE_Y = 10;
+
+    let scrolled = false;
+
+    window.addEventListener("scroll", () => {
+      const shouldCollapse = window.scrollY > COLLAPSE_Y;
+
+      if (shouldCollapse && !scrolled) {
+        scrolled = true;
+        nav.classList.add("scrolled");
+        leftSep.classList.add("hidden");
+        rightSep.classList.add("hidden");
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = "";
+          title.classList.add("shrunk");
+        }, 100);
+      } else if (!shouldCollapse && scrolled) {
+        scrolled = false;
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = FULL_TITLE;
+          title.classList.remove("shrunk");
+          title.classList.remove("fade");
+          leftSep.classList.remove("hidden");
+          rightSep.classList.remove("hidden");
+          nav.classList.remove("scrolled");
+        }, 100);
+      }
+    });
+
+    // set Lola's headshot on byline avatar
+    (function() {
+      const el = document.getElementById("byline-avatar-lola");
+      if (el && window.HEADSHOTS && window.HEADSHOTS.lola) {
+        el.src = window.HEADSHOTS.lola;
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 5px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 3px solid var(--red1); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a.nav-link {
+      color: var(--red1);
+      font-size: 4rem;
+      font-family: "Helvetica", Arial, sans-serif;
+      text-decoration: underline;
+      transition: color 0.2s ease, font-size 0.2s ease;
+    }
+
+    nav:not(.scrolled) a.nav-link {
+      font-size: 3.1rem;
+      text-decoration: none;
+    }
+
+    nav a.nav-link:hover { color: var(--red1); }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    .nav-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    .nav-title-link:focus-visible {
+      outline: 2px solid var(--red1);
+      outline-offset: 8px;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-weight: 800;
+      font-style: italic;
+      font-size: 5.72rem;
+      text-align: center;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+      margin: 0;
+    }
+
+    h1.shrunk { font-size: 0rem; }
+    h1.fade { opacity: 0; }
+
+    /* ===== ABOUT / EDITOR’S NOTE ===== */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4.5rem 2rem 6rem;
+    }
+
+    /* Accordion container */
+    .editors-note {
+      margin: 0 auto;
+    }
+
+    .editors-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      text-align: left;
+
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+      padding: 2.25rem 2.25rem;
+
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .editors-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.12);
+      border-color: rgba(0,0,0,0.22);
+    }
+
+    .editors-toggle:focus-visible {
+      outline: 2px solid var(--red1);
+      outline-offset: 8px;
+      border-radius: 28px;
+    }
+
+    .editors-toggle-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .note-kicker {
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+      color: rgba(0,0,0,0.6);
+      margin: 0;
+    }
+
+    .note-title {
+      font-size: 4rem;
+      font-style: italic;
+      line-height: 1.05;
+      margin: 0;
+      color: var(--red1);
+    }
+
+    .editors-chevron {
+      font-size: 2.4rem;
+      color: var(--red1);
+      transition: transform 0.25s ease;
+      flex: 0 0 auto;
+      user-select: none;
+    }
+
+    .editors-note.open .editors-chevron {
+      transform: rotate(180deg);
+    }
+
+    .editors-content {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease;
+    }
+
+    .editors-inner {
+      margin-top: 1.25rem;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 28px;
+      padding: 2.25rem 2.25rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .note-body {
+      font-size: 1.65rem;
+      line-height: 1.7;
+      color: rgba(0,0,0,0.9);
+    }
+
+    .note-body p { margin: 0 0 1.4rem; }
+    .note-body p:last-child { margin-bottom: 0; }
+
+    .note-signoff {
+      margin-top: 1.8rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(0,0,0,0.14);
+      text-align: center;
+    }
+
+    .note-signoff .name {
+      font-size: 1.5rem;
+      font-style: italic;
+      color: rgba(0,0,0,0.75);
+      margin: 0;
+    }
+
+    .meet-the-team {
+      margin-top: 3rem;
+    }
+
+    .meet-the-team h2 {
+      font-size: 3rem;
+      margin: 0 0 1rem;
+      color: var(--red1);
+      font-style: italic;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      main { padding: 3.25rem 1.25rem 5rem; }
+
+      .editors-toggle {
+        padding: 1.75rem 1.5rem;
+        border-radius: 22px;
+      }
+
+      .editors-inner {
+        padding: 1.75rem 1.5rem;
+        border-radius: 22px;
+      }
+
+      .note-title { font-size: 2.7rem; }
+      .note-body { font-size: 1.2rem; }
+      .editors-chevron { font-size: 2rem; }
+    }
+
+    @media (min-width: 1000px) {
+      html { font-size: 50%; }
+      nav { padding: 1.5rem 0; }
+      .separator { height: 3rem; margin: 0 1.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a class="nav-link" href="news.html">news</a></li>
+      </ul>
+    </div>
+
+    <div class="separator" id="left-sep"></div>
+
+    <a href="/index.html" class="nav-title-link" aria-label="Home">
+      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    </a>
+
+    <div class="separator" id="right-sep"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a class="nav-link" href="about.html">about</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Collapsed Editor’s Note -->
+    <section class="editors-note" id="editors-note" aria-label="Editor’s note">
+      <button class="editors-toggle" type="button" aria-expanded="false" aria-controls="editors-content">
+        <span class="editors-toggle-left">
+          <span class="note-kicker">Editor’s Note</span>
+          <span class="note-title">Who Owns the Flavor: An Investigation into Food, Culture and Profit</span>
+        </span>
+        <span class="editors-chevron" aria-hidden="true">▾</span>
+      </button>
+
+      <div class="editors-content" id="editors-content" hidden>
+        <div class="editors-inner">
+          <div class="note-body">
+            <p>
+              Last summer, as I scouted people and places for this podcast, I slipped into a restaurant in Ocean Springs,
+              Mississippi for a quick lunch. Sitting in the bustling pub, waiting on a catfish Po’ Boy and fries, I heard
+              a familiar melody wafting from a makeshift stage.
+            </p>
+
+            <p><em>“It’s not unusual to be loved by anyone…”</em></p>
+
+            <p>
+              Suddenly, I wasn’t in the Delta anymore. The soulful voice of a 30-something Latino cover musician transported
+              me back in time. I was a boy again, visiting my grandparents on Lumpkin Street on Detroit’s northeast side.
+              My grandmother, beautiful and full-figured with thick wavy silver hair, sat on the sofa, rhythmically tapping
+              her foot, her eyes fixed on the television.
+            </p>
+
+            <p><strong>Tom Jones was on!</strong></p>
+
+            <p>
+              The way she leaned forward during his performances, that sly grin when he’d wink into camera — I’ll always
+              cherish the memory of watching my grandma melt into a harmless schoolgirl crush over a swaggy white guy in a
+              silk scarf and bell bottoms.
+            </p>
+
+            <p>
+              Back then, I had assumed that Tom Jones was American, a hip-thrusting, self-styled Vegas crooner. It wasn’t
+              until years later that I would learn that grandma’s heartthrob was Welsh, a coal miner’s son from Pontypridd
+              whose silky baritone had traveled from European valleys to American living rooms, seducing my gran without
+              regard for borders.
+            </p>
+
+            <p>
+              I remember once comparing Tom Jones to soulful Elvis Presley. I was quickly corrected, by friends and family
+              alike. Tom Jones, I learned, enjoyed broader acceptance in certain Black circles than Elvis. Sure, both men
+              built their careers on Black musical foundations — gospel, rhythm and blues, soul. But Jones wore his
+              influences flagrantly; he was unapologetically sexual, gospel-drenched and transparent in his debt to Black
+              performers.
+            </p>
+
+            <p>
+              This series is about something larger than those cultural icons. It’s about how communities and industries
+              value its inventors. Is there a market value in ‘authenticity’ or should there be? Who gets to decide when
+              borrowing from a community constitutes theft? In this series, we explore that question not through song, but
+              within foodways along the Mississippi River.
+            </p>
+
+            <p><strong>Why Our Investigation Matters</strong></p>
+
+            <p>
+              Food carries our stories and connects us to where we come from. As globalization threatens to erase authentic
+              cultural traditions, food protection battles are erupting worldwide, from Mexican tequila brands feuding over
+              agave ingredients, to France’s Champagne industry forcing Miller High Life to destroy beer cans in Belgium for
+              calling itself “the champagne of beers,” to India fighting to protect Basmati rice from being patented by a U.S
+              company.
+            </p>
+
+            <p>
+              Nearly three decades ago, I worked for <em>Time</em> magazine as Midwest bureau chief. As we approached the 2000
+              presidential election, then-managing editor Walter Isaacson, a New Orleans native raised on tales of Huck Finn,
+              led us in an ambitious reporting project: telling stories along the Mississippi River that would illuminate the
+              social and political issues framing national debates. Aboard Grandpa Woo, our correspondents discovered a
+              powerful lens on America reporting along the Mighty Mississippi.
+            </p>
+
+            <p>
+              <em>Who Owns the Flavor?</em> stays the course — this time through recipes and restaurants. A few weeks ago, our
+              reporting team — seniors at the Missouri School of Journalism in capstone Journ4410 Reporting Projects — rented
+              a Chevrolet Suburban and set out on a three-day, 1,600-mile exploration of a question that defines these divided
+              times: who has the right to profit from culture?
+            </p>
+
+            <p>
+              Our whirlwind tour was instructive. In St. Louis, we found community pride and rivalry in the origin story of
+              toasted ravioli; in Memphis, we encountered fierce competition and economic disparity between popular barbecue
+              restaurants like Rendezvous and scrappy crosstown rival, Ballhogz; in New Orleans, we learned from award-winning
+              food writer Ian McNulty and legendary creole chef Frank Brigtsen the myriad ways Hurricane Katrina has shaken up
+              cuisine in the Big Easy, for better and worse. A trip highlight: after a panel discussion at historic Dooky Chase
+              Restaurant, Edgar “Dook” Chase IV signed copies of his late grandmother Leah Chase’s memoir and gifted them to us.
+            </p>
+
+            <p>
+              At every stop, we came to appreciate food as a unique and powerful economic driver in tourism — and upward
+              mobility. Every taste of toasted raviolo, rack of wet or dry ribs, or beignet carries a people’s history — and
+              policy decision. Every recipe represents generations of lore and refinement — and zoning ordinance. When James
+              Beard famously said “Food is our common ground, a universal experience,” he surely wasn’t talking about profits.
+            </p>
+
+            <div class="note-signoff">
+              <p class="name">Ron Stodghill</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meet the Team section (drop-in replacement for your current section) -->
+<section class="meet-the-team" id="team" aria-label="Meet the team">
+  <h2>Meet the Team</h2>
+
+  <div class="team-accordion" id="team-accordion">
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-ron" data-key="ron">
+      <span class="team-left">
+        <img class="team-avatar" alt="Ron headshot" />
+        <span class="team-name">Ron Stodghill</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-ron" hidden>
+      <div class="team-panel-inner">
+        <p>Ron is an award-winning journalist, author, and professor at the Missouri School of Journalism, where he serves as the Meredith Chair for Service Journalism. A former staff writer for such publications as the New York Times, Business Week and TIME magazine, Ron explores the intersection of business and culture. His current research and teaching project, Who Owns the Flavor?, investigates how taste, tradition, and ownership collide along local and global foodways.</p>
+      </div>
+    </div>
+
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-lola" data-key="lola">
+      <span class="team-left">
+        <img class="team-avatar" alt="Lola headshot" />
+        <span class="team-name">Lola Jahant</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-lola" hidden>
+      <div class="team-panel-inner">
+        <p>Lola is pursuing a bachelor’s of journalism with an emphasis in writing/reporting and a minor in business on track to graduate from the University of Missouri in May 2026. She is a city/county government reporter for the Columbia Missourian, and has also done work with D Magazine, KDFW Fox 4, CBS Sports and more. While local news is where her focus lies, she most enjoys writing feature and profile stories where she connects with sources on a deeper level.</p>
+      </div>
+    </div>
+
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-tanvi" data-key="tanvi">
+      <span class="team-left">
+        <img class="team-avatar" alt="Tanvi headshot" />
+        <span class="team-name">Tanvi Kulkarni</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-tanvi" hidden>
+      <div class="team-panel-inner">
+        <p>Tanvi is pursuing a bachelor of arts in art and journalism, with an emphasis in reporting and writing. She’s also getting a minor in French and plans to graduate from the University of Missouri in May 2026. She enjoys writing feature and profile stories and has reported for K-12 education with the Columbia Missourian. She hopes to continue with local reporting after graduation.</p>
+      </div>
+    </div>
+
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-amber" data-key="amber">
+      <span class="team-left">
+        <img class="team-avatar" alt="Amber headshot" />
+        <span class="team-name">Amber Roldan</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-amber" hidden>
+      <div class="team-panel-inner">
+        <p>Amber is getting ready to graduate with her bachelor’s of journalism in December before transitioning to a full time graduate student in the spring. During her undergraduate studies, Amber had a reporting and writing emphasis and earned a Women and Gender Studies minor. She was a city/county government reporter for the Columbia Missourian and has also reported for the Georgia Recorder. Her masters degree will have a Data and Investigative Journalism focus.</p>
+      </div>
+    </div>
+
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-toryionna" data-key="toryionna">
+      <span class="team-left">
+        <img class="team-avatar" alt="Torryionna headshot" />
+        <span class="team-name">Torryionna Miller</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-toryionna" hidden>
+      <div class="team-panel-inner">
+        <p>Torryionna is graduating from the University of Missouri this December. She’s pursuing a bachelor’s of journalism with an emphasis in writing and reporting. Torryionna has served as an higher education reporter for the Columbia Missourian focusing on governance and research. After graduation she plans to attend law school to become a constitutional or civil rights attorney.</p>
+      </div>
+    </div>
+
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-paige" data-key="paige">
+      <span class="team-left">
+        <img class="team-avatar" alt="Paige headshot" />
+        <span class="team-name">Paige Halter</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-paige" hidden>
+      <div class="team-panel-inner">
+        <p>Paige is graduating from the University of Missouri in December 2025 - so soon! She’s majoring in broadcast journalism and minoring in atmospheric science and plans to be a weather woman! During her time at Mizzou, Paige has been a reporter on KOMU 8 News, a forecaster with ABC17, and a youth leader back at her hometown church. Paige trusts in God’s plan for her, and is excited to see where she ends up!</p>
+      </div>
+    </div>
+
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-sophia" data-key="sophia">
+      <span class="team-left">
+        <img class="team-avatar" alt="Sophia headshot" />
+        <span class="team-name">Sophia Anderson</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-sophia" hidden>
+      <div class="team-panel-inner">
+        <p>Sophia is graduating from the University of Missouri in May 2026 with degrees in journalism and sociology, and a certificate in addiction science. She specializes in data and investigative reporting, primarily for radio, and previous beats have included state government, K-12 education and criminal justice. Sophia’s undergraduate sociological research projects have centered on race and weight stigma in healthcare, and sexual cybercrime against the LGBTQ community.</p>
+      </div>
+    </div>
+    <button class="team-toggle" type="button" aria-expanded="false" aria-controls="bio-shane" data-key="shane">
+      <span class="team-left">
+        <img class="team-avatar" alt="Shane headshot" />
+        <span class="team-name">Shane LaGesse</span>
+      </span>
+      <span class="team-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="team-panel" id="bio-shane" hidden>
+      <div class="team-panel-inner">
+        <p>Shane is graduating from the University of Missouri in May 2026 with a degree in journalism and certificate in web development. He is focused on data reporting and developing digital tools for journalists, and has covered higher education, Missouri state government and the EU.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-accordion {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .team-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    text-align: left;
+
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(0,0,0,0.14);
+    border-radius: 22px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    padding: 1.25rem 1.35rem;
+
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .team-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.10);
+    border-color: rgba(0,0,0,0.22);
+  }
+
+  .team-toggle:focus-visible {
+    outline: 2px solid var(--red1);
+    outline-offset: 8px;
+    border-radius: 22px;
+  }
+
+  .team-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .team-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 2px solid rgba(0,0,0,0.20);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    flex: 0 0 auto;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .team-name {
+    font-size: 2.5rem;
+    color: rgba(0,0,0,0.86);
+    font-weight: bolder;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .team-chevron {
+    font-size: 2rem;
+    color: var(--red1);
+    transition: transform 0.25s ease;
+    flex: 0 0 auto;
+    user-select: none;
+  }
+
+  .team-item-open .team-chevron {
+    transform: rotate(180deg);
+  }
+
+  .team-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease;
+  }
+
+  .team-panel-inner {
+    margin-top: 0.75rem;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(0,0,0,0.14);
+    border-radius: 22px;
+    padding: 1.35rem 1.35rem;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.07);
+    font-size: 2rem;
+    line-height: 1.65;
+    color: rgba(0,0,0,0.86);
+  }
+
+  .team-panel-inner p { margin: 0; }
+
+  @media (max-width: 720px) {
+    .team-name { font-size: 1.25rem; }
+    .team-panel-inner { font-size: 1.1rem; }
+    .team-avatar { width: 80px; height: 80px; }
+  }
+</style>
+
+<script>
+
+const note = document.getElementById("editors-note");
+  const toggle = note.querySelector(".editors-toggle");
+  const content = document.getElementById("editors-content");
+
+  const openNote = () => {
+    toggle.setAttribute("aria-expanded", "true");
+    note.classList.add("open");
+
+    content.hidden = false;
+    content.style.maxHeight = content.scrollHeight + "px";
+  };
+
+  const closeNote = () => {
+    toggle.setAttribute("aria-expanded", "false");
+    note.classList.remove("open");
+
+    content.style.maxHeight = content.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      content.style.maxHeight = "0px";
+    });
+
+    setTimeout(() => {
+      content.hidden = true;
+    }, 350);
+  };
+
+  toggle.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    isOpen ? closeNote() : openNote();
+  });
+
+  window.addEventListener("resize", () => {
+    if (toggle.getAttribute("aria-expanded") === "true") {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+
+window.HEADSHOTS = {
+    amber: "https://i.postimg.cc/KjMXZhhb/amber.jpg",
+    paige: "https://i.postimg.cc/8c681gg5/paige.jpg",
+    ron: "https://i.postimg.cc/nrD8Hff8/ron.jpg",
+    shane: "https://i.postimg.cc/D0XV233F/shane.jpg",
+    sophia: "https://i.postimg.cc/9073WHH0/sophia.jpg",
+    tanvi: "https://i.postimg.cc/nrD8Hffn/tanvi.jpg",
+    toryionna: "https://i.postimg.cc/gJ5FFkQz/toryionna.jpg",
+    lola: "https://i.postimg.cc/d0fwvBZm/lola.jpg"
+  };
+
+  const setTeamOpen = (btn, panel, open) => {
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+
+    const itemRoot = btn;
+    if (open) {
+      panel.hidden = false;
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      itemRoot.classList.add("team-item-open");
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      requestAnimationFrame(() => {
+        panel.style.maxHeight = "0px";
+      });
+      itemRoot.classList.remove("team-item-open");
+      window.setTimeout(() => { panel.hidden = true; }, 350);
+    }
+  };
+
+  const teamToggles = document.querySelectorAll(".team-toggle");
+  teamToggles.forEach((btn) => {
+    const panelId = btn.getAttribute("aria-controls");
+    const panel = document.getElementById(panelId);
+
+    btn.addEventListener("click", () => {
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+      setTeamOpen(btn, panel, !isOpen);
+    });
+  });
+
+  const setTeamAvatars = () => {
+    document.querySelectorAll(".team-toggle").forEach((btn) => {
+      const key = btn.getAttribute("data-key");
+      const img = btn.querySelector(".team-avatar");
+      if (!img) return;
+
+      const src = (window.HEADSHOTS && window.HEADSHOTS[key]) ? window.HEADSHOTS[key] : "";
+      if (src) img.src = src;
+    });
+  };
+
+  setTeamAvatars();
+
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".team-toggle").forEach((btn) => {
+      const panelId = btn.getAttribute("aria-controls");
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+
+      if (btn.getAttribute("aria-expanded") === "true") {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  });
+</script>
+</body>
+</html>

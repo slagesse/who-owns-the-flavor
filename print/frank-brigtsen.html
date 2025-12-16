@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Story - Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 3px solid var(--red1); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a.nav-link {
+      color: var(--red1);
+      font-size: 2.2rem;
+      font-family: "Helvetica", Arial, sans-serif;
+      text-decoration: underline;
+      transition: color 0.2s ease, font-size 0.2s ease, text-decoration 0.2s ease;
+    }
+
+    nav:not(.scrolled) a.nav-link {
+      font-size: 1.9rem;
+      text-decoration: none;
+    }
+
+    nav a.nav-link:hover { color: var(--red1); }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    .nav-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    h1 {
+      font-weight: 800;
+      font-style: italic;
+      font-size: 2rem;
+      text-align: center;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+      margin: 0;
+    }
+
+    h1.shrunk { font-size: 0rem; }
+    h1.fade { opacity: 0; }
+
+    /* === ARTICLE SECTION === */
+    .article-container {
+      max-width: 800px;
+      margin: 1rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .feature-image {
+      width: 100%;
+      height: 450px;
+      background-color: #ddd;
+      margin-bottom: 2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      object-fit: cover;
+      display: block;
+    }
+
+    .feature-credit {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.6);
+      text-align: left;
+      margin: -1.3rem 0 0;
+      font-style: italic;
+    }
+
+    .feature-credit a { color: rgba(0,0,0,0.6); }
+
+    .article-title {
+      font-family: "Instrument Serif", serif;
+      font-size: 4rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      text-align: center;
+      max-width: 22ch;
+    }
+
+    .article-subtitle {
+      font-family: "Noto Serif", serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: rgba(0,0,0,0.55);
+      text-align: center;
+      margin: 0 auto 1.6rem;
+      max-width: 100ch;
+    }
+
+    .byline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.8rem;
+      text-align: center;
+      color: var(--red1);
+      margin: 0 0 0;
+    }
+
+    .byline-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .byline-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(0,0,0,0.1);
+    }
+
+    .byline-sep {
+      color: rgba(0,0,0,0.35);
+      margin: 0 0.05rem;
+    }
+
+    .dateline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.4rem;
+      color: rgba(0,0,0,0.6);
+    }
+
+    .article-paragraph {
+      font-family: "Noto Serif";
+      font-size: 1.3rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 450px;
+      font-weight: 400;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* NEW: Pull quote styling */
+    .pull-quote {
+      max-width: 520px;
+      margin: 2.1rem auto 2.2rem;
+      padding: 1.4rem 1.6rem;
+      border-left: 5px solid var(--red1);
+      background: rgba(255,255,255,0.55);
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+    }
+
+    .pull-quote p {
+      margin: 0;
+      font-family: "Instrument Serif", serif;
+      font-size: 1.7rem;
+      line-height: 1.35;
+      font-style: italic;
+      color: rgba(0,0,0,0.9);
+    }
+
+    .pull-quote cite {
+      display: block;
+      margin-top: 0.8rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.95rem;
+      color: rgba(0,0,0,0.6);
+      font-style: normal;
+    }
+
+    @media (min-width: 1000px) {
+      html { font-size: 90%; }
+      nav { padding: 1.5rem 0; }
+      .separator { height: 3rem; margin: 0 1.5rem; }
+    }
+
+    @media (max-width: 1000px) {
+      html { font-size: 170%; }
+
+      .article-container { max-width: 90%; }
+      .article-paragraph { max-width: 75%; }
+      .pull-quote { max-width: 78%; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a class="nav-link" href="../news.html">news</a></li>
+      </ul>
+    </div>
+
+    <div class="separator" id="left-sep"></div>
+
+    <a href="../index.html" class="nav-title-link" aria-label="Home">
+      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    </a>
+
+    <div class="separator" id="right-sep"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a class="nav-link" href="../about.html">about</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="article-container">
+    <h2 class="article-title">How Chef Frank Brigtsen preserves Creole roots while guiding its evolution</h2>
+
+    <p class="byline">
+      <span class="byline-wrap">
+        <img class="byline-avatar" id="byline-avatar-lola" alt="Lola Jahant headshot" />
+        By Lola Jahant
+        <span class="byline-sep">•</span>
+        <span class="dateline">Dec. 15, 2025</span>
+      </span>
+    </p>
+
+    <p class="article-paragraph">
+      For Chef Frank Brigtsen, every bowl of gumbo carries a story. Devoted to New Orleans’ deep-rooted heritage, he has built his restaurant Brigtsen’s by preserving the city’s culture while guiding its evolution.
+    </p>
+
+    <p class="article-paragraph">
+      Considered a local culinary celebrity in New Orleans, Brigtsen was named one of FOOD &amp; WINE’s Top Ten New Chefs in America in 1988 and the James Beard Foundation’s Best Chef: Southeast in 1998.
+    </p>
+
+    <p class="article-paragraph">
+      His restaurant is well-awarded as well, earning accolades ranging from Zagat honors to the Ivy Award and was named one of the Top Ten Restaurants in New Orleans by The Times-Picayune.
+    </p>
+
+    <p class="article-paragraph">
+      Although celebrated for his mastery of Creole cuisine, Brigtsen says his work is about more than the food on the plate.
+    </p>
+
+    <figure class="pull-quote" aria-label="Pull quote">
+      <p>“Food is not just something to fill a belly,” Brigtsen said. “Food represents a culture. Food nourishes our spirits… restores us.”</p>
+      <cite>— Frank Brigtsen</cite>
+    </figure>
+
+    <p class="article-paragraph">
+      Beyond food, Brigtsen describes his restaurant as a space rooted in comfort and community. When reflecting on some of New Orleans’ difficult times such as Hurricane Katrina, he believes restaurants took on an even larger role.
+    </p>
+
+    <p class="article-paragraph">
+      “The restaurants were beacons of hope,” he said in reference to Hurricane Katrina. “They’re not just places to eat, they’re symbols of our culture, and they carry our culture forward from generation to generation.”
+    </p>
+
+    <p class="article-paragraph">
+      While he holds deep respect for tradition, Brigtsen also embraces change. He acknowledges that humans don’t always embrace radical change, but he remains optimistic about the city’s food culture.
+    </p>
+
+    <p class="article-paragraph">
+      “Think of a tree,” he explained when describing New Orleans cuisine. “It has roots, that’s the foundation — and then all these beautiful limbs and leaves start to grow and blossom. That’s how our restaurant culture is.”
+    </p>
+
+    <p class="article-paragraph">
+      Beyond his work in the kitchen, Brigtsen is committed to educating the next generation of chefs. He has taught public cooking classes for years, serves as an adjunct professor at the John Folse Culinary Institute and is the inaugural Chef-in-Residence at NOCCA. His goal, he says, is to help preserve and pass down the skills and traditions that shaped him.
+    </p>
+
+    <p class="article-paragraph">
+      “Some of the best Creole chefs you’ve never heard of,” he said. “That’s how this cuisine has been passed down from generation to generation.”
+    </p>
+  </div>
+
+  <script>
+    window.HEADSHOTS = {
+      amber: "https://i.postimg.cc/KjMXZhhb/amber.jpg",
+      paige: "https://i.postimg.cc/8c681gg5/paige.jpg",
+      ron: "https://i.postimg.cc/nrD8Hff8/ron.jpg",
+      shane: "https://i.postimg.cc/D0XV233F/shane.jpg",
+      sophia: "https://i.postimg.cc/9073WHH0/sophia.jpg",
+      tanvi: "https://i.postimg.cc/nrD8Hffn/tanvi.jpg",
+      toryionna: "https://i.postimg.cc/gJ5FFkQz/toryionna.jpg",
+      lola: "https://i.postimg.cc/d0fwvBZm/lola.jpg"
+    };
+
+    const nav = document.getElementById("navbar");
+    const title = document.getElementById("title");
+    const leftSep = document.getElementById("left-sep");
+    const rightSep = document.getElementById("right-sep");
+
+    const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
+    const COLLAPSE_Y = 10;
+
+    let scrolled = false;
+
+    window.addEventListener("scroll", () => {
+      const shouldCollapse = window.scrollY > COLLAPSE_Y;
+
+      if (shouldCollapse && !scrolled) {
+        scrolled = true;
+        nav.classList.add("scrolled");
+        leftSep.classList.add("hidden");
+        rightSep.classList.add("hidden");
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = "";
+          title.classList.add("shrunk");
+        }, 100);
+      } else if (!shouldCollapse && scrolled) {
+        scrolled = false;
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = FULL_TITLE;
+          title.classList.remove("shrunk");
+          title.classList.remove("fade");
+          leftSep.classList.remove("hidden");
+          rightSep.classList.remove("hidden");
+          nav.classList.remove("scrolled");
+        }, 100);
+      }
+    });
+
+    (function() {
+      const el = document.getElementById("byline-avatar-lola");
+      if (el && window.HEADSHOTS && window.HEADSHOTS.lola) {
+        el.src = window.HEADSHOTS.lola;
+      }
+    })();
+  </script>
+</body>
+</html>

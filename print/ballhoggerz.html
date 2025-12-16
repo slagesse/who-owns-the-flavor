@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Story - Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 3px solid var(--red1); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a.nav-link {
+      color: var(--red1);
+      font-size: 2.2rem;
+      font-family: "Helvetica", Arial, sans-serif;
+      text-decoration: underline;
+      transition: color 0.2s ease, font-size 0.2s ease, text-decoration 0.2s ease;
+    }
+
+    nav:not(.scrolled) a.nav-link {
+      font-size: 1.9rem;
+      text-decoration: none;
+    }
+
+    nav a.nav-link:hover { color: var(--red1); }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    .nav-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    h1 {
+      font-weight: 800;
+      font-style: italic;
+      font-size: 2rem;
+      text-align: center;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+      margin: 0;
+    }
+
+    h1.shrunk { font-size: 2.4rem; }
+    h1.fade { opacity: 0; }
+
+    /* === ARTICLE SECTION === */
+    .article-container {
+      max-width: 800px;
+      margin: 1rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .feature-image {
+      width: 100%;
+      height: 450px;
+      background-color: #ddd;
+      margin-bottom: 2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      object-fit: cover;
+      display: block;
+    }
+
+    .article-title {
+      font-family: "Instrument Serif", serif;
+      font-size: 4rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      text-align: center;
+      max-width: 28ch;
+    }
+
+    .byline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.8rem;
+      text-align: center;
+      color: var(--red1);
+      margin: 0 0 0;
+    }
+
+    .byline-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .byline-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(0,0,0,0.1);
+    }
+
+    .byline-sep {
+      color: rgba(0,0,0,0.35);
+      margin: 0 0.05rem;
+    }
+
+    .dateline {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.4rem;
+      color: rgba(0,0,0,0.6);
+    }
+
+    .article-paragraph {
+      font-family: "Noto Serif";
+      font-size: 1.3rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 450px;
+      font-weight: 400;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.6rem;
+      color: var(--red1);
+      margin: 1.5rem auto 0.75rem;
+      max-width: 450px;
+      width: 100%;
+      font-style: italic;
+      font-weight: 800;
+    }
+
+    @media (min-width: 1000px) {
+      html { font-size: 90%; }
+      nav { padding: 1.5rem 0; }
+      .separator { height: 3rem; margin: 0 1.5rem; }
+    }
+
+    @media (max-width: 1000px) {
+      html { font-size: 170%; }
+      .article-container { max-width: 90%; }
+      .article-paragraph { max-width: 75%; }
+      .section-label { max-width: 75%; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a class="nav-link" href="../news.html">news</a></li>
+      </ul>
+    </div>
+
+    <div class="separator" id="left-sep"></div>
+
+    <a href="../index.html" class="nav-title-link" aria-label="Home">
+      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    </a>
+
+    <div class="separator" id="right-sep"></div>
+
+    <div class="nav-right">
+      <ul>
+        <li><a class="nav-link" href="../about.html">about</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="article-container">
+    <h2 class="article-title">Ballhoggerz - Building community through BBQ</h2>
+
+    <figure>
+      <img
+        class="feature-image"
+        src="https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-6/480151554_1146762684126210_9133106408607368584_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=Z4ZXIL1jgoUQ7kNvwGomTOL&_nc_oc=AdlZpWFbRVMPekTgoun2QyXMVOFgd453_f4mtJ1kQRYrd8wKalmWLRVXq4XyXOX760Q&_nc_zt=23&_nc_ht=scontent-dfw5-2.xx&_nc_gid=sb2-UYNlqT6okxP6-WSoKw&oh=00_AfkzKc0t055kRh3mhV1_GMOIMI88e8rPSwkxNg-BTAh16w&oe=6946821A"
+        alt="Ballhoggerz BBQ in Memphis"
+        width="100%"
+        height="450"
+        style="width:100%;height:450px;border-radius:12px;border:1px solid rgba(0,0,0,0.12)"
+      />
+    </figure>
+
+    <p class="byline">
+      <span class="byline-wrap">
+        <img class="byline-avatar" id="byline-avatar-amber" alt="Amber Roldan headshot" />
+        By Amber Roldan
+        <span class="byline-sep">•</span>
+        <span class="dateline">Dec. 15, 2025</span>
+      </span>
+    </p>
+
+    <p class="article-paragraph">
+      Ballhoggerz BBQ is more than just a menu, it's an extension of connection to a community long celebrated for its culture. When you buy a slab of ribs, you are purchasing pride and a taste of history that goes all the way back to the late 1800s.
+    </p>
+
+    <p class="article-paragraph">
+      The beloved barbecue joint can be found just 6 miles away from downtown Memphis in one of the country’s oldest historically black communities: Orange Mound. The southeast Memphis neighborhood is known as the nation’s first community planned specifically for African Americans.
+    </p>
+
+    <div class="section-label">Orange Mound’s roots</div>
+
+    <p class="article-paragraph">
+      The neighborhood was built in 1890 when Izey Eugene Meacham, a white real estate developer purchased 5,000 acres from the John George Deaderick Plantation. After finalizing his purchase, Meacham divided the land to create a segregated subdivision for African Americans and 982 shotgun houses were sold for under one hundred dollars each.
+    </p>
+
+    <p class="article-paragraph">
+      What started as a tangible reinforcement of Jim Crow legislation, quickly became a thriving neighborhood and cultural hub. The community was named after a local plant called mock fruit that could be found growing in nearby shrubs.
+    </p>
+
+    <p class="article-paragraph">
+      Today, Orange Mound means a lot more than a shrub or even a neighborhood. In the greater Memphis area, Orange Mound has become a symbol of pride, resilience and community.
+    </p>
+
+    <div class="section-label">A family legacy</div>
+
+    <p class="article-paragraph">
+      This sentiment remains true for Ballhoggerz’s pitmaster, Merritt Bailey, a local restaurateur whose family has deep roots in Orange Mound.
+    </p>
+
+    <p class="article-paragraph">
+      “Me, myself, I have a real historical background in terms of my family in the city,” Bailey said. “My father, he was the founder of the civil rights museum, he also has a courthouse downtown named after him.”
+    </p>
+
+    <p class="article-paragraph">
+      Bailey’s father, D’Army, was a prominent Orange Mound lawyer who fought to bring the National Civil Rights Museum of Memphis to the former Lorraine Motel, the site of Rev. Dr. Martin Luther King Jr.’s assassination. As president of the Martin Luther King Jr. Memphis Memorial Foundation, Bailey’s fight was successful, and this accomplishment joined his long list of civil rights accolades.
+    </p>
+
+    <p class="article-paragraph">
+      While it's been a decade since D’Army Bailey’s passing, his legacy lives on in Orange Mound through not only landmark locations but through his son’s continued presence in the community.
+    </p>
+
+    <p class="article-paragraph">
+      Bailey has a photo of his father proudly hanging up inside of Ballhoggerz alongside hundreds of sharpied names, messages and raving reviews from visitors across the country.
+    </p>
+
+    <p class="article-paragraph">
+      “Best BBQ in Memphis, TN,” a visitor from California wrote.
+    </p>
+
+    <p class="article-paragraph">“10/10 from Maine,” another group signed.</p>
+
+    <div class="section-label">Pride that travels</div>
+
+    <p class="article-paragraph">
+      The Merrit family isn't the only success story to come out of Orange Mound. Beverly Robertson, former president of The National Civil Rights Museum is proud to have been born and raised in Orange Mound.
+    </p>
+
+    <p class="article-paragraph">
+      Like many others who grew up in the neighborhood, Robertson, who is the co-founder of a Memphis based marketing firm, accredits much of her success to her Orange Mound upbringing.
+    </p>
+
+    <p class="article-paragraph">
+      Despite what she recalls as an excellent education thanks to devoted teachers, Robertson doesn't remember learning the history of Orange Mound inside the classroom. Robertson said that when she was growing up, most of her graduating class learned about the history of Orange Mound in high school or college when they did their own personal research.
+    </p>
+
+    <p class="article-paragraph">
+      “For me, it was more precious, and we understood the value of being the first (planned) community where blacks (lived) and we felt it,” Roberstson said. “We felt it because we lived it, because people taught it to us. And so it wasn't as much in the transfer of the information as it was in how people lived and respected us and how they taught us to value our culture and our surroundings.”
+    </p>
+
+    <p class="article-paragraph">
+      Robertson no longer lives in the neighborhood, but frequently works with various community members and organizations to preserve the cultural significance of the neighborhood.
+    </p>
+
+    <p class="article-paragraph">
+      “A lot has changed,” she said. “The people who once anchored the neighborhood have passed away, and oftentimes when that happens, neighborhoods tend to languish.”
+    </p>
+
+    <div class="section-label">A bright spot since 2018</div>
+
+    <p class="article-paragraph">
+      Ballhoggerz has been a bright spot in the community since 2018 when Bailey opened his doors to sell smoked meats, grilled corn, and turkey legs. Bailey’s flavor has become a fan favorite and earned fourth place on this year's USA Today Ten Best list for Memphis Style BBQ.
+    </p>
+
+    <p class="article-paragraph">
+      “Locals come through, like I said, I'm trying to be an Orange Mound staple,” Bailey said. “We got businesses, black businesses, all up and down this strip. I cater to homeless people out here, man, or people in need. You know (what) I'm saying, they need food, give back to them. So, yeah, we serve our purpose.”
+    </p>
+
+    <p class="article-paragraph">
+      From increased housing prices to store closures, the neighborhood has faced difficulty in recent years. Despite challenges, a shared sense of passion and belonging has persevered.
+    </p>
+
+    <p class="article-paragraph">
+      “The heart of the community is still there, but it's a bit of a food desert, because stores that used to exist around there have closed down,” Robertson said. “It's been a fight to open them back up, but there is finally a grocery store and in an area that's close to where people live, but that's a fight, it's a battle now that has to be fought.”
+    </p>
+  </div>
+
+  <script>
+    window.HEADSHOTS = {
+      amber: "https://i.postimg.cc/KjMXZhhb/amber.jpg",
+      paige: "https://i.postimg.cc/8c681gg5/paige.jpg",
+      ron: "https://i.postimg.cc/nrD8Hff8/ron.jpg",
+      shane: "https://i.postimg.cc/D0XV233F/shane.jpg",
+      sophia: "https://i.postimg.cc/9073WHH0/sophia.jpg",
+      tanvi: "https://i.postimg.cc/nrD8Hffn/tanvi.jpg",
+      toryionna: "https://i.postimg.cc/gJ5FFkQz/toryionna.jpg",
+      lola: "https://i.postimg.cc/d0fwvBZm/lola.jpg"
+    };
+
+    const nav = document.getElementById("navbar");
+    const title = document.getElementById("title");
+    const leftSep = document.getElementById("left-sep");
+    const rightSep = document.getElementById("right-sep");
+
+    const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
+    const COLLAPSE_Y = 10;
+
+    let scrolled = false;
+
+    window.addEventListener("scroll", () => {
+      const shouldCollapse = window.scrollY > COLLAPSE_Y;
+
+      if (shouldCollapse && !scrolled) {
+        scrolled = true;
+        nav.classList.add("scrolled");
+        leftSep.classList.add("hidden");
+        rightSep.classList.add("hidden");
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = "";
+          title.classList.add("shrunk");
+        }, 100);
+      } else if (!shouldCollapse && scrolled) {
+        scrolled = false;
+        title.classList.add("fade");
+
+        setTimeout(() => {
+          title.innerHTML = FULL_TITLE;
+          title.classList.remove("shrunk");
+          title.classList.remove("fade");
+          leftSep.classList.remove("hidden");
+          rightSep.classList.remove("hidden");
+          nav.classList.remove("scrolled");
+        }, 100);
+      }
+    });
+
+    (function() {
+      const el = document.getElementById("byline-avatar-amber");
+      if (el && window.HEADSHOTS && window.HEADSHOTS.amber) {
+        el.src = window.HEADSHOTS.amber;
+      }
+    })();
+  </script>
+</body>
+</html>

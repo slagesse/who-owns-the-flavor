@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #f3f3e7;
+      --red1: #890d04;
+      --gray: rgba(0, 0, 0, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      font-family: "Instrument Serif", serif;
+      color: #000;
+    }
+
+    /* === NAVIGATION === */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--cream);
+      padding: 2rem 0;
+      z-index: 100;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.4s ease;
+    }
+
+    nav.scrolled { border-bottom: 3px solid var(--red1); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--red1);
+      font-size: 4rem; /* Doubled the font size */
+      font-family: "Helvetica", Arial, sans-serif; /* Changed to a clean sans-serif font */
+      text-decoration: underline; /* Remove underline */
+      transition: color 0.2s ease, font-size 0.2s ease;
+    }
+
+    nav:not(.scrolled) a {
+      font-size: 3.1rem; /* 1.3x smaller when nav is large */
+      text-decoration: none
+    }
+
+    nav a:hover { color: var(--red1); }
+
+    h1 {
+      font-weight: 800;
+      font-style: italic;
+      font-size: 5.72rem; /* Increased by 1.1x from 5.2rem */
+      text-align: center;
+      line-height: 1;
+      transition: opacity 0.5s ease, font-size 0.5s ease;
+    }
+
+    h1.shrunk { font-size: 0rem; }
+    h1.fade { opacity: 0; }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .separator {
+      width: 2px;
+      height: 4rem;
+      background-color: gray;
+      margin: 0 2rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .separator.hidden { opacity: 0; }
+
+    /* === HERO SECTION === */
+    .hero-section {
+      position: relative;
+      height: auto; /* Allow the section to adjust height dynamically */
+      max-height: none; /* Remove the max height constraint */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--cream);
+      overflow: hidden;
+    }
+
+    .map-container {
+      position: relative;
+      display: inline-block;
+      overflow: visible;
+      transform: translateX(-30%); /* Adjusted to shift the map slightly to the right */
+    }
+
+    .map-container img {
+      width: 2160px; /* Changed from 2340px to 2160px (1800 * 1.2) */
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* === STAR ICONS === */
+    @keyframes star-spin-1 {
+      0% { transform: rotate(-15deg); }
+      100% { transform: rotate(10deg); }
+    }
+
+    @keyframes star-spin-2 {
+      0% { transform: rotate(10deg); }
+      100% { transform: rotate(-5deg); }
+    }
+
+    @keyframes star-spin-3 {
+      0% { transform: rotate(-8deg); }
+      100% { transform: rotate(15deg); }
+    }
+
+    .map-star[data-id="1"] {
+      animation: star-spin-1 2.1s ease-in-out infinite alternate; /* 2.5s -> 2.1s */
+    }
+
+    .map-star[data-id="2"] {
+      animation: star-spin-2 2.5s ease-in-out infinite alternate; /* 3s -> 2.5s */
+      fill: #c38784; /* lighter than var(--red1 #890d04) */
+    }
+
+    .map-star[data-id="3"] {
+      animation: star-spin-3 2.9s ease-in-out infinite alternate; /* 3.5s -> 2.9s */
+    }
+
+    .map-star {
+      position: absolute;
+      width: 114px; /* Changed from 120px to 104px (80 * 1.3) */
+      height: 114px; /* Changed from 120px to 104px (80 * 1.3) */
+      fill: var(--red1);
+      stroke: white;
+      stroke-width: 1.5px;
+      cursor: pointer;
+      transform-origin: center;
+      transition: transform 0.25s ease, fill 0.25s ease;
+      z-index: 3;
+    }
+
+    .map-star:hover {
+      transform: scale(1.5) rotate(0deg);
+      fill: white;
+      stroke: black;
+    }
+
+    .map-star.active {
+      fill: white;
+      stroke: black;
+      transform: scale(1.4);
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) 
+              drop-shadow(0 0 16px rgba(255, 255, 255, 0.6))
+              drop-shadow(0 0 24px rgba(255, 255, 255, 0.4));
+    }
+
+    /* === OVERLAY BOX === */
+    .hero-overlay {
+      position: absolute;
+      left: 62.5%;
+      top: 59%;
+      transform: translate(-50%, -50%) scaleY(0.95);
+      background-color: white; /* Changed from black to white */
+      color: black; /* Changed from white to black */
+      border: 1px solid black; /* Changed from white to black */
+      border-radius: 50px;
+      padding: 2rem 2.5rem;
+      height: auto;
+      width: 600px;
+      font-family: "Instrument Serif", serif;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+      transition: transform 0.4s ease, opacity 0.3s ease;
+    }
+
+    .hero-overlay.fade h2,
+    .hero-overlay.fade p {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .hero-overlay.active {
+      transform: translate(-50%, -50%) scaleY(1);
+    }
+
+    .hero-overlay-a {
+      font-size: 4rem; /* Scale up heading by 1.5x */
+      font-weight: 800;
+      margin: 0 0 0.8rem;
+      transition: opacity 0.3s ease;
+      color: var(--red1);
+    }
+
+    .hero-overlay p {
+      font-size: 1.6rem; /* Scale up paragraph by 1.5x */
+      margin: 0;
+      line-height: 1.4;
+      font-family: monospace;
+      font-weight: lighter;
+      font-style: italic;
+
+      transition: opacity 0.3s ease;
+    }
+
+    /* === AUDIO PLAYER === */
+    .audio-player {
+      margin: 1rem 0 1rem 0;
+      display: none; /* Hide by default */
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .audio-player.visible {
+      display: block; /* Show when visible class is added */
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .custom-audio-player {
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .play-pause-btn {
+      background: var(--red1);
+      border: 1px solid var(--red1);
+      border-radius: 10px 0 0 10px;
+      width: 91px;
+      height: 70px;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .play-pause-btn:hover {
+      transform: scale(1.00);
+    }
+
+    .play-pause-btn:active {
+      transform: scale(0.90);
+    }
+
+    .progress-container {
+      flex: 1;
+      height: 70px;
+      background: #ddd;
+      position: relative;
+      cursor: pointer;
+      margin: 0 20px 0 0;
+      border-radius: 0 10px 10px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #af3636; /* Light red color */
+      width: 0%;
+      transition: width 0.1s ease, background-color 0.3s ease;
+    }
+
+    .progress-bar.paused {
+      background: #888; /* Gray when paused */
+    }
+
+    .time-display {
+      font-size: 1.5rem;
+      font-weight: normal;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: lighter;
+      min-width: 120px;
+      text-align: right;
+      padding: 10px 20px 0 0;
+      color: #555;
+    }
+
+    .volume-container {
+      display: none; /* Hide the volume container */
+    }
+
+    /* === ABOUT SECTION === */
+    .about-wrapper {
+      max-width: 900px;
+      margin: 8rem auto; /* Increased from 4rem to 8rem */
+      padding: 0 2rem;
+      scroll-margin-top: 140px;
+    }
+
+    .page-title {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-size: 6rem; /* Increased from 3rem */
+      color: var(--red1);
+      margin-bottom: 3rem;
+      text-align: center; /* Changed from left to center */
+    }
+
+    .about-block {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .about-block:nth-child(even) { flex-direction: row-reverse; }
+
+    .about-text { flex: 1; }
+
+    .about-text h3 {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-size: 3rem;
+      color: var(--red1);
+      margin: 0 0 1rem;
+    }
+
+    .about-text p {
+      font-family: "Bodoni Moda", serif;
+      color: black;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .about-img {
+      width: 300px;
+      height: 200px;
+      background-color: #ddd;
+      flex-shrink: 0;
+    }
+
+    .context-image {
+      position: absolute;
+      width: 550px; /* Same as overlay box */
+      height: 300px;
+      background-color: #ddd;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 1;
+      border-radius: 15px;
+      border: 2px solid black;
+    }
+
+    .top-image {
+      bottom: calc(100% + 40px); /* 20px spacing */
+    }
+
+    .bottom-image {
+      top: calc(100% + 40px);
+    }
+
+    .context-image.visible {
+      opacity: 1;
+    }
+
+    /* === LATEST SECTION === */
+    .latest-wrapper {
+      max-width: 100%;
+      overflow: hidden;
+      padding: 4rem 4rem;
+    }
+
+    .latest-title {
+      font-family: "Instrument Serif", serif;
+      font-size: 6rem; /* Doubled font size */
+      color: var(--red1);
+      margin-bottom: 2rem;
+    }
+
+    .latest-gallery {
+      display: flex;
+      gap: 2rem;
+      scroll-snap-type: x mandatory;
+      overflow-x: auto;
+      padding-bottom: 3rem;
+    }
+
+    .latest-gallery::-webkit-scrollbar {
+      display: none;
+    }
+
+    .latest-item {
+      flex: 0 0 80%;
+      scroll-snap-align: start;
+      background: white;
+      border: 1px solid var(--gray);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .latest-item h3 {
+      font-family: "Instrument Serif", serif;
+      font-size: 4rem; /* Doubled font size */
+      color: var(--red1);
+      margin: 1rem;
+    }
+
+    .latest-item p {
+      font-family: "Bodoni Moda", serif;
+      font-size: 1.6rem; /* Reduced font size */
+      color: black;
+      margin: 0 1rem 1rem;
+    }
+
+    .transcript-link {
+  display: inline-block;
+  margin: 10px 0 0 0;
+  padding: 0 20px 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  color: var(--red1);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  font-weight: bold;
+}
+
+.transcript-link:hover {
+  opacity: 0.8;
+}
+
+.transcript-link.hidden {
+  display: none;
+}
+
+/* Desktop “zoom out” to keep proportions on wide screens */
+    @media (min-width: 1000px) {
+      html {
+        font-size: 50%; /* 14px base: scales all rems down */
+      }
+      .map-container img {
+        max-width: 900px; /* down from 2160px for better desktop balance */
+      }
+      .map-star {
+        width: 10%;  /* down from 114px */
+        height: 10%; /* down from 114px */
+      }
+      .hero-overlay {
+        width: 400px; /* down from 600px */
+        border-radius: 5%;
+        padding: 1.5rem 2rem; /* slightly tighter padding */
+        left: 65%;
+        top: 50%;
+      }
+
+      .play-pause-btn {
+      height: 50px;
+      font-size: 30px;
+      }
+
+      .progress-container {
+        height: 50px;
+      }
+      nav {
+        padding: 1.5rem 0; /* tighten nav spacing */
+      }
+      .separator {
+        height: 3rem; /* reduce separator height */
+        margin: 0 1.5rem;
+      }
+      .latest-wrapper {
+        padding: 3rem 3rem; /* slightly tighter section padding */
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="nav-left">
+      <ul>
+        <li><a href="news.html">news</a></li>
+      </ul>
+    </div>
+    <div class="separator" id="left-sep"></div>
+    <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    <div class="separator" id="right-sep"></div>
+    <div class="nav-right">
+      <ul>
+        <li><a href="about.html">about</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero-section">
+    <div class="map-container">
+      <img src="map.svg" alt="Map showing cultural food regions">
+
+      <svg class="map-star" data-id="1" viewBox="0 0 24 24" style="top: 46%; left: 62%;">
+        <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
+      </svg>
+      <svg class="map-star" data-id="2" viewBox="0 0 24 24" style="top: 57%; left: 63%;">
+        <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
+      </svg>
+      <svg class="map-star" data-id="3" viewBox="0 0 24 24" style="top: 77%; left: 64%;">
+        <polygon points="12,2 14.9,8.6 22,9.3 16.5,14.1 18,21 12,17.3 6,21 7.5,14.1 2,9.3 9.1,8.6"/>
+      </svg>
+    </div>
+    <div class="hero-overlay" id="overlay-box">
+      <div class="context-image top-image" id="top-image"></div>
+      <div class="context-image bottom-image" id="bottom-image"></div>
+      <a class='hero-overlay-a'>Along the Mississippi</a>
+      <p>◀ Click a star to hear that city's podcast episode.</p>
+      <div class="audio-player" id="audio-player">
+        <audio id="overlay-audio" preload="metadata">
+          <source src="" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <div class="custom-audio-player">
+          <button class="play-pause-btn" id="play-pause-btn">
+            ▶
+          </button>
+          <div class="progress-container" id="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+        <div class="time-display" id="time-display">0:00 / 0:00</div>
+        <a class="transcript-link" id="transcript-link" href="#">
+          ↳ Follow along with the transcript
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="latest-wrapper">
+    <h2 class="latest-title">Latest</h2>
+    <div class="latest-gallery">
+      <div class="latest-item">
+        <!-- Removed the image -->
+        <h3><a href="story.html" style="text-decoration: none; color: var(--red1);">St. Louis’ Best Example of Gentrification</a></h3>
+        <p>Just 5 miles north of The Hill is Delmar Boulevard, a road notoriously known for its racial and socioeconomic division in St. Louis...</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!--<div class="about-wrapper" id="about">
+    <h2 class="page-title">OUR MISSION</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: 0 auto;">
+      
+    </p>
+  </div>-->
+
+  <script>
+    const overlayBox = document.getElementById("overlay-box");
+    const overlayTitle = overlayBox.querySelector("a");
+    const overlayText = overlayBox.querySelector("p");
+    const stars = document.querySelectorAll(".map-star");
+    const transcriptLink = document.getElementById("transcript-link");
+
+    const starData = {
+      1: {
+        title: "I. St. Louis, MO",
+        text: "Dive into The Hill: an Italian-American neighborhood and birthplace of toasted ravioli.",
+        topImage: "https://i.ibb.co/0V8XnKmD/toasted-ravs.jpg",
+        bottomImage: "https://i.ibb.co/LDx5ZQjZ/DSC09447.jpg",
+        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/44/97/1851297543869744-1851297543943801-1851297563364329.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103257Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=465d19c4671cf849a0852e42eaa4ddae4220aae258008c5a9e55f167c816f196",
+        transcript: "/stl.html"
+      },
+      2: {
+        title: "II. Memphis, TN",
+        text: "Dig into the complex and competing flavors of the Memphis dry-rubbed rib.",
+        topImage: "https://i.ibb.co/wN2V8fHz/dry-ribs.jpg",
+        bottomImage: "https://i.ibb.co/XrB6frXt/bar-b-q-shop.jpg",
+        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/39/85/1851297543638539-1851297543735720-1851297565036563.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103116Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=4e885acc02e75b790334638f6bdedc4f5c0804f2d0bfa6f029c55a3f4e16a775",
+        transcript: "/memphis.html"
+      },
+      3: {
+        title: "III. New Orleans, LA",
+        text: "Creole flavor, Cajun spice, and centuries of fusion.",
+        topImage: "https://i.ibb.co/1thkwCD6/nola-streets.jpg",
+        bottomImage: "https://i.ibb.co/8LdSjDkG/po-boy.jpg",
+        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/57/18/1851297543761857-1851297543837152-1851297558877420.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103116Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=c37b78e57b792e5bee28bb6594cfc6527350ca223ff68ca48cac994cbc24de72",
+        transcript: "/nola.html"
+      }
+    };
+
+
+
+    let activeStar = null;
+
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        const id = star.getAttribute("data-id");
+
+        // If same star clicked again — untoggle
+        if (activeStar === id) {
+          stars.forEach(s => s.classList.remove("active"));
+          activeStar = null;
+          hideOverlay();
+          return;
+        }
+
+        // Activate new star
+        stars.forEach(s => s.classList.remove("active"));
+        star.classList.add("active");
+        activeStar = id;
+        showOverlay(id);
+      });
+    });
+
+    const topImage = document.getElementById("top-image");
+    const bottomImage = document.getElementById("bottom-image");
+    const audioPlayer = document.getElementById("audio-player");
+    const overlayAudio = document.getElementById("overlay-audio");
+
+    // Custom audio player controls
+    const playPauseBtn = document.getElementById("play-pause-btn");
+    const progressContainer = document.getElementById("progress-container");
+    const progressBar = document.getElementById("progress-bar");
+    const timeDisplay = document.getElementById("time-display");
+
+    let isPlaying = false;
+
+    // Play/Pause functionality
+    playPauseBtn.addEventListener("click", () => {
+      if (overlayAudio.src && overlayAudio.src !== window.location.href) {
+        if (isPlaying) {
+          overlayAudio.pause();
+        } else {
+          overlayAudio.play().catch(error => {
+            console.error('Error playing audio:', error);
+          });
+        }
+      }
+    });
+
+    overlayAudio.addEventListener("play", () => {
+      isPlaying = true;
+      playPauseBtn.textContent = "⏸";
+      progressBar.classList.remove("paused");
+    });
+
+    overlayAudio.addEventListener("pause", () => {
+      isPlaying = false;
+      playPauseBtn.textContent = "▶";
+      progressBar.classList.add("paused");
+    });
+
+    // Progress bar functionality
+    overlayAudio.addEventListener("timeupdate", () => {
+      const duration = overlayAudio.duration;
+      const currentTime = overlayAudio.currentTime;
+      
+      if (duration) {
+        const progressPercent = (currentTime / duration) * 100;
+        progressBar.style.width = progressPercent + "%";
+        
+        // Update time display
+        const currentMins = Math.floor(currentTime / 60);
+        const currentSecs = Math.floor(currentTime % 60);
+        const durationMins = Math.floor(duration / 60);
+        const durationSecs = Math.floor(duration % 60);
+        
+        timeDisplay.textContent = 
+          `${currentMins}:${currentSecs.toString().padStart(2, '0')} / ${durationMins}:${durationSecs.toString().padStart(2, '0')}`;
+      }
+    });
+
+    // Click on progress bar to seek
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+    const seekToClientX = (clientX) => {
+      const rect = progressContainer.getBoundingClientRect();
+      const t = clamp01((clientX - rect.left) / rect.width);
+      if (overlayAudio.duration) overlayAudio.currentTime = t * overlayAudio.duration;
+    };
+
+    let dragging = false;
+
+    progressContainer.addEventListener("pointerdown", (e) => {
+      if (!overlayAudio.duration) return;
+      dragging = true;
+      progressContainer.setPointerCapture(e.pointerId);
+      seekToClientX(e.clientX);
+    });
+
+    progressContainer.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      seekToClientX(e.clientX);
+    });
+
+    const stopDrag = () => { dragging = false; };
+
+    progressContainer.addEventListener("pointerup", stopDrag);
+    progressContainer.addEventListener("pointercancel", stopDrag);
+    progressContainer.addEventListener("lostpointercapture", stopDrag);
+
+
+    function showOverlay(id) {
+      fadeOverlay(() => {
+        overlayTitle.textContent = starData[id].title;
+        overlayTitle.href = starData[id].transcript || "#";
+        overlayText.textContent = starData[id].text;
+        overlayBox.classList.add("active");
+
+        if (starData[id].transcript) {
+          transcriptLink.href = starData[id].transcript;
+          transcriptLink.classList.remove("hidden");
+        } else {
+          transcriptLink.href = "#";
+          transcriptLink.classList.add("hidden");
+        }
+
+        
+        /*// Set background images
+        topImage.style.backgroundImage = starData[id].topImage ? `url(${starData[id].topImage})` : 'none';
+        bottomImage.style.backgroundImage = starData[id].bottomImage ? `url(${starData[id].bottomImage})` : 'none';
+        topImage.style.backgroundSize = 'cover';
+        bottomImage.style.backgroundSize = 'cover';
+        topImage.classList.add("visible");
+        bottomImage.classLst.add("visible");
+        */
+
+        // Completely refresh the audio player
+        if (starData[id].audio) {
+          // Reset player state first
+          overlayAudio.pause();
+          overlayAudio.currentTime = 0;
+          isPlaying = false;
+          playPauseBtn.textContent = "▶";
+          progressBar.style.width = "0%";
+          progressBar.classList.add("paused");
+          timeDisplay.textContent = "0:00 / 0:00";
+          
+          // Remove old source
+          overlayAudio.removeAttribute('src');
+          
+          // Set new source and load
+          overlayAudio.src = starData[id].audio;
+          overlayAudio.load();
+          
+          // Show the player
+          audioPlayer.classList.add("visible");
+          
+          // Debug log
+          console.log('Loading audio:', starData[id].audio);
+        }
+      });
+    }
+
+    function hideOverlay() {
+      // Remove image visibility first
+      topImage.classList.remove("visible");
+      bottomImage.classList.remove("visible");
+      audioPlayer.classList.remove("visible");
+
+      transcriptLink.href = "#";
+      transcriptLink.classList.add("hidden");
+
+      
+      fadeOverlay(() => {
+        overlayTitle.textContent = "Along the Mississippi";
+        overlayText.textContent = "◀ Click a star to hear that city's podcast episode.";
+        overlayBox.classList.remove("active");
+        
+        // Completely stop and reset audio
+        overlayAudio.pause();
+        overlayAudio.currentTime = 0;
+        overlayAudio.removeAttribute('src');
+        overlayAudio.load();
+        
+        // Reset player state
+        isPlaying = false;
+        playPauseBtn.textContent = "▶";
+        progressBar.style.width = "0%";
+        progressBar.classList.add("paused");
+        timeDisplay.textContent = "0:00 / 0:00";
+      });
+    }
+
+    function fadeOverlay(updateFn) {
+      overlayBox.classList.add("fade");
+      setTimeout(() => {
+        updateFn();
+        overlayBox.classList.remove("fade");
+      }, 300);
+    }
+
+    // Add error handling for audio loading
+    overlayAudio.addEventListener('error', (e) => {
+      console.error('Audio loading error:', e);
+      console.error('Failed to load:', overlayAudio.src);
+    });
+
+    overlayAudio.addEventListener('canplay', () => {
+      console.log('Audio can play:', overlayAudio.src);
+    });
+
+    overlayAudio.addEventListener('loadedmetadata', () => {
+      console.log('Audio metadata loaded:', overlayAudio.src);
+      // Update time display with duration
+      const duration = overlayAudio.duration;
+      if (duration) {
+        const durationMins = Math.floor(duration / 60);
+        const durationSecs = Math.floor(duration % 60);
+        timeDisplay.textContent = `0:00 / ${durationMins}:${durationSecs.toString().padStart(2, '0')}`;
+      }
+    });
+
+    // === Shrinking Nav ===
+    const nav = document.getElementById("navbar");
+    const title = document.getElementById("title");
+    const leftSep = document.getElementById("left-sep");
+    const rightSep = document.getElementById("right-sep");
+    let scrolled = false;
+
+    window.addEventListener("scroll", () => {
+      const shouldCollapse = window.scrollY > 10;
+
+      if (shouldCollapse && !scrolled) {
+        scrolled = true;
+        nav.classList.add("scrolled");
+        leftSep.classList.add("hidden");
+        rightSep.classList.add("hidden");
+        title.classList.add("fade");
+        setTimeout(() => {
+          title.innerHTML = ""; // Clear the title completely
+          title.classList.add("shrunk");
+        }, 100);
+      } else if (!shouldCollapse && scrolled) {
+        scrolled = false;
+        title.classList.add("fade");
+        setTimeout(() => {
+          title.innerHTML = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
+          title.classList.remove("shrunk");
+          title.classList.remove("fade");
+          leftSep.classList.remove("hidden");
+          rightSep.classList.remove("hidden");
+          nav.classList.remove("scrolled");
+        }, 100);
+      }
+    });
+  </script>
+</body>
+</html>

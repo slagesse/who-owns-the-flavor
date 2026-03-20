@@ -7,112 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/shared.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
-    :root {
-      --cream: #f3f3e7;
-      --red1: #890d04;
-      --gray: rgba(0, 0, 0, 0.25);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background-color: var(--cream);
-      font-family: "Instrument Serif", serif;
-      display: flex;
-      align-items: center;
-    }
-
-    #navbar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: sticky;
-      top: 0;
-      background-color: var(--cream);
-      padding: 2rem 0;
-      z-index: 100;
-      border-bottom: 3px solid transparent;
-      transition: border-bottom 0.4s ease;
-    }
-
-    #navbar.scrolled { border-bottom: 3px solid var(--red1); }
-    #navbar.scrolled h1 {display: none;}
-
-    #navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      padding: 0;
-      margin: 0;
-      align-items: center;
-    }
-
-    #navbar a.nav-link {
-      color: var(--red1);
-      font-size: 4rem;
-      font-family: "Helvetica", Arial, sans-serif;
-      text-decoration: underline;
-      transition: color 0.2s ease, font-size 0.2s ease;
-    }
-
-    #navbar:not(.scrolled) a.nav-link {
-      font-size: 4rem;
-      text-decoration: none;
-    }
-
-    #navbar a.nav-link:hover { color: var(--red1); }
-
-    #navbar .nav-left, #navbar .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    #navbar .separator {
-      width: 2px;
-      height: 2rem;
-      background-color: gray;
-      margin: 0 2rem;
-      transition: opacity 0.4s ease;
-    }
-
-    #navbar .separator.hidden { opacity: 0; }
-
-    #navbar .nav-title-link {
-      display: block;
-      color: inherit;
-      text-decoration: none;
-      line-height: 1;
-    }
-
-    #navbar .nav-title-link:focus-visible {
-      outline: 2px solid var(--red1);
-      outline-offset: 8px;
-      border-radius: 8px;
-    }
-
-    h1 {
-      font-weight: 800;
-      font-style: italic;
-      font-size: 6rem;
-      text-align: center;
-      line-height: 1;
-      transition: opacity 0.5s ease, font-size 0.5s ease;
-      margin: 0;
-      min-width: 11ch;
-    }
-
-    h1.shrunk { font-size: 0rem; }
-    h1.fade { opacity: 0; }
 
     /* ===== ABOUT / EDITOR’S NOTE ===== */
     main {
       max-width: 900px;
       margin: 0 auto;
-      padding: 4.5rem 2rem 6rem;
+      padding: 2.25rem 2rem 3rem;
       justify-items: center;
     }
 
@@ -125,14 +29,14 @@
       width: max-content;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 0.75rem;
       text-align: left;
 
       background: rgba(255,255,255,0.55);
       border: 3px solid var(--red1);
       border-radius: 28px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.10);
-      padding: 2.25rem 2.25rem;
+      padding: 1.125rem 1.125rem;
       margin-left: auto;
       margin-right: auto;
 
@@ -164,7 +68,7 @@
     }
 
     .note-title {
-      font-size: 5rem;
+      font-size: 2.5rem;
       font-style: italic;
       font-weight: bold;
       line-height: 1.05;
@@ -175,7 +79,7 @@
     .note-title:hover { color: white; }
 
     .editors-chevron {
-      font-size: 2.4rem;
+      font-size: 1.2rem;
       color: var(--red1);
       transition: transform 0.25s ease;
       flex: 0 0 auto;
@@ -191,58 +95,49 @@
       max-width: 100%;
     }
 
-    html.desktop .editors-content { max-width: 100%;}
+    .editors-content { max-width: 100%; }
 
     .editors-inner {
-      margin-top: 1.25rem;
+      margin-top: 0.625rem;
       background: rgba(255,255,255,0.45);
       border: 1px solid rgba(0,0,0,0.14);
       border-radius: 28px;
-      padding: 2.25rem 2.25rem;
+      padding: 1.125rem 1.125rem;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
     .note-body {
-      font-size: 3rem;
+      font-size: 1.1rem;
       line-height: 1.7;
       color: rgba(0,0,0,0.9);
     }
 
-    .note-body p { margin: 0 0 2rem; font-family: "Noto Serif"; font-size: 2.2rem;}
+    .note-body p { margin: 0 0 1rem; font-family: "Noto Serif"; font-size: 1.1rem; }
     .note-body p:last-child { margin-bottom: 0; }
 
     .note-signoff {
-      margin-top: 1.8rem;
-      padding-top: 1.2rem;
+      margin-top: 0.9rem;
+      padding-top: 0.6rem;
       border-top: 1px solid rgba(0,0,0,0.14);
       text-align: center;
     }
 
     .note-signoff .name {
-      font-size: 3rem;
+      font-size: 1.5rem;
       font-style: italic;
       color: rgba(0,0,0,0.75);
       margin: 0;
     }
 
     .meet-the-team {
-      margin-top: 3rem;
+      margin-top: 1.5rem;
       width: 80%;
       margin-left: auto;
       margin-right: auto;
     }
 
-    html.mobile-device { font-size: 110%; }
-
-    html.mobile-device #navbar a.nav-link { font-size: 4rem; }
-
-    html.mobile-device h1 {
-      font-size: 4rem;
-      font-weight: bold;
-    }
-
     .meet-the-team h2 {
-      font-size: 5rem;
+      font-size: 2.5rem;
       margin: 0 0 1rem;
       color: black;
       text-align: center;
@@ -250,10 +145,8 @@
 
     .meet-the-team p {
       font-family: 'Noto Serif';
-      font-size: 2.2rem;
+      font-size: 1.1rem;
     }
-
-    html { font-size: 50%; }
 
     #editors-imgs {
       display: flex;
@@ -291,19 +184,19 @@
       border-radius: 18px;
     }
 
-    .mission{
+    .mission {
   width: 80%;
-  margin: 0 auto 3rem;
+  margin: 0 auto 1.5rem;
   background: rgba(255,255,255,0.55);
   border: 1px solid rgba(0,0,0,0.14);
   border-radius: 28px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  padding: 2.5rem 2.5rem;
+  padding: 1.5rem 1.5rem;
 }
 
-.mission-title{
-  margin: 0 0 1rem;
-  font-size: 5rem;
+.mission-title {
+  margin: 0 0 0.75rem;
+  font-size: 2.5rem;
   font-style: italic;
   font-weight: bold;
   color: var(--red1);
@@ -311,18 +204,19 @@
   line-height: 1.05;
 }
 
-.mission-text{
+.mission-text {
   margin: 0;
   font-family: "Noto Serif";
-  font-size: 2.2rem;
+  font-size: 1.1rem;
   line-height: 1.7;
   color: rgba(0,0,0,0.9);
   text-align: left;
 }
 
-html.mobile-device .mission{
-  padding: 2rem 1.75rem;
-  border-radius: 22px;
+@media (max-width: 700px) {
+  .mission { width: 90%; padding: 1.25rem; border-radius: 18px; }
+  .meet-the-team { width: 95%; }
+  .editors-toggle { width: auto; }
 }
   </style>
 </head>
@@ -650,18 +544,18 @@ html.mobile-device .mission{
       }
 
       .team-name {
-        font-size: 4rem;
+        font-size: 1.4rem;
         color: rgba(0,0,0,0.86);
         font-weight: bolder;
         line-height: 1.15;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        margin-left: 2rem;
+        margin-left: 1rem;
       }
 
       .team-chevron {
-        font-size: 2rem;
+        font-size: 1rem;
         color: var(--red1);
         transition: transform 0.25s ease;
         flex: 0 0 auto;
@@ -681,9 +575,9 @@ html.mobile-device .mission{
         background: rgba(255,255,255,0.45);
         border: 1px solid rgba(0,0,0,0.14);
         border-radius: 22px;
-        padding: 1.35rem 1.35rem;
+        padding: 1rem 1rem;
         box-shadow: 0 10px 26px rgba(0,0,0,0.07);
-        font-size: 3rem;
+        font-size: 1rem;
         line-height: 1.65;
         color: rgba(0,0,0,0.86);
         font-family: 'Noto Serif';
@@ -699,7 +593,7 @@ html.mobile-device .mission{
       const rightSep = document.getElementById("right-sep");
 
       const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
-      const COLLAPSE_Y = 1;
+      const COLLAPSE_Y = 10;
 
       let scrolled = false;
 
@@ -835,29 +729,6 @@ html.mobile-device .mission{
       });
     </script>
 
-    <script>
-      function isMobileDevice() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        const isSmallScreen = window.innerWidth <= 600;
-        return isMobileUA || (isTouchDevice && isSmallScreen);
-      }
-
-      function applyMobileStyling() {
-        if (isMobileDevice()) {
-          document.documentElement.classList.add('mobile-device');
-          document.documentElement.classList.remove('desktop');
-        } else {
-          document.documentElement.classList.remove('mobile-device');
-          document.documentElement.classList.add('desktop');
-        }
-      }
-
-      applyMobileStyling();
-      window.addEventListener('resize', applyMobileStyling);
-      window.addEventListener('orientationchange', applyMobileStyling);
-    </script>
   </main>
 </body>
 </html>

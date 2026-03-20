@@ -49,28 +49,36 @@
       align-items: center;
     }
 
-    nav a {
+    nav a.nav-link {
       color: var(--red1);
-      font-size: 4rem; /* Doubled the font size */
-      font-family: "Helvetica", Arial, sans-serif; /* Changed to a clean sans-serif font */
-      text-decoration: underline; /* Remove underline */
+      font-size: 4rem;
+      font-family: "Helvetica", Arial, sans-serif;
+      text-decoration: underline;
       transition: color 0.2s ease, font-size 0.2s ease;
     }
 
-    nav:not(.scrolled) a {
-      font-size: 3.1rem; /* 1.3x smaller when nav is large */
-      text-decoration: none
+    nav:not(.scrolled) a.nav-link {
+      font-size: 3.1rem;
+      text-decoration: none;
     }
 
-    nav a:hover { color: var(--red1); }
+    nav a.nav-link:hover { color: var(--red1); }
+
+    .nav-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1;
+    }
 
     h1 {
       font-weight: 800;
       font-style: italic;
-      font-size: 5.72rem; /* Increased by 1.1x from 5.2rem */
+      font-size: 5.72rem;
       text-align: center;
       line-height: 1;
       transition: opacity 0.5s ease, font-size 0.5s ease;
+      margin: 0;
     }
 
     h1.shrunk { font-size: 0rem; }
@@ -707,15 +715,17 @@ html.desktop #mobile-about-section {
   <nav id="navbar">
     <div class="nav-left">
       <ul>
-        <li><a href="news.html">news</a></li>
+        <li><a class="nav-link" href="news.html">news</a></li>
       </ul>
     </div>
     <div class="separator" id="left-sep"></div>
-    <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    <a href="/index.html" class="nav-title-link" aria-label="Home">
+      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
+    </a>
     <div class="separator" id="right-sep"></div>
     <div class="nav-right">
       <ul>
-        <li><a href="about.html">about</a></li>
+        <li><a class="nav-link" href="about.html">about</a></li>
       </ul>
     </div>
   </nav>

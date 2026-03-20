@@ -34,24 +34,15 @@
     }
 
     .article-title {
-      font-size: 5.2rem;
       font-style: normal;
-      line-height: 1;
-      margin: 0 0 1rem;
     }
 
     .article-dek {
-      font-family: "Instrument Serif", serif;
-      font-size: 1.4rem;
-      line-height: 1.5;
       margin: 0 auto 1.25rem;
       max-width: 42ch;
-      color: rgba(0,0,0,0.85);
     }
 
     .article-meta {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.95rem;
       color: rgba(0,0,0,0.6);
       margin: 0;
     }
@@ -152,8 +143,6 @@
 
     .big-transcript-link {
       display: inline-block;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 1.05rem;
       color: var(--red1);
       text-decoration: underline;
       text-decoration-thickness: 2px;
@@ -165,14 +154,7 @@
 
     /* === ARTICLE BODY === */
     .article-body {
-      font-family: "Instrument serif";
-      font-size: 2.75rem;
-      line-height: 1.55;
       color: rgba(0,0,0,0.92);
-    }
-
-    .article-body p {
-      margin: 0 0 1.75rem;
     }
 
     .article-body p.lede::first-letter {
@@ -185,13 +167,6 @@
       color: var(--red1);
     }
 
-    .article-body h2 {
-      font-size: 2.2rem;
-      margin: 2.5rem 0 1rem;
-      color: var(--red1);
-      font-style: italic;
-    }
-
     .article-body blockquote {
       margin: 2rem 0;
       padding: 0.5rem 1.25rem;
@@ -202,9 +177,7 @@
     }
 
     @media (max-width: 720px) {
-      .article-title { font-size: 3.2rem; }
       .big-play { width: 66px; height: 66px; font-size: 30px; }
-      .article-body { font-size: 1.22rem; }
     }
 
     .transcript-head {
@@ -227,9 +200,6 @@
     }
 
     @media (min-width: 1000px) {
-      html {
-        font-size: 60%; /* 14px base: scales all rems down */
-      }
       .map-container img {
         max-width: 900px; /* down from 2160px for better desktop balance */
       }
@@ -282,27 +252,7 @@
 </head>
 
 <body>
-  <nav id="navbar">
-    <div class="nav-left">
-      <ul>
-        <li><a class="nav-link" href="news.html">news</a></li>
-      </ul>
-    </div>
-
-    <div class="separator" id="left-sep"></div>
-
-    <a href="/index.html" class="nav-title-link" aria-label="Home">
-      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
-    </a>
-
-    <div class="separator" id="right-sep"></div>
-
-    <div class="nav-right">
-      <ul>
-        <li><a class="nav-link" href="about.html">about</a></li>
-      </ul>
-    </div>
-  </nav>
+  <script src="/nav.js"></script>
 
   <main class="article-shell">
     <header class="transcript-head">    
@@ -603,45 +553,6 @@
   </main>
 
   <script>
-    const nav = document.getElementById("navbar");
-    const title = document.getElementById("title");
-    const leftSep = document.getElementById("left-sep");
-    const rightSep = document.getElementById("right-sep");
-
-    const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
-    const COLLAPSE_Y = 10;
-
-    let scrolled = false;
-
-    window.addEventListener("scroll", () => {
-      const shouldCollapse = window.scrollY > COLLAPSE_Y;
-
-      if (shouldCollapse && !scrolled) {
-        scrolled = true;
-        nav.classList.add("scrolled");
-        leftSep.classList.add("hidden");
-        rightSep.classList.add("hidden");
-        title.classList.add("fade");
-
-        setTimeout(() => {
-          title.innerHTML = "";
-          title.classList.add("shrunk");
-        }, 100);
-      } else if (!shouldCollapse && scrolled) {
-        scrolled = false;
-        title.classList.add("fade");
-
-        setTimeout(() => {
-          title.innerHTML = FULL_TITLE;
-          title.classList.remove("shrunk");
-          title.classList.remove("fade");
-          leftSep.classList.remove("hidden");
-          rightSep.classList.remove("hidden");
-          nav.classList.remove("scrolled");
-        }, 100);
-      }
-    });
-
     const heroAudio = document.getElementById("hero-audio");
     const heroPlay = document.getElementById("hero-play");
     const heroProgress = document.getElementById("hero-progress");

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+ <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Who Owns the Flavor</title>
@@ -222,27 +222,7 @@
 </head>
 
 <body>
-  <nav id="navbar">
-    <div class="nav-left">
-      <ul>
-        <li><a class="nav-link" href="news.html">news</a></li>
-      </ul>
-    </div>
-
-    <div class="separator" id="left-sep"></div>
-
-    <a href="/index.html" class="nav-title-link" aria-label="Home">
-      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
-    </a>
-
-    <div class="separator" id="right-sep"></div>
-
-    <div class="nav-right">
-      <ul>
-        <li><a class="nav-link" href="about.html">about</a></li>
-      </ul>
-    </div>
-  </nav>
+  <script src="/nav.js"></script>
 
   <main>
     <section class="mission" aria-label="Our mission">
@@ -587,45 +567,6 @@
     </style>
 
     <script>
-      const nav = document.getElementById("navbar");
-      const title = document.getElementById("title");
-      const leftSep = document.getElementById("left-sep");
-      const rightSep = document.getElementById("right-sep");
-
-      const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
-      const COLLAPSE_Y = 10;
-
-      let scrolled = false;
-
-      window.addEventListener("scroll", () => {
-        const shouldCollapse = window.scrollY > COLLAPSE_Y;
-
-        if (shouldCollapse && !scrolled) {
-          scrolled = true;
-          nav.classList.add("scrolled");
-          leftSep.classList.add("hidden");
-          rightSep.classList.add("hidden");
-          title.classList.add("fade");
-
-          setTimeout(() => {
-            title.innerHTML = "";
-            title.classList.add("shrunk");
-          }, 100);
-        } else if (!shouldCollapse && scrolled) {
-          scrolled = false;
-          title.classList.add("fade");
-
-          setTimeout(() => {
-            title.innerHTML = FULL_TITLE;
-            title.classList.remove("shrunk");
-            title.classList.remove("fade");
-            leftSep.classList.remove("hidden");
-            rightSep.classList.remove("hidden");
-            nav.classList.remove("scrolled");
-          }, 100);
-        }
-      });
-
       const note = document.getElementById("editors-note");
       const toggle = note.querySelector(".editors-toggle");
       const content = document.getElementById("editors-content");

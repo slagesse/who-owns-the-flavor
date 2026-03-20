@@ -47,7 +47,7 @@ nav ul, #navbar ul {
 
 a.nav-link {
   color: var(--red1);
-  font-size: 4rem;
+  font-size: 2rem;
   font-family: "Helvetica", Arial, sans-serif;
   text-decoration: underline;
   transition: color 0.2s ease, font-size 0.2s ease;
@@ -55,7 +55,7 @@ a.nav-link {
 
 nav:not(.scrolled) a.nav-link,
 #navbar:not(.scrolled) a.nav-link {
-  font-size: 3.1rem;
+  font-size: 1.5rem;
   text-decoration: none;
 }
 
@@ -69,7 +69,7 @@ a.nav-link:hover { color: var(--red1); }
 
 .separator {
   width: 2px;
-  height: 4rem;
+  height: 2rem;
   background-color: gray;
   margin: 0 2rem;
   transition: opacity 0.4s ease;
@@ -93,7 +93,7 @@ a.nav-link:hover { color: var(--red1); }
 h1 {
   font-weight: 800;
   font-style: italic;
-  font-size: 5.72rem;
+  font-size: 3rem;
   text-align: center;
   line-height: 1;
   transition: opacity 0.5s ease, font-size 0.5s ease;
@@ -107,11 +107,146 @@ h1.fade   { opacity: 0; }
 /* === RESPONSIVE NAV === */
 @media (max-width: 700px) {
   nav, #navbar { padding: 1rem 0.5rem; }
-  .separator { height: 2.5rem; margin: 0 0.75rem; }
-  h1 { font-size: 3rem; min-width: 0; }
+  .separator { height: 1.5rem; margin: 0 0.75rem; }
+  h1 { font-size: 1.8rem; min-width: 0; }
   a.nav-link,
   nav:not(.scrolled) a.nav-link,
   #navbar:not(.scrolled) a.nav-link {
-    font-size: 1.8rem;
+    font-size: 1.1rem;
   }
+}
+
+/* === TYPOGRAPHY BASELINES === */
+h2 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin: 0 0 1rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 0 0 0.75rem;
+}
+
+/* Article pages (stl, memphis, nola) */
+.article-title {
+  font-size: 3.5rem;
+  line-height: 1;
+  margin: 0 0 1rem;
+}
+
+.article-dek {
+  font-family: "Instrument Serif", serif;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: rgba(0,0,0,0.85);
+}
+
+.article-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.6);
+}
+
+.article-body {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: rgba(0,0,0,0.92);
+}
+
+.article-body p { margin: 0 0 1.75rem; }
+
+.article-body h2 {
+  font-size: 1.6rem;
+  margin: 2.5rem 0 1rem;
+  color: var(--red1);
+  font-style: italic;
+}
+
+/* News/podcast cards */
+.podcast-title { font-size: 1.6rem; }
+.podcast-desc  { font-size: 1rem; }
+
+/* Print cards */
+.print-title {
+  font-family: "Instrument Serif", serif;
+  font-size: 1.5rem;
+  color: var(--red1);
+  margin: 0 0 0.55rem 0;
+}
+
+.print-desc {
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+  color: rgba(0,0,0,0.85);
+}
+
+.print-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.875rem;
+  color: rgba(0,0,0,0.55);
+}
+
+.print-cta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--red1);
+}
+
+/* Index page */
+.page-title   { font-size: 2.5rem; }
+.latest-title { font-size: 2rem; }
+.print-teaser-link { font-size: 2rem; }
+.print-teaser-arrow { font-size: 1.25rem; }
+.print-section h2 { font-size: 2.5rem; }
+
+/* === WIDE DESKTOP (1440px+) === */
+@media (min-width: 1700px) {
+  h1 { font-size: 4rem; }
+  h2 { font-size: 2.8rem; }
+  h3 { font-size: 2rem; }
+
+  a.nav-link { font-size: 2.5rem; }
+  nav:not(.scrolled) a.nav-link,
+  #navbar:not(.scrolled) a.nav-link { font-size: 2rem; }
+  .separator { height: 2.75rem; }
+
+  .article-title { font-size: 4.5rem; }
+  .article-dek   { font-size: 1.5rem; }
+  .article-body  { font-size: 1.3rem; }
+  .article-body h2 { font-size: 2rem; }
+
+  .podcast-title { font-size: 2rem; }
+  .podcast-desc  { font-size: 1.15rem; }
+
+  .print-title { font-size: 1.9rem; }
+  .print-desc  { font-size: 1.1rem; }
+  .print-meta  { font-size: 1rem; }
+  .print-cta   { font-size: 1.05rem; }
+
+  .page-title       { font-size: 3.5rem; }
+  .latest-title     { font-size: 2.8rem; }
+  .print-section h2 { font-size: 3rem; }
+  .print-teaser-link  { font-size: 2.5rem; }
+}
+
+/* Responsive baselines */
+@media (max-width: 700px) {
+  h2 { font-size: 1.7rem; }
+  h3 { font-size: 1.3rem; }
+  .article-title { font-size: 2.2rem; }
+  .article-dek   { font-size: 1.1rem; }
+  .article-body  { font-size: 1rem; }
+  .podcast-title { font-size: 1.3rem; }
+  .podcast-desc  { font-size: 1.2rem; }
+  .print-title   { font-size: 1.3rem; }
+  .print-desc    { font-size: 0.875rem; }
+  .page-title    { font-size: 2rem; }
+  .latest-title  { font-size: 2rem; }
+  .print-section h2 { font-size: 2rem; }
 }

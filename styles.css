@@ -177,7 +177,7 @@
     width: 550px;
     font-family: "Instrument Serif", serif;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    z-index: 2;
+    z-index: 10000000000000000000000000000;
     transition: transform 0.4s ease, opacity 0.3s ease;
   }
 

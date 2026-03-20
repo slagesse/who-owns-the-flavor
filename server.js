@@ -5,12 +5,14 @@ const PORT = process.env.PORT || 3000;
 
 app.set('trust proxy', 1);
 
-app.use((req, res, next) => {
-  if (req.headers['x-forwarded-proto'] !== 'https') {
-    return res.redirect(301, 'https://' + req.hostname + req.url);
-  }
-  next();
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(301, 'https://' + req.hostname + req.url);
+    }
+    next();
+  });
+}
 
 // Serve static files (CSS, JS, images, etc.)
 app.use(express.static(__dirname));

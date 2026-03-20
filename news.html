@@ -23,11 +23,8 @@
 
     .podcast-section h2 {
       margin: 0 0 2rem 0;
-      font-size: 2.5rem;
-      font-style: normal;
-      font-weight: lighter;
       text-align: center;
-      font-family: 'Courier New', Courier, monospace
+      font-family: 'Courier New', Courier, monospace;
     }
 
     .podcast-grid {
@@ -70,17 +67,13 @@
     }
 
     .podcast-title {
-      font-family: "Instrument Serif", serif;
-      font-size: 2rem;
       color: var(--red1);
       margin: 0 0 0.5rem 0;
     }
 
     .podcast-desc {
-      font-family: "Courier New";
       font-weight: bolder;
       font-style: italic;
-      font-size: 0.8rem;
       margin: 0 0 1rem 0;
     }
 
@@ -104,8 +97,6 @@
         height: auto;
       }
       .podcast-card { border-radius: 10px; }
-      .podcast-title { font-size: 1.6rem; }
-      .podcast-desc  { font-size: 0.95rem; }
 
       .print-wrap { width: 100%; }
       .print-card { grid-template-columns: 1fr; }
@@ -129,13 +120,9 @@
 
 .print-section h2 {
       margin: 0 0 2rem 0;
-      font-size: 2.5rem;
-      font-style: normal;
-      font-weight: lighter;
       text-align: center;
       font-family: 'Courier New', Courier, monospace;
       color: var(--red1);
-
 }
 
 .print-wrap {
@@ -192,7 +179,6 @@
 
 .print-title {
   font-family: "Instrument Serif", serif;
-  font-size: 2.2rem;
   color: var(--red1);
   margin: 0 0 0.55rem 0;
 }
@@ -201,7 +187,6 @@
   font-family: "Courier New";
   font-weight: bolder;
   font-style: italic;
-  font-size: 0.95rem;
   margin: 0 0 1rem 0;
   color: rgba(0,0,0,0.85);
 }
@@ -237,36 +222,13 @@
   .print-wrap { width: 100%; }
   .print-card { grid-template-columns: 1fr; }
   .print-thumb { max-height: 180px; }
-  .print-title { font-size: 1.8rem; }
-  .print-desc  { font-size: 1rem; }
 }
 
   </style>
 </head>
 
 <body>
-  <nav id="navbar">
-    <div class="nav-left">
-      <ul>
-        <li><a class="nav-link" href="news.html">news</a></li>
-      </ul>
-    </div>
-
-    <div class="separator" id="left-sep"></div>
-
-    <!-- Link wraps the title, but styled to not change layout -->
-    <a href="/index.html" class="nav-title-link" aria-label="Home">
-      <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
-    </a>
-
-    <div class="separator" id="right-sep"></div>
-
-    <div class="nav-right">
-      <ul>
-        <li><a class="nav-link" href="about.html">about</a></li>
-      </ul>
-    </div>
-  </nav>
+  <script src="/nav.js"></script>
 
   <!-- === PODCAST SECTION === -->
   <section class="podcast-section" aria-labelledby="podcast-heading">
@@ -465,46 +427,6 @@
     </div>
   </section>
 
-  <script>
-    const nav = document.getElementById("navbar");
-    const title = document.getElementById("title");
-    const leftSep = document.getElementById("left-sep");
-    const rightSep = document.getElementById("right-sep");
-
-    const FULL_TITLE = `WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span>`;
-    const COLLAPSE_Y = 10;
-
-    let scrolled = false;
-
-    window.addEventListener("scroll", () => {
-      const shouldCollapse = window.scrollY > COLLAPSE_Y;
-
-      if (shouldCollapse && !scrolled) {
-        scrolled = true;
-        nav.classList.add("scrolled");
-        leftSep.classList.add("hidden");
-        rightSep.classList.add("hidden");
-        title.classList.add("fade");
-
-        setTimeout(() => {
-          title.innerHTML = "";
-          title.classList.add("shrunk");
-        }, 100);
-      } else if (!shouldCollapse && scrolled) {
-        scrolled = false;
-        title.classList.add("fade");
-
-        setTimeout(() => {
-          title.innerHTML = FULL_TITLE;
-          title.classList.remove("shrunk");
-          title.classList.remove("fade");
-          leftSep.classList.remove("hidden");
-          rightSep.classList.remove("hidden");
-          nav.classList.remove("scrolled");
-        }, 100);
-      }
-    });
-  </script>
 
   
 </body>

@@ -6,7 +6,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -452,18 +452,23 @@
 }
 
 /* Desktop “zoom out” to keep proportions on wide screens */
-    @media (min-width: 1000px) {
-      html {
+      html.desktop {
         font-size: 50%; /* 14px base: scales all rems down */
       }
-      .map-container img {
+
+      html.desktop .hero-section {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      html.desktop .map-container img {
         max-width: 900px; /* down from 2160px for better desktop balance */
       }
-      .map-star {
+      html.desktop .map-star {
         width: 10%;  /* down from 114px */
         height: 10%; /* down from 114px */
       }
-      .hero-overlay {
+      html.desktop .hero-overlay {
         width: 400px; /* down from 600px */
         border-radius: 5%;
         padding: 1.5rem 2rem; /* slightly tighter padding */
@@ -471,25 +476,229 @@
         top: 50%;
       }
 
-      .play-pause-btn {
+      html.desktop .play-pause-btn {
       height: 50px;
       font-size: 30px;
       }
 
-      .progress-container {
+      html.desktop .progress-container {
         height: 50px;
       }
-      nav {
+      html.desktop nav {
         padding: 1.5rem 0; /* tighten nav spacing */
       }
-      .separator {
+      html.desktop .separator {
         height: 3rem; /* reduce separator height */
         margin: 0 1.5rem;
       }
-      .latest-wrapper {
+      html.desktop .latest-wrapper {
         padding: 3rem 3rem; /* slightly tighter section padding */
       }
-    }
+
+    /* === TOP PRINT + NEWS SECTION (from news.html) === */
+.print-section {
+  background: var(--cream);
+  color: #000;
+  padding: 5rem 2rem 4rem;
+}
+
+.print-section h2 {
+  margin: 0 0 2rem 0;
+  font-size: 4rem;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--red1);
+}
+
+.print-wrap {
+  width: min(60vw, 1100px);
+  height: min-content;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.print-card {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+
+  background: #fff;
+  border: 3px solid transparent;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+
+  text-decoration: none;
+  color: inherit;
+
+  transition: border 0.2s, box-shadow 0.2s;
+
+  max-height: auto;
+}
+
+.print-card:hover,
+.print-card:focus-visible {
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.18);
+  border-color: var(--red1);
+  outline: none;
+}
+
+.print-card:not(:has(.print-thumb)) {
+  grid-template-columns: 1fr;
+  min-height: auto;
+}
+
+.print-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  display: block;
+}
+
+.print-content {
+  padding: 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.print-title {
+  font-family: "Instrument Serif", serif;
+  font-size: 4rem;
+  color: var(--red1);
+  margin: 0 0 0.55rem 0;
+}
+
+.print-desc {
+  font-family: "Courier New";
+  font-weight: bolder;
+  font-style: italic;
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  color: rgba(0,0,0,0.85);
+}
+
+.print-cta {
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  color: var(--red1);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 2rem;
+}
+
+.print-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+  color: rgba(0,0,0,0.55);
+  margin: 0 0 0.6rem 0;
+}
+
+.print-meta .author { font-weight: bold; }
+.print-meta .sep { margin: 0 0.25rem; }
+
+/* mobile: stop images from taking over */
+
+
+/* === PRINT TEASER (sticky bottom until section) === */
+.print-teaser {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  background: var(--cream);
+  border-top: 3px solid var(--red1);
+  padding: 0.4rem 1rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  z-index: 200; /* above nav (100) and overlay (2) */
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.print-teaser.hidden {
+  transform: translate(-50%, 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.print-teaser-link {
+  font-family: 'Courier New', Courier, monospace; /* match h2 */
+  font-weight: bold;
+  font-size: 4rem; /* match h2 size */
+  color: var(--red1);
+  text-decoration: none;
+  line-height: 1;
+}
+.print-teaser-arrow {
+  font-size: 2rem;
+  color: var(--red1);
+  line-height: 1;
+  animation: teaser-bounce 1.4s ease-in-out infinite;
+  user-select: none;
+}
+@keyframes teaser-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+
+#about-section {
+  position: absolute;
+  right: 5%;
+  top: 15%;
+  z-index: 1000;
+  max-width: 30vw;
+  text-align: right;
+  background-color: var(--cream);
+}
+
+#about-section h2 {
+  font-size: 5rem;
+  color: var(--red1);
+  font-weight: bold;
+  font-style: italic;
+  margin-bottom: -15px;
+}
+
+#about-section p {
+  font-size: 2rem;
+  font-family: 'Noto Serif';
+}
+
+#mobile-about-section {
+  z-index: 1000;
+  text-align: left;
+  background-color: var(--cream);
+  padding: 30px;
+  margin-top: -100px;
+}
+
+#mobile-about-section h2 {
+  font-size: 5rem;
+  color: var(--red1);
+  font-weight: bold;
+  font-style: italic;
+  margin-bottom: -15px;
+}
+
+#mobile-about-section p {
+  font-size: 2.1rem;
+  font-family: 'Noto Serif';
+}
+
+
+html.mobile-device #about-section {
+  display: none;
+}
+
+html.desktop #mobile-about-section {
+  display: none;
+}
 
   </style>
 </head>
@@ -511,6 +720,11 @@
     </div>
   </nav>
 
+  <div id="about-section">
+      <h2>Who Owns the Flavor</h2>
+      <p><span style='font-weight: bold;'>Who Owns the Flavor</span> is a three-part podcast investigating the origins, ownership, and impact of local dishes from <br>St. Louis to New Orleans.<br><br><span style="color: var(--red1)">Click on the red stars along the Mississippi to view the podcast!</span></p>
+  </div>
+
   <div class="hero-section">
     <div class="map-container">
       <img src="map.svg" alt="Map showing cultural food regions">
@@ -528,7 +742,7 @@
     <div class="hero-overlay" id="overlay-box">
       <div class="context-image top-image" id="top-image"></div>
       <div class="context-image bottom-image" id="bottom-image"></div>
-      <a class='hero-overlay-a'>Along the Mississippi</a>
+      <a class='hero-overlay-a'></a>
       <p>◀ Click a star to hear that city's podcast episode.</p>
       <div class="audio-player" id="audio-player">
         <audio id="overlay-audio" preload="metadata">
@@ -550,17 +764,11 @@
       </div>
     </div>
   </div>
+  </div>
 
-  <div class="latest-wrapper">
-    <h2 class="latest-title">Latest</h2>
-    <div class="latest-gallery">
-      <div class="latest-item">
-        <!-- Removed the image -->
-        <h3><a href="story.html" style="text-decoration: none; color: var(--red1);">St. Louis’ Best Example of Gentrification</a></h3>
-        <p>Just 5 miles north of The Hill is Delmar Boulevard, a road notoriously known for its racial and socioeconomic division in St. Louis...</p>
-      </div>
-
-    </div>
+  <div id="mobile-about-section">
+    <h2>Who Owns the Flavor</h2>
+    <p><span style='font-weight: bold;'>Who Owns the Flavor</span> is a three-part podcast investigating the origins, ownership, and impact of local dishes from St. Louis to New Orleans.<br><br><span style="color: var(--red1)">Click on the red stars along the Mississippi to view the podcast!</span></p>
   </div>
 
   <!--<div class="about-wrapper" id="about">
@@ -569,6 +777,8 @@
       
     </p>
   </div>-->
+
+  <!-- Fixed teaser that sticks to bottom until the print section is reached -->
 
   <script>
     const overlayBox = document.getElementById("overlay-box");
@@ -583,7 +793,7 @@
         text: "Dive into The Hill: an Italian-American neighborhood and birthplace of toasted ravioli.",
         topImage: "https://i.ibb.co/0V8XnKmD/toasted-ravs.jpg",
         bottomImage: "https://i.ibb.co/LDx5ZQjZ/DSC09447.jpg",
-        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/44/97/1851297543869744-1851297543943801-1851297563364329.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103257Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=465d19c4671cf849a0852e42eaa4ddae4220aae258008c5a9e55f167c816f196",
+        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/66/14/1852135316961466-1852135317048101-1852135327654781.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251221%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251221T161838Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=42fed75e42b4578ac7653d1c1a99a5cb851a062b761f1067b1efb4f759ed5bed",
         transcript: "/stl.html"
       },
       2: {
@@ -591,7 +801,7 @@
         text: "Dig into the complex and competing flavors of the Memphis dry-rubbed rib.",
         topImage: "https://i.ibb.co/wN2V8fHz/dry-ribs.jpg",
         bottomImage: "https://i.ibb.co/XrB6frXt/bar-b-q-shop.jpg",
-        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/39/85/1851297543638539-1851297543735720-1851297565036563.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103116Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=4e885acc02e75b790334638f6bdedc4f5c0804f2d0bfa6f029c55a3f4e16a775",
+        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/11/10/1852134683701011-1852134683776168-1852134688866671.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251221%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251221T160857Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=4184dc2cb58763da74b99e12b5c27a5477f120295f8df948a69a7908c3f38d90",
         transcript: "/memphis.html"
       },
       3: {
@@ -599,7 +809,7 @@
         text: "Creole flavor, Cajun spice, and centuries of fusion.",
         topImage: "https://i.ibb.co/1thkwCD6/nola-streets.jpg",
         bottomImage: "https://i.ibb.co/8LdSjDkG/po-boy.jpg",
-        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/57/18/1851297543761857-1851297543837152-1851297558877420.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103116Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=c37b78e57b792e5bee28bb6594cfc6527350ca223ff68ca48cac994cbc24de72",
+        audio: "https://s3.ustatik.com/audio.com.audio/transcoding/02/46/1852135385714602-1852135385774554-1852135391285611.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251221%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251221T161928Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=f52d7c095746a908f8f94819cb01434176c7fda334e4d7f1e906cb5dec2d5d4b",
         transcript: "/nola.html"
       }
     };
@@ -779,7 +989,7 @@
 
       
       fadeOverlay(() => {
-        overlayTitle.textContent = "Along the Mississippi";
+        overlayTitle.textContent = "";
         overlayText.textContent = "◀ Click a star to hear that city's podcast episode.";
         overlayBox.classList.remove("active");
         
@@ -860,6 +1070,67 @@
         }, 100);
       }
     });
+
+    // === Print teaser show/hide based on heading visibility ===
+    (function () {
+      const printTeaser = document.getElementById('print-teaser');
+      const printHeading = document.getElementById('print-heading');
+      if (!printTeaser || !printHeading) return;
+
+      const showTeaser = () => printTeaser.classList.remove('hidden');
+      const hideTeaser = () => printTeaser.classList.add('hidden');
+
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              hideTeaser(); // hide when the heading is on screen
+            } else {
+              showTeaser(); // show otherwise
+            }
+          });
+        }, { root: null, threshold: 0 });
+        io.observe(printHeading);
+      } else {
+        // Fallback if IntersectionObserver is not supported
+        const check = () => {
+          const r = printHeading.getBoundingClientRect();
+          const inView = r.top < window.innerHeight && r.bottom >= 0;
+          printTeaser.classList.toggle('hidden', inView);
+        };
+        window.addEventListener('scroll', check, { passive: true });
+        window.addEventListener('resize', check);
+        check();
+      }
+    })();
+    function isMobileDevice() {
+      // Check multiple indicators for mobile
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 600;
+      
+      return isMobileUA || (isTouchDevice && isSmallScreen);
+    }
+
+    function applyMobileStyling() {
+      if (isMobileDevice()) {
+        document.documentElement.classList.add('mobile-device');
+        document.documentElement.classList.remove('desktop');
+      } else {
+        document.documentElement.classList.remove('mobile-device');
+        document.documentElement.classList.add('desktop');
+      }
+    }
+
+    // Apply on load
+    applyMobileStyling();
+
+    // Recheck on resize/orientation change
+    window.addEventListener('resize', applyMobileStyling);
+    window.addEventListener('orientationchange', applyMobileStyling);
   </script>
+
+  
 </body>
 </html>

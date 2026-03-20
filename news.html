@@ -6,7 +6,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -33,7 +33,7 @@
       position: sticky;
       top: 0;
       background-color: var(--cream);
-      padding: 2rem 0;
+      padding: 1rem 0;
       z-index: 100;
       border-bottom: 3px solid transparent;
       transition: border-bottom 0.4s ease;
@@ -72,8 +72,8 @@
     }
 
     #navbar .separator {
-      width: 2px;
-      height: 2rem;
+      width: 1px;
+      height: 1rem;
       background-color: gray;
       margin: 0 2rem;
       transition: opacity 0.4s ease;
@@ -100,13 +100,13 @@
       font-size: 3rem;
       text-align: center;
       line-height: 1;
-      transition: opacity 0.5s ease, font-size 0.5s ease;
       margin: 0;
       min-width: 11ch;
     }
 
     h1.shrunk { font-size: 0rem; }
     h1.fade { opacity: 0; }
+    
 
     /* === PODCAST SECTION === */
     .podcast-section {
@@ -118,7 +118,7 @@
 
     .podcast-section h2 {
       margin: 0 0 2rem 0;
-      font-size: 4rem;
+      font-size: 2.5rem;
       font-style: normal;
       font-weight: lighter;
       text-align: center;
@@ -218,9 +218,9 @@
 
     .print-thumb {
       width: 100%;
-      height: 200px;      /* key: stop "cover the whole card" */
+      height: 100%;      /* key: stop "cover the whole card" */
       min-height: 0;      /* override desktop min-height */
-      object-fit: cover;
+      object-fit: fill;
       display: block;
     }
 
@@ -237,7 +237,7 @@
 
 .print-section h2 {
       margin: 0 0 2rem 0;
-      font-size: 4rem;
+      font-size: 2.5rem;
       font-style: normal;
       font-weight: lighter;
       text-align: center;
@@ -288,7 +288,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  min-height: 170px;
+  max-height: 170px;
 }
 
 .print-content {
@@ -355,7 +355,7 @@
   }
 
   .print-thumb {
-    min-height: 180px;
+    max-height: 180px;
   }
 
   .print-title {
@@ -549,7 +549,42 @@
           <span class="print-cta">Read →</span>
         </div>
       </a>
+
+      <a class="print-card" href="./print/dooky-chase.html">
+        <div class="print-content">
+          <h3 class="print-title">Dooky Chase — A story of family, tradition, and resilience</h3>
+
+          <p class="print-meta">
+            <span class="author">Torryionna Miller</span>
+            <span class="sep">•</span>
+            <span class="date">Dec. 21, 2025</span>
+          </p>
+
+          <p class="print-desc">
+            From a Tremé storefront to a national symbol of Creole excellence, Dooky Chase’s became a gathering place for the Black community — and remains a family legacy today.
+          </p>
+
+          <span class="print-cta">Read →</span>
+        </div>
+      </a>
       
+      <a class="print-card" href="./print/nochi.html">
+        <div class="print-content">
+          <h3 class="print-title">NOCHI - Training Nola's Next Generation</h3>
+
+          <p class="print-meta">
+            <span class="author">Torryionna Miller</span>
+            <span class="sep">•</span>
+            <span class="date">Dec. 21, 2025</span>
+          </p>
+
+          <p class="print-desc">
+            NOCHI's fast-paced culinary curriculum gives students the baseline they need to move up in the kitchen.
+          </p>
+
+          <span class="print-cta">Read →</span>
+        </div>
+      </a>
       
   
       <!-- ...existing code (other print cards remain unchanged)... -->
@@ -596,5 +631,7 @@
       }
     });
   </script>
+
+  
 </body>
 </html>

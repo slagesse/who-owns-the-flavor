@@ -134,21 +134,13 @@
       text-underline-offset: 4px;
     }
 
-    @media (min-width: 1000px) {
-      html { font-size: 90%; }
-    }
-
     /* scale up text on mobile */
-    @media (max-width: 1000px) {
-      html { font-size: 170%; }
-
-      .article-container {
-        max-width: 90%;
-      }
-
-      .article-paragraph {
-        max-width: 75%;
-      }
+    @media (max-width: 600px) {
+      .article-container { max-width: 90%; }
+      .article-title { font-size: 2rem; }
+      .byline { font-size: 1rem; }
+      .dateline { font-size: 0.85rem; }
+      .article-paragraph { font-size: 0.95rem; max-width: 75%; }
     }
   </style>
 </head>

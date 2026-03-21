@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const COLLAPSE_Y = 10;
   let scrolled = false;
 
+  const isIndex = window.location.pathname === "/" || window.location.pathname.endsWith("index.html");
+  if (isIndex) return;
+
   window.addEventListener("scroll", () => {
     const shouldCollapse = window.scrollY > COLLAPSE_Y;
     if (shouldCollapse && !scrolled) {

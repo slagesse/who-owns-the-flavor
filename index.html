@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Who Owns the Flavor</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,7 +124,7 @@
     }
 
     .hero-overlay-a {
-      font-size: 2rem;
+      font-size: 2.75rem;
       font-weight: 800;
       margin: 0 0 0.8rem;
       transition: opacity 0.3s ease;
@@ -131,7 +132,7 @@
     }
 
     .hero-overlay p {
-      font-size: 1rem;
+      font-size: 1.25rem;
       margin: 0;
       line-height: 1.4;
       font-family: monospace;
@@ -370,9 +371,12 @@
 
 /* Desktop “zoom out” to keep proportions on wide screens */
       html.desktop .hero-section {
+        position: relative;
         margin-top: 2rem;
         margin-bottom: 2rem;
       }
+      html.desktop .map-container { z-index: 5; }
+      html.desktop .hero-overlay  { z-index: 10; }
 
       html.desktop .map-container img {
         max-width: 900px; /* down from 2160px for better desktop balance */
@@ -398,7 +402,19 @@
         height: 50px;
       }
       html.desktop .latest-wrapper {
-        padding: 3rem 3rem; /* slightly tighter section padding */
+        padding: 3rem 3rem;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      html.desktop .latest-item {
+        flex: 0 0 420px;
+      }
+      html.desktop .latest-item h3 {
+        font-size: 2rem;
+      }
+      html.desktop .latest-item p {
+        font-size: 1.1rem;
       }
 
     /* === TOP PRINT + NEWS SECTION (from news.html) === */
@@ -550,16 +566,16 @@
 
 #about-section {
   position: absolute;
-  right: 5%;
-  top: 15%;
-  z-index: 5;
+  top: 1rem;
+  right: 1.5rem;
+  z-index: 2;
   max-width: 30vw;
   text-align: right;
   background-color: var(--cream);
 }
 
 #about-section h2 {
-  font-size: 3.5rem;
+  font-size: 2rem;
   color: var(--red1);
   font-weight: bold;
   font-style: italic;
@@ -567,7 +583,7 @@
 }
 
 #about-section p {
-  font-size: 1.4rem;
+  font-size: 0.9rem;
   font-family: 'Noto Serif';
 }
 
@@ -580,7 +596,7 @@
 }
 
 #mobile-about-section h2 {
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   color: var(--red1);
   font-weight: bold;
   font-style: italic;
@@ -601,18 +617,129 @@ html.desktop #mobile-about-section {
   display: none;
 }
 
+/* === MOBILE DEVICE LAYOUT (viewport-aware) === */
+html.mobile-device .hero-section {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
+
+html.mobile-device .map-container {
+  transform: translateX(-35%);
+}
+
+html.mobile-device .map-container img {
+  width: 700px;
+}
+
+html.mobile-device .map-star {
+  width: 10%;
+  height: 10%;
+}
+
+html.mobile-device .hero-overlay {
+  width: min(240px, 65vw);
+  left: 65%;
+  top: 50%;
+  padding: 0.75rem 1rem;
+  border-radius: 18px;
+}
+
+html.mobile-device .hero-overlay-a {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+html.mobile-device .hero-overlay p {
+  font-size: 0.8rem;
+  margin: 0 0 0.3rem;
+}
+
+html.mobile-device .play-pause-btn {
+  height: 40px;
+  width: 60px;
+  font-size: 22px;
+}
+
+html.mobile-device .progress-container {
+  height: 40px;
+}
+
+html.mobile-device .time-display {
+  font-size: 0.85rem;
+  min-width: 70px;
+  padding: 6px 10px 0 0;
+}
+
+html.mobile-device .transcript-link {
+  font-size: 1rem;
+}
+
+html.mobile-device #mobile-about-section {
+  margin-top: 0;
+  padding: 1.5rem;
+}
+
+html.mobile-device #mobile-about-section h2 {
+  font-size: 3rem;
+}
+
+html.mobile-device #mobile-about-section p {
+  font-size: 1.1rem;
+}
+
+html.mobile-device .latest-wrapper {
+  padding: 2rem 1.25rem;
+}
+
+html.mobile-device .latest-title {
+  font-size: 2.5rem;
+}
+
+html.mobile-device .latest-item h3 {
+  font-size: 2rem;
+}
+
+html.mobile-device .latest-item p {
+  font-size: 1.1rem;
+}
+
+html.mobile-device .print-wrap {
+  width: 90vw;
+}
+
+html.mobile-device .print-card {
+  grid-template-columns: 1fr;
+}
+
+html.mobile-device .print-thumb {
+  height: 160px;
+  width: 100%;
+}
+
+html.mobile-device .print-section {
+  padding: 3rem 1rem 2rem;
+}
+
+html.mobile-device .print-section h2 {
+  font-size: 2.5rem;
+}
+
+html.mobile-device .print-title {
+  font-size: 1.6rem;
+}
+
   </style>
 </head>
 
 <body>
   <script src="/nav.js"></script>
 
-  <div id="about-section">
+  <div class="hero-section">
+    <div id="about-section">
       <h2>Who Owns the Flavor</h2>
       <p><span style='font-weight: bold;'>Who Owns the Flavor</span> is a three-part podcast investigating the origins, ownership, and impact of local dishes from <br>St. Louis to New Orleans.<br><br><span style="color: var(--red1)">Click on the red stars along the Mississippi to view the podcast!</span></p>
-  </div>
-
-  <div class="hero-section">
+    </div>
     <div class="map-container">
       <img src="map.svg" alt="Map showing cultural food regions">
 

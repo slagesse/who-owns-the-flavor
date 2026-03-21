@@ -54,10 +54,10 @@
       border: 1px solid rgba(0,0,0,0.18);
       border-radius: 28px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.14);
-      padding: 1.25rem 1.25rem 1rem;
+      padding: 0.75rem 1.25rem;
       position: sticky;
-      top: var(--nav-height);
-      z-index: 90; /* below the nav (z-index: 100), above content */
+      top: calc(var(--nav-height) + 1rem);
+      z-index: 90;
     }
 
     .audio-hero.stuck {
@@ -65,18 +65,10 @@
       border-color: rgba(0,0,0,0.22);
     }
 
-    .audio-hero-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
     .audio-hero-label {
       font-family: Arial, Helvetica, sans-serif;
       color: rgba(0,0,0,0.65);
-      font-size: 0.95rem;
+      font-size: 0.8rem;
     }
 
     .audio-hero-label strong {
@@ -88,7 +80,7 @@
     .audio-hero-time {
       font-family: Arial, Helvetica, sans-serif;
       color: rgba(0,0,0,0.6);
-      font-size: 0.95rem;
+      font-size: 0.8rem;
       white-space: nowrap;
     }
 
@@ -101,11 +93,11 @@
     .big-play {
       background: var(--red1);
       border: 1px solid var(--red1);
-      width: 76px;
-      height: 76px;
+      width: 52px;
+      height: 52px;
       border-radius: 999px;
       color: #fff;
-      font-size: 34px;
+      font-size: 22px;
       cursor: pointer;
       display: grid;
       place-items: center;
@@ -120,7 +112,13 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.35rem;
+    }
+
+    .big-track-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .big-progress {
@@ -273,11 +271,6 @@
     
 
     <section class="audio-hero" aria-label="Episode audio player">
-      <div class="audio-hero-top">
-        <div class="audio-hero-label"><strong>Listen</strong> · Episode III</div>
-        <div class="audio-hero-time" id="hero-time">0:00 / 0:00</div>
-      </div>
-
       <audio id="hero-audio" preload="metadata">
         <source src="/audio/final new orleans episode for website.mp3" type="audio/mpeg">
       </audio>
@@ -288,6 +281,10 @@
         <div class="big-track">
           <div class="big-progress" id="hero-progress" aria-label="Seek bar">
             <div class="big-progress-fill paused" id="hero-progress-fill"></div>
+          </div>
+          <div class="big-track-meta">
+            <div class="audio-hero-label"><strong>Listen</strong> · Episode III</div>
+            <div class="audio-hero-time" id="hero-time">0:00 / 0:00</div>
           </div>
         </div>
       </div>
@@ -560,7 +557,7 @@
     const heroTime = document.getElementById("hero-time");
     const transcriptLink = document.getElementById("hero-transcript-link");
 
-    heroAudio.src = "https://s3.ustatik.com/audio.com.audio/transcoding/57/18/1851297543761857-1851297543837152-1851297558877420.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=W7IA3NSYSOQIKLY9DEVC%2F20251212%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20251212T103116Z&X-Amz-SignedHeaders=host&X-Amz-Expires=518400&X-Amz-Signature=c37b78e57b792e5bee28bb6594cfc6527350ca223ff68ca48cac994cbc24de72";
+    heroAudio.src = "/audio/final new orleans episode for website.mp3";
 
     let dragging = false;
 
@@ -576,7 +573,11 @@
     const seekToClientX = (clientX) => {
       const rect = heroProgress.getBoundingClientRect();
       const t = clamp01((clientX - rect.left) / rect.width);
-      if (heroAudio.duration) heroAudio.currentTime = t * heroAudio.duration;
+      if (heroAudio.duration) {
+        heroAudio.currentTime = t * heroAudio.duration;
+        heroProgressFill.style.width = (t * 100) + "%";
+        heroTime.textContent = `${fmtTime(heroAudio.currentTime)} / ${fmtTime(heroAudio.duration)}`;
+      }
     };
 
     heroPlay.addEventListener("click", () => {
@@ -628,10 +629,11 @@
 
     const audioHero = document.querySelector(".audio-hero");
     const setNavHeight = () => {
-      const h = nav.offsetHeight || 0;
+      const navEl = document.getElementById("navbar");
+      const h = navEl ? navEl.offsetHeight : 0;
       document.documentElement.style.setProperty("--nav-height", h + "px");
     };
-    setNavHeight();
+    document.addEventListener("DOMContentLoaded", setNavHeight);
     window.addEventListener("resize", setNavHeight);
     window.addEventListener("scroll", setNavHeight);
 

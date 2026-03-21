@@ -1,3 +1,21 @@
+// Page transition: fade in on load
+document.addEventListener("DOMContentLoaded", () => {
+  requestAnimationFrame(() => document.body.classList.add("page-ready"));
+});
+
+// Page transition: fade out before navigating
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a");
+  if (!a || !a.href) return;
+  if (a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const url = new URL(a.href, location.href);
+  if (url.origin !== location.origin) return;
+  if (url.pathname === location.pathname && url.hash) return; // anchor links
+  e.preventDefault();
+  document.body.classList.remove("page-ready");
+  setTimeout(() => { location.href = a.href; }, 175);
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const navHTML = `
   <nav id="navbar">

@@ -16,6 +16,12 @@ body {
   background-color: var(--cream);
   font-family: "Instrument Serif", serif;
   color: #000;
+  opacity: 0;
+  transition: opacity 0.175s ease;
+}
+
+body.page-ready {
+  opacity: 1;
 }
 
 /* === NAVIGATION === */
@@ -47,7 +53,7 @@ nav ul, #navbar ul {
 
 a.nav-link {
   color: var(--red1);
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-family: "Helvetica", Arial, sans-serif;
   text-decoration: underline;
   transition: color 0.2s ease, font-size 0.2s ease;
@@ -55,8 +61,7 @@ a.nav-link {
 
 nav:not(.scrolled) a.nav-link,
 #navbar:not(.scrolled) a.nav-link {
-  font-size: 1.25rem;
-  text-decoration: none;
+  font-size: 1.5rem;
 }
 
 a.nav-link {

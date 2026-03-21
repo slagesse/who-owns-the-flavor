@@ -21,17 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
   <nav id="navbar">
     <div class="nav-left">
       <ul>
-        <li><a class="nav-link" href="/news.html">news</a></li>
+        <li><a class="nav-link" href="/news">news</a></li>
       </ul>
     </div>
     <div class="separator" id="left-sep"></div>
-    <a href="/index.html" class="nav-title-link" aria-label="Home">
+    <a href="/" class="nav-title-link" aria-label="Home">
       <h1 id="title">WHO OWNS<br>THE <span style="color: var(--red1)">FLAVOR?</span></h1>
     </a>
     <div class="separator" id="right-sep"></div>
     <div class="nav-right">
       <ul>
-        <li><a class="nav-link" href="/about.html">about</a></li>
+        <li><a class="nav-link" href="/about">about</a></li>
       </ul>
     </div>
   </nav>`;
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const COLLAPSE_Y = 10;
   let scrolled = false;
 
-  const isIndex = window.location.pathname === "/" || window.location.pathname.endsWith("index.html");
+  const isIndex = window.location.pathname === "/" || window.location.pathname === "/index" || window.location.pathname.endsWith("index.html");
   if (isIndex) return;
 
   window.addEventListener("scroll", () => {

@@ -14,25 +14,27 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Serve static files (CSS, JS, images, etc.)
+// Serve static files (CSS, JS, images, audio, etc.)
 app.use(express.static(__dirname));
 
-// Routes for HTML pages
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+// Top-level pages
+app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/news', (_req, res) => res.sendFile(path.join(__dirname, 'news.html')));
+app.get('/about', (_req, res) => res.sendFile(path.join(__dirname, 'about.html')));
+app.get('/stl', (_req, res) => res.sendFile(path.join(__dirname, 'stl.html')));
+app.get('/memphis', (_req, res) => res.sendFile(path.join(__dirname, 'memphis.html')));
+app.get('/nola', (_req, res) => res.sendFile(path.join(__dirname, 'nola.html')));
+app.get('/map', (_req, res) => res.sendFile(path.join(__dirname, 'map.html')));
 
-app.get('/contact', (req, res) => {
-    res.sendFile(path.join(__dirname, 'contact.html'));
-});
-
-app.get('/news', (req, res) => {
-    res.sendFile(path.join(__dirname, 'news.html'));
-});
-
-app.get('/resources', (req, res) => {
-    res.sendFile(path.join(__dirname, 'resources.html'));
-});
+// Print articles
+app.get('/print/dooky-chase', (_req, res) => res.sendFile(path.join(__dirname, 'print/dooky-chase.html')));
+app.get('/print/rendeszvous-profile', (_req, res) => res.sendFile(path.join(__dirname, 'print/rendeszvous-profile.html')));
+app.get('/print/good-competition', (_req, res) => res.sendFile(path.join(__dirname, 'print/good-competition.html')));
+app.get('/print/wayne-m-baquet', (_req, res) => res.sendFile(path.join(__dirname, 'print/wayne-m-baquet.html')));
+app.get('/print/delmar-divide', (_req, res) => res.sendFile(path.join(__dirname, 'print/delmar-divide.html')));
+app.get('/print/frank-brigtsen', (_req, res) => res.sendFile(path.join(__dirname, 'print/frank-brigtsen.html')));
+app.get('/print/nochi', (_req, res) => res.sendFile(path.join(__dirname, 'print/nochi.html')));
+app.get('/print/ballhoggerz', (_req, res) => res.sendFile(path.join(__dirname, 'print/ballhoggerz.html')));
 
 // 404 handler
 app.use((req, res) => {
@@ -43,12 +45,6 @@ app.use((req, res) => {
     `);
 });
 
-// Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    console.log('Available routes:');
-    console.log('  / (index.html)');
-    console.log('  /contact (contact.html)');
-    console.log('  /news (news.html)');
-    console.log('  /resources (resources.html)');
+    console.log(`Server running on http://localhost:${PORT}`);
 });

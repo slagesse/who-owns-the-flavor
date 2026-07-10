@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{TITLE}}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/shared.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+
+    /* === ARTICLE LAYOUT === */
+    .article-shell {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3.5rem 1.75rem 6rem;
+    }
+
+    .article-title {
+      font-style: normal;
+    }
+
+    .article-dek {
+      margin: 0 auto 1.25rem;
+      max-width: 42ch;
+    }
+
+    .article-meta {
+      color: rgba(0,0,0,0.6);
+      margin: 0;
+    }
+
+    .transcript-head {
+      text-align: center;
+      margin: 0 auto 2.25rem;
+      max-width: 65%;
+    }
+
+    .transcript-head .article-title { margin-bottom: 0.9rem; }
+    .transcript-head .article-dek { margin-bottom: 1rem; }
+
+    .meta-label {
+      font-weight: 700;
+      color: rgba(0,0,0,0.72);
+    }
+
+    /* === PROMINENT AUDIO PLAYER === */
+    .audio-hero {
+      margin: 2.25rem auto 3rem;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+      padding: 0.75rem 1.25rem;
+      position: sticky;
+      top: calc(var(--nav-height) + 1rem);
+      z-index: 90;
+    }
+
+    .audio-hero.stuck {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      border-color: rgba(0,0,0,0.22);
+    }
+
+    .audio-hero-label {
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(0,0,0,0.65);
+      font-size: 0.8rem;
+    }
+
+    .audio-hero-label strong {
+      color: var(--red1);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .audio-hero-time {
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(0,0,0,0.6);
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .big-player {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .big-play {
+      background: var(--red1);
+      border: 1px solid var(--red1);
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: transform 0.12s ease;
+      flex: 0 0 auto;
+    }
+
+    .big-play:hover { transform: scale(1.03); }
+    .big-play:active { transform: scale(0.97); }
+
+    .big-track {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .big-track-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .big-progress {
+      height: 10px;
+      background: rgba(0,0,0,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .big-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #af3636;
+      transition: width 0.06s linear, background-color 0.2s ease;
+    }
+
+    .big-progress-fill.paused { background: rgba(0,0,0,0.45); }
+
+    /* === ARTICLE BODY === */
+    .article-body {
+      color: rgba(0,0,0,0.92);
+    }
+
+    .article-body p.lede::first-letter {
+      float: left;
+      font-size: 4.1rem;
+      line-height: 0.9;
+      padding-right: 0.6rem;
+      padding-top: 0.2rem;
+      font-weight: 800;
+      color: var(--red1);
+    }
+
+    .article-body blockquote {
+      margin: 2rem 0;
+      padding: 0.5rem 1.25rem;
+      border-left: 4px solid var(--red1);
+      background: rgba(255,255,255,0.55);
+      border-radius: 12px;
+      font-style: italic;
+    }
+
+    .article-body .credits {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(0,0,0,0.75);
+    }
+
+    @media (max-width: 720px) {
+      .big-play { width: 66px; height: 66px; font-size: 30px; }
+    }
+
+    /* Centered episode links beneath audio player */
+    .episode-links {
+      text-align: center;
+      margin: 0.75rem 0 2rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+    }
+    .episode-links a {
+      color: var(--red1);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      margin: 0 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="/nav.js"></script>
+
+  <main class="article-shell">
+    <header class="transcript-head">
+      <h2 class="article-title">{{EPISODE_TITLE}}</h2>
+
+      <p class="article-dek">
+        Written by {{WRITTEN}} <br> Voiced by {{VOICED}}
+      </p>
+
+      <p class="article-meta">
+        <span class="meta-label">Research/Interviews:</span>
+        {{RESEARCH}}
+        <br>
+        <span class="meta-label">Produced:</span> {{PRODUCED}} ·
+        <span class="meta-label">{{MUSIC_LABEL}}:</span> {{MUSIC_CREDIT}}
+      </p>
+    </header>
+
+    <section class="audio-hero" aria-label="Episode audio player">
+      <audio id="hero-audio" preload="metadata">
+        <source src="{{AUDIO_URL}}" type="audio/mpeg">
+      </audio>
+
+      <div class="big-player">
+        <button class="big-play" id="hero-play" aria-label="Play or pause">▶</button>
+
+        <div class="big-track">
+          <div class="big-progress" id="hero-progress" aria-label="Seek bar">
+            <div class="big-progress-fill paused" id="hero-progress-fill"></div>
+          </div>
+          <div class="big-track-meta">
+            <div class="audio-hero-label"><strong>Listen</strong> · {{EPISODE_LABEL}}</div>
+            <div class="audio-hero-time" id="hero-time">0:00 / 0:00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="episode-links">
+      {{EPISODE_LINKS}}
+    </div>
+
+    <article class="article-body">
+      <span style="font-size: 1rem; font-family: Arial, Helvetica, sans-serif">TRANSCRIPT</span>
+
+      {{TRANSCRIPT_BODY}}
+    </article>
+  </main>
+
+  <script>
+    const heroAudio = document.getElementById("hero-audio");
+    const heroPlay = document.getElementById("hero-play");
+    const heroProgress = document.getElementById("hero-progress");
+    const heroProgressFill = document.getElementById("hero-progress-fill");
+    const heroTime = document.getElementById("hero-time");
+
+    heroAudio.src = "{{AUDIO_URL}}";
+    heroAudio.load();
+
+    let dragging = false;
+
+    const fmtTime = (s) => {
+      if (!Number.isFinite(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, "0")}`;
+    };
+
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+    const seekToClientX = (clientX) => {
+      const rect = heroProgress.getBoundingClientRect();
+      const t = clamp01((clientX - rect.left) / rect.width);
+      if (heroAudio.duration) {
+        heroAudio.currentTime = t * heroAudio.duration;
+        heroProgressFill.style.width = (t * 100) + "%";
+        heroTime.textContent = `${fmtTime(heroAudio.currentTime)} / ${fmtTime(heroAudio.duration)}`;
+      }
+    };
+
+    heroPlay.addEventListener("click", () => {
+      if (!heroAudio.src) return;
+      if (heroAudio.paused) heroAudio.play();
+      else heroAudio.pause();
+    });
+
+    heroAudio.addEventListener("play", () => {
+      heroPlay.textContent = "⏸";
+      heroProgressFill.classList.remove("paused");
+    });
+
+    heroAudio.addEventListener("pause", () => {
+      heroPlay.textContent = "▶";
+      heroProgressFill.classList.add("paused");
+    });
+
+    heroAudio.addEventListener("loadedmetadata", () => {
+      heroTime.textContent = `${fmtTime(0)} / ${fmtTime(heroAudio.duration)}`;
+    });
+
+    heroAudio.addEventListener("timeupdate", () => {
+      if (!heroAudio.duration) return;
+      if (!dragging) {
+        const pct = (heroAudio.currentTime / heroAudio.duration) * 100;
+        heroProgressFill.style.width = pct + "%";
+      }
+      heroTime.textContent = `${fmtTime(heroAudio.currentTime)} / ${fmtTime(heroAudio.duration)}`;
+    });
+
+    heroProgress.addEventListener("pointerdown", (e) => {
+      if (!heroAudio.duration) return;
+      dragging = true;
+      heroProgress.setPointerCapture(e.pointerId);
+      seekToClientX(e.clientX);
+    });
+
+    heroProgress.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      seekToClientX(e.clientX);
+    });
+
+    const stopDrag = () => { dragging = false; };
+
+    heroProgress.addEventListener("pointerup", stopDrag);
+    heroProgress.addEventListener("pointercancel", stopDrag);
+    heroProgress.addEventListener("lostpointercapture", stopDrag);
+
+    const audioHero = document.querySelector(".audio-hero");
+    const setNavHeight = () => {
+      const navEl = document.getElementById("navbar");
+      const h = navEl ? navEl.offsetHeight : 0;
+      document.documentElement.style.setProperty("--nav-height", h + "px");
+    };
+    document.addEventListener("DOMContentLoaded", setNavHeight);
+    window.addEventListener("resize", setNavHeight);
+    window.addEventListener("scroll", setNavHeight);
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.boundingClientRect.top <= (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-height")) || 0)) {
+            audioHero.classList.add("stuck");
+          } else {
+            audioHero.classList.remove("stuck");
+          }
+        });
+      },
+      { root: null, threshold: [0, 1] }
+    );
+    io.observe(audioHero);
+  </script>
+</body>
+</html>

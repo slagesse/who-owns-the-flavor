@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard — Who Owns the Flavor</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Instrument+Serif:ital@0;1&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/shared.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --cms-bg: #101110;
+      --cms-sidebar: #0a0b0a;
+      --cms-panel: #171815;
+      --cms-panel-raised: #1d1f1a;
+      --cms-border: rgba(255,255,255,0.09);
+      --cms-text: #e9e7dc;
+      --cms-text-dim: rgba(233,231,220,0.55);
+      --cms-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    /* This page doesn't load nav.js (skips the warm site nav for a standalone app feel),
+       so shared.css's opacity:0 fade-in — normally triggered by nav.js — never resolves. */
+    body { opacity: 1; }
+
+    body.authed {
+      background: var(--cms-bg);
+    }
+
+    /* === LOGIN SCREEN === */
+    main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+
+    .dashboard-title {
+      font-size: 2.5rem;
+      font-style: italic;
+      font-weight: bold;
+      color: var(--red1);
+      text-align: center;
+      margin: 0 0 2rem;
+    }
+
+    .login-card {
+      background: rgba(255,255,255,0.55);
+      border: 3px solid var(--red1);
+      border-radius: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+      padding: 2rem;
+    }
+
+    .login-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .login-field label {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.9rem;
+      color: rgba(0,0,0,0.65);
+    }
+
+    .login-field input {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.1rem;
+      padding: 0.6rem 0.75rem;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .login-field input:focus {
+      outline: none;
+      border-color: var(--red1);
+    }
+
+    .login-submit {
+      width: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      font-size: 1rem;
+      color: white;
+      background-color: var(--red1);
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .login-submit:hover { opacity: 0.85; }
+
+    .login-error {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.9rem;
+      color: var(--red1);
+      margin: 0 0 1.25rem;
+      display: none;
+    }
+
+    .login-error.visible { display: block; }
+
+    /* === APP SHELL === */
+    #app-shell {
+      display: none;
+      min-height: 100vh;
+      font-family: var(--cms-mono);
+      color: var(--cms-text);
+    }
+
+    body.authed #app-shell { display: flex; }
+
+    #sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--cms-sidebar);
+      border-right: 1px solid var(--cms-border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0;
+    }
+
+    .sidebar-brand {
+      display: block;
+      color: var(--cms-text);
+      text-decoration: none;
+      padding: 0 1.25rem 1.25rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--cms-border);
+    }
+
+    .sidebar-brand-name {
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+    }
+
+    .sidebar-brand-tag {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--red1);
+      letter-spacing: 0.12em;
+      margin-top: 0.2rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      width: 100%;
+      background: none;
+      border: none;
+      border-left: 3px solid transparent;
+      color: var(--cms-text-dim);
+      font-family: var(--cms-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      text-align: left;
+      padding: 0.65rem 1.25rem;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .sidebar-link:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--cms-text);
+    }
+
+    .sidebar-link.active {
+      background: rgba(137,13,4,0.14);
+      border-left-color: var(--red1);
+      color: var(--cms-text);
+    }
+
+    .sidebar-count {
+      font-size: 0.72rem;
+      color: var(--cms-text-dim);
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px;
+      padding: 0.05rem 0.5rem;
+    }
+
+    .sidebar-link.active .sidebar-count {
+      color: var(--red1);
+      background: rgba(137,13,4,0.18);
+    }
+
+    .sidebar-foot {
+      padding: 1rem 1.25rem 0;
+      border-top: 1px solid var(--cms-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sidebar-foot a,
+    .sidebar-foot button {
+      font-family: var(--cms-mono);
+      font-size: 0.78rem;
+      color: var(--cms-text-dim);
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 0.3rem 0;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .sidebar-foot a:hover,
+    .sidebar-foot button:hover { color: var(--cms-text); }
+
+    #main-panel {
+      flex: 1;
+      padding: 2rem 2.5rem;
+      overflow-x: auto;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--cms-text);
+      margin: 0;
+    }
+
+    .btn {
+      font-family: var(--cms-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+      border-radius: 6px;
+      padding: 0.5rem 0.9rem;
+      cursor: pointer;
+      border: 1px solid var(--cms-border);
+      background: var(--cms-panel-raised);
+      color: var(--cms-text);
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover { border-color: rgba(255,255,255,0.25); }
+
+    .btn-primary {
+      background: var(--red1);
+      border-color: var(--red1);
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn-primary:hover { opacity: 0.88; border-color: var(--red1); }
+
+    .btn-danger {
+      color: #ff8a7a;
+      border-color: rgba(255,80,60,0.35);
+      background: rgba(255,60,40,0.08);
+    }
+
+    .btn-danger:hover { border-color: #ff8a7a; }
+
+    .btn-small { font-size: 0.72rem; padding: 0.35rem 0.65rem; }
+
+    /* === TABLE === */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--cms-panel);
+      border: 1px solid var(--cms-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .data-table th {
+      text-align: left;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--cms-text-dim);
+      font-weight: normal;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--cms-border);
+    }
+
+    .data-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--cms-border);
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.025); }
+
+    .cell-headline {
+      max-width: 340px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--cms-text);
+    }
+
+    .cell-meta { color: var(--cms-text-dim); white-space: nowrap; }
+    .cell-actions { text-align: right; white-space: nowrap; }
+    .cell-actions .btn { margin-left: 0.4rem; }
+
+    .empty-note {
+      font-family: var(--cms-mono);
+      font-size: 0.85rem;
+      color: var(--cms-text-dim);
+      text-align: center;
+      padding: 2.5rem 1rem;
+      border: 1px dashed var(--cms-border);
+      border-radius: 8px;
+    }
+
+    .placeholder-panel {
+      border: 1px dashed var(--cms-border);
+      border-radius: 8px;
+      padding: 2.5rem;
+      text-align: center;
+      color: var(--cms-text-dim);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    .placeholder-panel strong { color: var(--cms-text); }
+
+    .media-subsection { margin-bottom: 2.25rem; }
+
+    .media-subheading {
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--cms-text-dim);
+      margin: 0 0 0.9rem;
+    }
+
+    .media-upload {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .media-upload input[type="file"] {
+      color-scheme: dark;
+      font-family: var(--cms-mono);
+      font-size: 0.78rem;
+      color: var(--cms-text-dim);
+      max-width: 260px;
+    }
+
+    .cell-audio audio {
+      height: 32px;
+      max-width: 220px;
+    }
+
+    .cell-image-thumb img {
+      height: 40px;
+      width: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--cms-border);
+      display: block;
+    }
+
+    .drag-handle-cell { width: 2rem; text-align: center; }
+
+    .drag-handle {
+      cursor: grab;
+      color: var(--cms-text-dim);
+      font-size: 1.1rem;
+      user-select: none;
+      display: inline-block;
+      padding: 0.25rem;
+    }
+
+    .drag-handle:hover { color: var(--cms-text); }
+
+    tr.dragging { opacity: 0.4; }
+
+    .audio-picker {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .audio-picker-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .audio-picker-input-wrap input { width: 100%; box-sizing: border-box; }
+
+    .audio-suggestions {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--cms-panel-raised);
+      border: 1px solid var(--cms-border);
+      border-radius: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 20;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    }
+
+    .audio-suggestions.visible { display: block; }
+
+    .audio-suggestion {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.5rem 0.7rem;
+      font-family: var(--cms-mono);
+      font-size: 0.8rem;
+      color: var(--cms-text);
+      cursor: pointer;
+    }
+
+    .audio-suggestion:hover { background: rgba(137,13,4,0.16); }
+
+    .audio-suggestion-size {
+      color: var(--cms-text-dim);
+      flex-shrink: 0;
+    }
+
+    .audio-suggestions-empty {
+      padding: 0.5rem 0.7rem;
+      font-family: var(--cms-mono);
+      font-size: 0.78rem;
+      color: var(--cms-text-dim);
+    }
+
+    /* === EDIT FORM (dark) === */
+    .edit-panel { max-width: 720px; }
+
+    .edit-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .edit-field label {
+      font-size: 0.75rem;
+      letter-spacing: 0.03em;
+      color: var(--cms-text-dim);
+      text-transform: uppercase;
+    }
+
+    .edit-field .hint {
+      text-transform: none;
+      letter-spacing: 0;
+      display: block;
+      margin-top: 0.15rem;
+      color: rgba(233,231,220,0.4);
+      font-size: 0.72rem;
+    }
+
+    .edit-field input,
+    .edit-field select,
+    .edit-field textarea {
+      font-family: var(--cms-mono);
+      font-size: 0.88rem;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--cms-border);
+      border-radius: 6px;
+      background: var(--cms-panel);
+      color: var(--cms-text);
+    }
+
+    .edit-field textarea {
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 320px;
+    }
+
+    .edit-field input:focus,
+    .edit-field select:focus,
+    .edit-field textarea:focus {
+      outline: none;
+      border-color: var(--red1);
+    }
+
+    .edit-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .save-status {
+      font-size: 0.8rem;
+      display: none;
+    }
+
+    .save-status.visible { display: inline-block; }
+    .save-status.success { color: #7fd67f; }
+    .save-status.error { color: #ff8a7a; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.25rem;
+      font-family: var(--cms-mono);
+      font-size: 0.8rem;
+      color: var(--cms-text-dim);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .back-link:hover { color: var(--cms-text); }
+
+    /* === MODAL === */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #modal-overlay.visible { display: flex; }
+
+    .modal-box {
+      background: var(--cms-panel-raised);
+      border: 1px solid var(--cms-border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      max-width: 380px;
+      width: 90%;
+      font-family: var(--cms-mono);
+      color: var(--cms-text);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+
+    .modal-title {
+      font-size: 0.95rem;
+      margin: 0 0 0.6rem;
+      color: var(--red1);
+    }
+
+    .modal-message {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--cms-text-dim);
+      margin: 0 0 1.5rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.6rem;
+    }
+
+    @media (max-width: 800px) {
+      #app-shell { flex-direction: column; }
+      #sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0.75rem;
+        align-items: center;
+      }
+      .sidebar-brand, .sidebar-foot { display: none; }
+      .sidebar-nav { display: flex; flex: none; }
+      .sidebar-link { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; }
+      .sidebar-link.active { border-left-color: transparent; border-bottom-color: var(--red1); }
+      #main-panel { padding: 1.25rem; }
+      .cell-headline { max-width: 160px; }
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 1.5rem 1rem 2rem; }
+      .dashboard-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <main id="login-screen">
+    <h2 class="dashboard-title">Dashboard Login</h2>
+
+    <div class="login-card">
+      <form id="login-form">
+        <p class="login-error" id="login-error">Incorrect username or password.</p>
+        <div class="login-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" autocomplete="username" />
+        </div>
+        <div class="login-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="login-submit">Log In</button>
+      </form>
+    </div>
+  </main>
+
+  <div id="app-shell">
+    <aside id="sidebar">
+      <a href="/" class="sidebar-brand">
+        <span class="sidebar-brand-name">WHO OWNS<br>THE FLAVOR</span>
+        <span class="sidebar-brand-tag">/CMS</span>
+      </a>
+
+      <ul class="sidebar-nav">
+        <li><button type="button" class="sidebar-link active" data-section="articles">Articles <span class="sidebar-count" id="count-articles"></span></button></li>
+        <li><button type="button" class="sidebar-link" data-section="podcasts">Podcasts <span class="sidebar-count" id="count-podcasts"></span></button></li>
+        <li><button type="button" class="sidebar-link" data-section="trash">Trash <span class="sidebar-count" id="count-trash"></span></button></li>
+        <li><button type="button" class="sidebar-link" data-section="mediabank">Media Bank</button></li>
+      </ul>
+
+      <div class="sidebar-foot">
+        <a href="/">← Back to site</a>
+        <button type="button" id="logout-btn">Log out</button>
+      </div>
+    </aside>
+
+    <div id="main-panel">
+      <!-- Articles -->
+      <section id="section-articles">
+        <div class="panel-header">
+          <h3 class="panel-title">Articles</h3>
+          <button type="button" class="btn btn-primary" id="new-story-btn">+ New Story</button>
+        </div>
+        <div id="articles-table-wrap"></div>
+      </section>
+
+      <!-- Trash -->
+      <section id="section-trash" style="display: none;">
+        <div class="panel-header">
+          <h3 class="panel-title">Trash</h3>
+          <button type="button" class="btn btn-danger" id="empty-trash-btn">Empty Trash</button>
+        </div>
+        <div id="trash-table-wrap"></div>
+      </section>
+
+      <!-- Podcasts -->
+      <section id="section-podcasts" style="display: none;">
+        <div class="panel-header">
+          <h3 class="panel-title">Podcasts</h3>
+          <button type="button" class="btn btn-primary" id="new-episode-btn">+ New Episode</button>
+        </div>
+        <div id="podcasts-table-wrap"></div>
+      </section>
+
+      <!-- Media Bank -->
+      <section id="section-mediabank" style="display: none;">
+        <div class="panel-header">
+          <h3 class="panel-title">Media Bank</h3>
+        </div>
+
+        <div class="media-subsection">
+          <div class="panel-header" style="margin-bottom: 1rem;">
+            <h4 class="media-subheading" style="margin: 0;">Images</h4>
+            <div class="media-upload">
+              <input type="file" id="image-upload-input" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.svg" />
+              <button type="button" class="btn btn-primary btn-small" id="image-upload-btn">Upload</button>
+            </div>
+          </div>
+          <p class="save-status" id="image-upload-status"></p>
+          <div id="image-table-wrap"></div>
+        </div>
+
+        <div class="media-subsection">
+          <div class="panel-header" style="margin-bottom: 1rem;">
+            <h4 class="media-subheading" style="margin: 0;">Headshots</h4>
+            <div class="media-upload">
+              <input type="file" id="headshot-upload-input" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.svg" />
+              <button type="button" class="btn btn-primary btn-small" id="headshot-upload-btn">Upload</button>
+            </div>
+          </div>
+          <p class="save-status" id="headshot-upload-status"></p>
+          <div id="headshot-table-wrap"></div>
+        </div>
+
+        <div class="media-subsection">
+          <div class="panel-header" style="margin-bottom: 1rem;">
+            <h4 class="media-subheading" style="margin: 0;">Audio</h4>
+            <div class="media-upload">
+              <input type="file" id="audio-upload-input" accept="audio/*,.mp3,.wav,.m4a,.ogg,.aac,.flac" />
+              <button type="button" class="btn btn-primary btn-small" id="audio-upload-btn">Upload</button>
+            </div>
+          </div>
+          <p class="save-status" id="audio-upload-status"></p>
+          <div id="audio-table-wrap"></div>
+        </div>
+      </section>
+
+      <!-- Editor (create or edit) -->
+      <section id="section-editor" style="display: none;">
+        <button type="button" class="back-link" id="back-link">← Back to articles</button>
+        <h3 class="panel-title" id="editor-title" style="margin-bottom: 1.25rem;">Edit story</h3>
+
+        <p class="login-error" id="edit-load-error">Couldn't load that article.</p>
+
+        <form id="edit-form" class="edit-panel">
+          <div class="edit-field" id="slug-field" style="display: none;">
+            <label for="field-slug">Slug <span class="hint">— becomes the URL: /print/&lt;slug&gt;</span></label>
+            <input type="text" id="field-slug" pattern="[a-z0-9-]+" placeholder="my-new-story" />
+          </div>
+          <div class="edit-field">
+            <label for="field-headline">Headline</label>
+            <input type="text" id="field-headline" required />
+          </div>
+          <div class="edit-field">
+            <label for="field-subhead">Subhead <span class="hint">optional</span></label>
+            <input type="text" id="field-subhead" />
+          </div>
+          <div class="edit-field">
+            <label for="field-author">Author</label>
+            <input type="text" id="field-author" required />
+          </div>
+          <div class="edit-field">
+            <label for="field-author-headshot">Author headshot <span class="hint">search the Headshots library or upload a new one</span></label>
+            <div class="audio-picker">
+              <div class="audio-picker-input-wrap">
+                <input type="text" id="field-author-headshot" autocomplete="off" required />
+                <div class="audio-suggestions" id="field-author-headshot-suggestions"></div>
+              </div>
+              <button type="button" class="btn btn-small" id="field-author-headshot-upload-btn">Upload</button>
+              <input type="file" id="field-author-headshot-upload-input" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.svg" style="display: none;" />
+            </div>
+            <p class="save-status" id="field-author-headshot-upload-status"></p>
+          </div>
+          <div class="edit-field">
+            <label for="field-date">Date</label>
+            <input type="text" id="field-date" placeholder="e.g. Dec. 15, 2025" required />
+          </div>
+          <div class="edit-field">
+            <label for="field-image">Feature image URL <span class="hint">optional — search the media library or upload a new file</span></label>
+            <div class="audio-picker">
+              <div class="audio-picker-input-wrap">
+                <input type="text" id="field-image" autocomplete="off" />
+                <div class="audio-suggestions" id="field-image-suggestions"></div>
+              </div>
+              <button type="button" class="btn btn-small" id="field-image-upload-btn">Upload</button>
+              <input type="file" id="field-image-upload-input" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.svg" style="display: none;" />
+            </div>
+            <p class="save-status" id="field-image-upload-status"></p>
+          </div>
+          <div class="edit-field">
+            <label for="field-image-alt">Feature image alt text <span class="hint">optional</span></label>
+            <input type="text" id="field-image-alt" />
+          </div>
+          <div class="edit-field">
+            <label for="field-image-credit">Feature image credit <span class="hint">optional — supports [text](url)</span></label>
+            <input type="text" id="field-image-credit" />
+          </div>
+          <div class="edit-field">
+            <label for="field-body">
+              Body
+              <span class="hint">blank line = new paragraph · "## Subhead" = section label · "&gt; Quote" then "— Attribution" = pull quote · "Resource: [text](url)" = resource link</span>
+            </label>
+            <textarea id="field-body" required></textarea>
+          </div>
+
+          <div class="edit-actions">
+            <button type="submit" class="btn btn-primary" id="save-btn">Save changes</button>
+            <span class="save-status" id="save-status"></span>
+          </div>
+        </form>
+      </section>
+
+      <!-- Podcast editor (create or edit) -->
+      <section id="section-podcast-editor" style="display: none;">
+        <button type="button" class="back-link" id="podcast-back-link">← Back to podcasts</button>
+        <h3 class="panel-title" id="podcast-editor-title" style="margin-bottom: 1.25rem;">Edit episode</h3>
+
+        <p class="login-error" id="podcast-edit-load-error">Couldn't load that episode.</p>
+
+        <form id="podcast-edit-form" class="edit-panel">
+          <div class="edit-field" id="podcast-slug-field" style="display: none;">
+            <label for="podcast-field-slug">Slug <span class="hint">— used as the internal ID</span></label>
+            <input type="text" id="podcast-field-slug" pattern="[a-z0-9-]+" placeholder="my-new-episode" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-title">Title</label>
+            <input type="text" id="podcast-field-title" required />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-desc">Description</label>
+            <input type="text" id="podcast-field-desc" required />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-order">Order <span class="hint">controls position in the grid, lowest first</span></label>
+            <input type="text" id="podcast-field-order" placeholder="e.g. 1" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-href">Link <span class="hint">where the card goes when clicked</span></label>
+            <input type="text" id="podcast-field-href" placeholder="/stl" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-audio">Audio file URL <span class="hint">optional — search the media library or upload a new file</span></label>
+            <div class="audio-picker">
+              <div class="audio-picker-input-wrap">
+                <input type="text" id="podcast-field-audio" placeholder="/audio/episode.mp3" autocomplete="off" />
+                <div class="audio-suggestions" id="podcast-audio-suggestions"></div>
+              </div>
+              <button type="button" class="btn btn-small" id="podcast-audio-upload-btn">Upload</button>
+              <input type="file" id="podcast-audio-upload-input" accept="audio/*,.mp3,.wav,.m4a,.ogg,.aac,.flac" style="display: none;" />
+            </div>
+            <p class="save-status" id="podcast-audio-upload-status"></p>
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-thumb">Thumbnail image URL <span class="hint">optional — search the media library or upload a new file</span></label>
+            <div class="audio-picker">
+              <div class="audio-picker-input-wrap">
+                <input type="text" id="podcast-field-thumb" autocomplete="off" />
+                <div class="audio-suggestions" id="podcast-field-thumb-suggestions"></div>
+              </div>
+              <button type="button" class="btn btn-small" id="podcast-field-thumb-upload-btn">Upload</button>
+              <input type="file" id="podcast-field-thumb-upload-input" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.svg" style="display: none;" />
+            </div>
+            <p class="save-status" id="podcast-field-thumb-upload-status"></p>
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-thumb-alt">Thumbnail alt text <span class="hint">optional</span></label>
+            <input type="text" id="podcast-field-thumb-alt" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-thumb-credit">Thumbnail credit <span class="hint">optional — supports [text](url)</span></label>
+            <input type="text" id="podcast-field-thumb-credit" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-episode-label">Episode label <span class="hint">optional — shown on the transcript page next to the play button, e.g. "Episode I"</span></label>
+            <input type="text" id="podcast-field-episode-label" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-written">Written by <span class="hint">optional</span></label>
+            <input type="text" id="podcast-field-written" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-voiced">Voiced by <span class="hint">optional</span></label>
+            <input type="text" id="podcast-field-voiced" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-research">Research/Interviews <span class="hint">optional</span></label>
+            <input type="text" id="podcast-field-research" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-produced">Produced by <span class="hint">optional</span></label>
+            <input type="text" id="podcast-field-produced" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-music-label">Music credit label <span class="hint">optional — e.g. "Theme Music" or "Intro Music"</span></label>
+            <input type="text" id="podcast-field-music-label" placeholder="Theme Music" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-music">Music credit <span class="hint">optional</span></label>
+            <input type="text" id="podcast-field-music" />
+          </div>
+          <div class="edit-field">
+            <label for="podcast-field-body">
+              Transcript <span class="hint">optional — shown on the episode's own page (the Link field above)</span>
+              <span class="hint">blank line = new paragraph · a short line ending in ":" atop a paragraph = speaker tag · "&gt; Speaker:" atop a paragraph = blockquote · "## Heading" = section heading · *text* = italics · ^text^ = superscript · [text](url) = link</span>
+            </label>
+            <textarea id="podcast-field-body"></textarea>
+          </div>
+
+          <div class="edit-actions">
+            <button type="submit" class="btn btn-primary" id="podcast-save-btn">Save changes</button>
+            <span class="save-status" id="podcast-save-status"></span>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </div>
+
+  <div id="modal-overlay">
+    <div class="modal-box">
+      <p class="modal-title" id="modal-title">Are you sure?</p>
+      <p class="modal-message" id="modal-message"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="modal-cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginScreen = document.getElementById('login-screen');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    const sections = {
+      articles: document.getElementById('section-articles'),
+      trash: document.getElementById('section-trash'),
+      podcasts: document.getElementById('section-podcasts'),
+      mediabank: document.getElementById('section-mediabank'),
+      editor: document.getElementById('section-editor'),
+      podcastEditor: document.getElementById('section-podcast-editor'),
+    };
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const countArticles = document.getElementById('count-articles');
+    const countPodcasts = document.getElementById('count-podcasts');
+    const countTrash = document.getElementById('count-trash');
+
+    const editForm = document.getElementById('edit-form');
+    const editorTitle = document.getElementById('editor-title');
+    const editLoadError = document.getElementById('edit-load-error');
+    const saveStatus = document.getElementById('save-status');
+    const saveBtn = document.getElementById('save-btn');
+    const slugField = document.getElementById('slug-field');
+    const slugInput = document.getElementById('field-slug');
+    const headlineInput = document.getElementById('field-headline');
+
+    let editorMode = 'edit'; // 'edit' | 'create'
+    let currentSlug = null;
+    let slugTouched = false;
+
+    // --- helpers ---
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function slugify(str) {
+      return String(str)
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    async function api(url, options) {
+      const res = await fetch(url, options);
+      let data = null;
+      try { data = await res.json(); } catch (_e) { /* no body */ }
+      return { ok: res.ok, status: res.status, data };
+    }
+
+    // --- confirm modal ---
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const modalConfirmBtn = document.getElementById('modal-confirm');
+    const modalCancelBtn = document.getElementById('modal-cancel');
+    let modalConfirmHandler = null;
+
+    function confirmAction({ title, message, confirmLabel, onConfirm }) {
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      modalConfirmBtn.textContent = confirmLabel || 'Confirm';
+      modalConfirmHandler = onConfirm;
+      modalOverlay.classList.add('visible');
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('visible');
+      modalConfirmHandler = null;
+    }
+
+    modalCancelBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+    modalConfirmBtn.addEventListener('click', async () => {
+      const handler = modalConfirmHandler;
+      closeModal();
+      if (handler) await handler();
+    });
+
+    // --- section switching ---
+    function showSection(name) {
+      Object.entries(sections).forEach(([key, el]) => {
+        el.style.display = key === name ? 'block' : 'none';
+      });
+      sidebarLinks.forEach((link) => {
+        link.classList.toggle('active', link.dataset.section === name);
+      });
+      if (name === 'articles') loadArticlesTable();
+      if (name === 'podcasts') loadPodcastsTable();
+      if (name === 'mediabank') { loadImageTable(); loadHeadshotTable(); loadAudioTable(); }
+      if (name === 'trash') loadTrashTable();
+    }
+
+    sidebarLinks.forEach((link) => {
+      link.addEventListener('click', () => showSection(link.dataset.section));
+    });
+
+    async function refreshCounts() {
+      const [articlesRes, podcastsRes, trashRes] = await Promise.all([
+        api('/api/articles'),
+        api('/api/podcasts'),
+        api('/api/trash'),
+      ]);
+      if (articlesRes.ok) countArticles.textContent = articlesRes.data.length;
+      if (podcastsRes.ok) countPodcasts.textContent = podcastsRes.data.length;
+      if (trashRes.ok) countTrash.textContent = trashRes.data.length;
+    }
+
+    // --- articles table ---
+    async function loadArticlesTable() {
+      const wrap = document.getElementById('articles-table-wrap');
+      wrap.innerHTML = '<p class="empty-note">Loading…</p>';
+      const { ok, data } = await api('/api/articles');
+      if (!ok) { wrap.innerHTML = '<p class="empty-note">Couldn’t load articles.</p>'; return; }
+      if (data.length === 0) { wrap.innerHTML = '<p class="empty-note">No articles yet. Click "New Story" to add one.</p>'; return; }
+
+      const rows = data.map((a) => `
+        <tr data-slug="${a.slug}">
+          <td class="drag-handle-cell"><span class="drag-handle" draggable="true" title="Drag to reorder">⠿</span></td>
+          <td class="cell-headline" title="${escapeHtml(a.headline)}">${escapeHtml(a.headline)}</td>
+          <td class="cell-meta">${escapeHtml(a.author)}</td>
+          <td class="cell-meta">${escapeHtml(a.date)}</td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn-small" data-edit="${a.slug}">Edit</button>
+            <button type="button" class="btn btn-small btn-danger" data-delete="${a.slug}" data-headline="${escapeHtml(a.headline)}">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th></th><th>Headline</th><th>Author</th><th>Date</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      wrap.querySelectorAll('[data-edit]').forEach((btn) => {
+        btn.addEventListener('click', () => openEditor(btn.dataset.edit));
+      });
+      wrap.querySelectorAll('[data-delete]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          confirmAction({
+            title: 'Move to trash?',
+            message: `"${btn.dataset.headline}" will be moved to Trash. It won't be visible on the live site, and you can restore it later.`,
+            confirmLabel: 'Move to trash',
+            onConfirm: async () => {
+              await api(`/api/articles/${encodeURIComponent(btn.dataset.delete)}`, { method: 'DELETE' });
+              loadArticlesTable();
+              refreshCounts();
+            },
+          });
+        });
+      });
+
+      setupArticleDragReorder(wrap);
+    }
+
+    // Native HTML5 drag-and-drop: grab a row by its handle, drop it on another
+    // row to reorder, then persist the new order to the server.
+    let draggedArticleSlug = null;
+
+    function setupArticleDragReorder(wrap) {
+      const tbody = wrap.querySelector('tbody');
+      if (!tbody) return;
+
+      tbody.querySelectorAll('.drag-handle').forEach((handle) => {
+        handle.addEventListener('dragstart', (e) => {
+          const row = handle.closest('tr');
+          draggedArticleSlug = row.dataset.slug;
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        handle.addEventListener('dragend', () => {
+          tbody.querySelectorAll('tr.dragging').forEach((r) => r.classList.remove('dragging'));
+          draggedArticleSlug = null;
+        });
+      });
+
+      tbody.querySelectorAll('tr[data-slug]').forEach((row) => {
+        row.addEventListener('dragover', (e) => {
+          if (!draggedArticleSlug) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+        row.addEventListener('drop', (e) => {
+          e.preventDefault();
+          if (!draggedArticleSlug || draggedArticleSlug === row.dataset.slug) return;
+          const draggedRow = tbody.querySelector(`tr[data-slug="${draggedArticleSlug}"]`);
+          if (!draggedRow) return;
+
+          const rows = Array.from(tbody.children);
+          if (rows.indexOf(draggedRow) < rows.indexOf(row)) row.after(draggedRow);
+          else row.before(draggedRow);
+
+          persistArticleOrder(tbody);
+        });
+      });
+    }
+
+    async function persistArticleOrder(tbody) {
+      const slugs = Array.from(tbody.querySelectorAll('tr[data-slug]')).map((r) => r.dataset.slug);
+      await api('/api/articles/reorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slugs }),
+      });
+    }
+
+    // --- podcasts table ---
+    async function loadPodcastsTable() {
+      const wrap = document.getElementById('podcasts-table-wrap');
+      wrap.innerHTML = '<p class="empty-note">Loading…</p>';
+      const { ok, data } = await api('/api/podcasts');
+      if (!ok) { wrap.innerHTML = '<p class="empty-note">Couldn’t load podcasts.</p>'; return; }
+      if (data.length === 0) { wrap.innerHTML = '<p class="empty-note">No episodes yet. Click "New Episode" to add one.</p>'; return; }
+
+      const rows = data.map((p) => `
+        <tr data-slug="${p.slug}">
+          <td class="drag-handle-cell"><span class="drag-handle" draggable="true" title="Drag to reorder">⠿</span></td>
+          <td class="cell-headline" title="${escapeHtml(p.title)}">${escapeHtml(p.title)}</td>
+          <td class="cell-meta">${escapeHtml(p.href)}</td>
+          <td class="cell-meta">${escapeHtml(String(p.order))}</td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn-small" data-edit="${p.slug}">Edit</button>
+            <button type="button" class="btn btn-small btn-danger" data-delete="${p.slug}" data-title="${escapeHtml(p.title)}">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th></th><th>Title</th><th>Link</th><th>Order</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      wrap.querySelectorAll('[data-edit]').forEach((btn) => {
+        btn.addEventListener('click', () => openPodcastEditor(btn.dataset.edit));
+      });
+      wrap.querySelectorAll('[data-delete]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          confirmAction({
+            title: 'Move to trash?',
+            message: `"${btn.dataset.title}" will be moved to Trash. It won't be visible on the live site, and you can restore it later.`,
+            confirmLabel: 'Move to trash',
+            onConfirm: async () => {
+              await api(`/api/podcasts/${encodeURIComponent(btn.dataset.delete)}`, { method: 'DELETE' });
+              loadPodcastsTable();
+              refreshCounts();
+            },
+          });
+        });
+      });
+
+      setupPodcastDragReorder(wrap);
+    }
+
+    // Native HTML5 drag-and-drop: grab a row by its handle, drop it on another
+    // row to reorder, then persist the new order to the server.
+    let draggedPodcastSlug = null;
+
+    function setupPodcastDragReorder(wrap) {
+      const tbody = wrap.querySelector('tbody');
+      if (!tbody) return;
+
+      tbody.querySelectorAll('.drag-handle').forEach((handle) => {
+        handle.addEventListener('dragstart', (e) => {
+          const row = handle.closest('tr');
+          draggedPodcastSlug = row.dataset.slug;
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        handle.addEventListener('dragend', () => {
+          tbody.querySelectorAll('tr.dragging').forEach((r) => r.classList.remove('dragging'));
+          draggedPodcastSlug = null;
+        });
+      });
+
+      tbody.querySelectorAll('tr[data-slug]').forEach((row) => {
+        row.addEventListener('dragover', (e) => {
+          if (!draggedPodcastSlug) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+        row.addEventListener('drop', (e) => {
+          e.preventDefault();
+          if (!draggedPodcastSlug || draggedPodcastSlug === row.dataset.slug) return;
+          const draggedRow = tbody.querySelector(`tr[data-slug="${draggedPodcastSlug}"]`);
+          if (!draggedRow) return;
+
+          const rows = Array.from(tbody.children);
+          if (rows.indexOf(draggedRow) < rows.indexOf(row)) row.after(draggedRow);
+          else row.before(draggedRow);
+
+          persistPodcastOrder(tbody);
+        });
+      });
+    }
+
+    async function persistPodcastOrder(tbody) {
+      const slugs = Array.from(tbody.querySelectorAll('tr[data-slug]')).map((r) => r.dataset.slug);
+      await api('/api/podcasts/reorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slugs }),
+      });
+    }
+
+    // --- trash table (unified across articles + podcasts) ---
+    async function loadTrashTable() {
+      const wrap = document.getElementById('trash-table-wrap');
+      wrap.innerHTML = '<p class="empty-note">Loading…</p>';
+      const { ok, data } = await api('/api/trash');
+      if (!ok) { wrap.innerHTML = '<p class="empty-note">Couldn’t load trash.</p>'; return; }
+      if (data.length === 0) { wrap.innerHTML = '<p class="empty-note">Trash is empty.</p>'; return; }
+
+      const rows = data.map((item) => `
+        <tr>
+          <td class="cell-meta" style="text-transform: capitalize;">${escapeHtml(item.type)}</td>
+          <td class="cell-headline" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn-small" data-restore="${item.slug}" data-type="${item.type}">Restore</button>
+            <button type="button" class="btn btn-small btn-danger" data-purge="${item.slug}" data-type="${item.type}" data-title="${escapeHtml(item.title)}">Delete Forever</button>
+          </td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>Type</th><th>Title</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      wrap.querySelectorAll('[data-restore]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          await api(`/api/trash/${btn.dataset.type}/${encodeURIComponent(btn.dataset.restore)}/restore`, { method: 'POST' });
+          loadTrashTable();
+          refreshCounts();
+        });
+      });
+      wrap.querySelectorAll('[data-purge]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          confirmAction({
+            title: 'Delete forever?',
+            message: `"${btn.dataset.title}" will be permanently deleted. This cannot be undone.`,
+            confirmLabel: 'Delete forever',
+            onConfirm: async () => {
+              await api(`/api/trash/${btn.dataset.type}/${encodeURIComponent(btn.dataset.purge)}`, { method: 'DELETE' });
+              loadTrashTable();
+              refreshCounts();
+            },
+          });
+        });
+      });
+    }
+
+    document.getElementById('empty-trash-btn').addEventListener('click', () => {
+      confirmAction({
+        title: 'Empty trash?',
+        message: 'Every article currently in Trash will be permanently deleted. This cannot be undone.',
+        confirmLabel: 'Empty trash',
+        onConfirm: async () => {
+          await api('/api/trash', { method: 'DELETE' });
+          loadTrashTable();
+          refreshCounts();
+        },
+      });
+    });
+
+    // --- media bank: audio ---
+    let audioLibraryCache = null; // shared with the podcast editor's audio picker
+
+    async function getAudioLibrary(forceRefresh) {
+      if (audioLibraryCache && !forceRefresh) return audioLibraryCache;
+      const { ok, data } = await api('/api/media/audio');
+      audioLibraryCache = ok ? data : [];
+      return audioLibraryCache;
+    }
+
+    function formatBytes(bytes) {
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    async function loadAudioTable() {
+      const wrap = document.getElementById('audio-table-wrap');
+      wrap.innerHTML = '<p class="empty-note">Loading…</p>';
+      const { ok, data } = await api('/api/media/audio');
+      if (!ok) { wrap.innerHTML = '<p class="empty-note">Couldn’t load audio files.</p>'; return; }
+      if (data.length === 0) { wrap.innerHTML = '<p class="empty-note">No audio files yet. Upload one above.</p>'; return; }
+
+      const rows = data.map((f) => `
+        <tr>
+          <td class="cell-headline" title="${escapeHtml(f.filename)}">${escapeHtml(f.filename)}</td>
+          <td class="cell-meta">${formatBytes(f.size)}</td>
+          <td class="cell-audio"><audio controls preload="none" src="${escapeHtml(f.url)}"></audio></td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn-small btn-danger" data-delete-audio="${f.filename}">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>Filename</th><th>Size</th><th>Preview</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      wrap.querySelectorAll('[data-delete-audio]').forEach((btn) => {
+        const filename = btn.dataset.deleteAudio;
+        btn.addEventListener('click', () => {
+          confirmAction({
+            title: 'Delete audio file?',
+            message: `"${filename}" will be permanently deleted. This cannot be undone, and anything linking to it will break.`,
+            confirmLabel: 'Delete forever',
+            onConfirm: async () => {
+              await api(`/api/media/audio/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+              audioLibraryCache = null;
+              loadAudioTable();
+            },
+          });
+        });
+      });
+    }
+
+    const audioUploadInput = document.getElementById('audio-upload-input');
+    const audioUploadStatus = document.getElementById('audio-upload-status');
+
+    document.getElementById('audio-upload-btn').addEventListener('click', async () => {
+      const file = audioUploadInput.files && audioUploadInput.files[0];
+      audioUploadStatus.classList.remove('visible', 'success', 'error');
+      if (!file) {
+        audioUploadStatus.classList.add('visible', 'error');
+        audioUploadStatus.textContent = 'Choose a file first.';
+        return;
+      }
+
+      audioUploadStatus.classList.add('visible');
+      audioUploadStatus.textContent = 'Uploading…';
+
+      const res = await fetch('/api/media/audio', {
+        method: 'POST',
+        headers: {
+          'X-Filename': encodeURIComponent(file.name),
+          'Content-Type': file.type || 'application/octet-stream',
+        },
+        body: file,
+      });
+      let data = null;
+      try { data = await res.json(); } catch (_e) { /* no body */ }
+
+      if (res.ok) {
+        audioUploadStatus.classList.add('success');
+        audioUploadStatus.textContent = 'Uploaded.';
+        audioUploadInput.value = '';
+        audioLibraryCache = null;
+        loadAudioTable();
+      } else {
+        audioUploadStatus.classList.add('error');
+        audioUploadStatus.textContent = (data && data.error) || 'Upload failed.';
+      }
+    });
+
+    // --- editor (create / edit) ---
+    function resetEditorForm() {
+      editForm.reset();
+      editForm.style.display = 'block';
+      editLoadError.classList.remove('visible');
+      saveStatus.classList.remove('visible', 'success', 'error');
+    }
+
+    async function openEditor(slug) {
+      editorMode = 'edit';
+      currentSlug = slug;
+      editorTitle.textContent = 'Edit story';
+      slugField.style.display = 'none';
+      showSection('editor');
+      resetEditorForm();
+
+      const { ok, data } = await api(`/api/articles/${encodeURIComponent(slug)}`);
+      if (!ok) {
+        editLoadError.classList.add('visible');
+        editForm.style.display = 'none';
+        return;
+      }
+      const { meta, body } = data;
+      document.getElementById('field-headline').value = meta.Headline || '';
+      document.getElementById('field-subhead').value = meta.Subhead || '';
+      document.getElementById('field-author').value = meta.Author || '';
+      document.getElementById('field-author-headshot').value = meta.AuthorHeadshot || '';
+      document.getElementById('field-date').value = meta.Date || '';
+      document.getElementById('field-image').value = meta.Image || '';
+      document.getElementById('field-image-alt').value = meta.ImageAlt || '';
+      document.getElementById('field-image-credit').value = meta.ImageCredit || '';
+      document.getElementById('field-body').value = body || '';
+    }
+
+    function openNewStoryEditor() {
+      editorMode = 'create';
+      currentSlug = null;
+      slugTouched = false;
+      editorTitle.textContent = 'New story';
+      slugField.style.display = 'flex';
+      showSection('editor');
+      resetEditorForm();
+      slugInput.value = '';
+    }
+
+    headlineInput.addEventListener('input', () => {
+      if (editorMode === 'create' && !slugTouched) {
+        slugInput.value = slugify(headlineInput.value);
+      }
+    });
+    slugInput.addEventListener('input', () => { slugTouched = true; });
+
+    document.getElementById('new-story-btn').addEventListener('click', openNewStoryEditor);
+    document.getElementById('back-link').addEventListener('click', () => showSection('articles'));
+
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      saveStatus.classList.remove('visible', 'success', 'error');
+
+      const meta = {
+        Headline: document.getElementById('field-headline').value.trim(),
+        Subhead: document.getElementById('field-subhead').value.trim(),
+        Author: document.getElementById('field-author').value.trim(),
+        AuthorHeadshot: document.getElementById('field-author-headshot').value.trim(),
+        Date: document.getElementById('field-date').value.trim(),
+        Image: document.getElementById('field-image').value.trim(),
+        ImageAlt: document.getElementById('field-image-alt').value.trim(),
+        ImageCredit: document.getElementById('field-image-credit').value.trim(),
+      };
+      const body = document.getElementById('field-body').value;
+
+      let result;
+      if (editorMode === 'create') {
+        const slug = slugInput.value.trim();
+        result = await api('/api/articles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, meta, body }),
+        });
+      } else {
+        result = await api(`/api/articles/${encodeURIComponent(currentSlug)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ meta, body }),
+        });
+      }
+
+      saveStatus.classList.add('visible');
+      if (result.ok) {
+        saveStatus.classList.add('success');
+        saveStatus.textContent = editorMode === 'create' ? 'Created.' : 'Saved.';
+        refreshCounts();
+        if (editorMode === 'create') {
+          editorMode = 'edit';
+          currentSlug = slugInput.value.trim();
+          slugField.style.display = 'none';
+          editorTitle.textContent = 'Edit story';
+        }
+      } else {
+        saveStatus.classList.add('error');
+        saveStatus.textContent = (result.data && result.data.error) || 'Something went wrong saving this article.';
+      }
+    });
+
+    // --- podcast editor (create / edit) ---
+    const podcastEditForm = document.getElementById('podcast-edit-form');
+    const podcastEditorTitle = document.getElementById('podcast-editor-title');
+    const podcastEditLoadError = document.getElementById('podcast-edit-load-error');
+    const podcastSaveStatus = document.getElementById('podcast-save-status');
+    const podcastSlugField = document.getElementById('podcast-slug-field');
+    const podcastSlugInput = document.getElementById('podcast-field-slug');
+    const podcastTitleInput = document.getElementById('podcast-field-title');
+
+    let podcastEditorMode = 'edit'; // 'edit' | 'create'
+    let currentPodcastSlug = null;
+    let podcastSlugTouched = false;
+
+    function resetPodcastEditorForm() {
+      podcastEditForm.reset();
+      podcastEditForm.style.display = 'block';
+      podcastEditLoadError.classList.remove('visible');
+      podcastSaveStatus.classList.remove('visible', 'success', 'error');
+    }
+
+    async function openPodcastEditor(slug) {
+      podcastEditorMode = 'edit';
+      currentPodcastSlug = slug;
+      podcastEditorTitle.textContent = 'Edit episode';
+      podcastSlugField.style.display = 'none';
+      showSection('podcastEditor');
+      resetPodcastEditorForm();
+
+      const { ok, data } = await api(`/api/podcasts/${encodeURIComponent(slug)}`);
+      if (!ok) {
+        podcastEditLoadError.classList.add('visible');
+        podcastEditForm.style.display = 'none';
+        return;
+      }
+      const { meta, body } = data;
+      document.getElementById('podcast-field-title').value = meta.Title || '';
+      document.getElementById('podcast-field-desc').value = meta.Desc || '';
+      document.getElementById('podcast-field-order').value = meta.Order || '';
+      document.getElementById('podcast-field-href').value = meta.Href || '';
+      document.getElementById('podcast-field-audio').value = meta.AudioUrl || '';
+      document.getElementById('podcast-field-thumb').value = meta.Thumb || '';
+      document.getElementById('podcast-field-thumb-alt').value = meta.ThumbAlt || '';
+      document.getElementById('podcast-field-thumb-credit').value = meta.ThumbCredit || '';
+      document.getElementById('podcast-field-episode-label').value = meta.EpisodeLabel || '';
+      document.getElementById('podcast-field-written').value = meta.Written || '';
+      document.getElementById('podcast-field-voiced').value = meta.Voiced || '';
+      document.getElementById('podcast-field-research').value = meta.ResearchInterviews || '';
+      document.getElementById('podcast-field-produced').value = meta.Produced || '';
+      document.getElementById('podcast-field-music-label').value = meta.MusicLabel || '';
+      document.getElementById('podcast-field-music').value = meta.Music || '';
+      document.getElementById('podcast-field-body').value = body || '';
+    }
+
+    function openNewEpisodeEditor() {
+      podcastEditorMode = 'create';
+      currentPodcastSlug = null;
+      podcastSlugTouched = false;
+      podcastEditorTitle.textContent = 'New episode';
+      podcastSlugField.style.display = 'flex';
+      showSection('podcastEditor');
+      resetPodcastEditorForm();
+      podcastSlugInput.value = '';
+    }
+
+    podcastTitleInput.addEventListener('input', () => {
+      if (podcastEditorMode === 'create' && !podcastSlugTouched) {
+        podcastSlugInput.value = slugify(podcastTitleInput.value);
+      }
+    });
+    podcastSlugInput.addEventListener('input', () => { podcastSlugTouched = true; });
+
+    document.getElementById('new-episode-btn').addEventListener('click', openNewEpisodeEditor);
+    document.getElementById('podcast-back-link').addEventListener('click', () => showSection('podcasts'));
+
+    podcastEditForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      podcastSaveStatus.classList.remove('visible', 'success', 'error');
+
+      const meta = {
+        Title: document.getElementById('podcast-field-title').value.trim(),
+        Desc: document.getElementById('podcast-field-desc').value.trim(),
+        Order: document.getElementById('podcast-field-order').value.trim(),
+        Href: document.getElementById('podcast-field-href').value.trim(),
+        AudioUrl: document.getElementById('podcast-field-audio').value.trim(),
+        Thumb: document.getElementById('podcast-field-thumb').value.trim(),
+        ThumbAlt: document.getElementById('podcast-field-thumb-alt').value.trim(),
+        ThumbCredit: document.getElementById('podcast-field-thumb-credit').value.trim(),
+        EpisodeLabel: document.getElementById('podcast-field-episode-label').value.trim(),
+        Written: document.getElementById('podcast-field-written').value.trim(),
+        Voiced: document.getElementById('podcast-field-voiced').value.trim(),
+        ResearchInterviews: document.getElementById('podcast-field-research').value.trim(),
+        Produced: document.getElementById('podcast-field-produced').value.trim(),
+        MusicLabel: document.getElementById('podcast-field-music-label').value.trim(),
+        Music: document.getElementById('podcast-field-music').value.trim(),
+      };
+      const body = document.getElementById('podcast-field-body').value;
+
+      let result;
+      if (podcastEditorMode === 'create') {
+        const slug = podcastSlugInput.value.trim();
+        result = await api('/api/podcasts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, meta, body }),
+        });
+      } else {
+        result = await api(`/api/podcasts/${encodeURIComponent(currentPodcastSlug)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ meta, body }),
+        });
+      }
+
+      podcastSaveStatus.classList.add('visible');
+      if (result.ok) {
+        podcastSaveStatus.classList.add('success');
+        podcastSaveStatus.textContent = podcastEditorMode === 'create' ? 'Created.' : 'Saved.';
+        refreshCounts();
+        if (podcastEditorMode === 'create') {
+          podcastEditorMode = 'edit';
+          currentPodcastSlug = podcastSlugInput.value.trim();
+          podcastSlugField.style.display = 'none';
+          podcastEditorTitle.textContent = 'Edit episode';
+        }
+      } else {
+        podcastSaveStatus.classList.add('error');
+        podcastSaveStatus.textContent = (result.data && result.data.error) || 'Something went wrong saving this episode.';
+      }
+    });
+
+    // --- podcast editor: audio field media-library search + inline upload ---
+    const podcastAudioInput = document.getElementById('podcast-field-audio');
+    const podcastAudioSuggestions = document.getElementById('podcast-audio-suggestions');
+
+    function renderAudioSuggestions(files) {
+      if (files.length === 0) {
+        podcastAudioSuggestions.innerHTML = '<div class="audio-suggestions-empty">No matching audio files.</div>';
+      } else {
+        podcastAudioSuggestions.innerHTML = files.slice(0, 8).map((f) => `
+          <div class="audio-suggestion" data-url="${escapeHtml(f.url)}">
+            <span>${escapeHtml(f.filename)}</span>
+            <span class="audio-suggestion-size">${formatBytes(f.size)}</span>
+          </div>
+        `).join('');
+        podcastAudioSuggestions.querySelectorAll('.audio-suggestion').forEach((el) => {
+          el.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // fires before blur, so the click isn't lost when the input loses focus
+            podcastAudioInput.value = el.dataset.url;
+            hideAudioSuggestions();
+          });
+        });
+      }
+      podcastAudioSuggestions.classList.add('visible');
+    }
+
+    function hideAudioSuggestions() {
+      podcastAudioSuggestions.classList.remove('visible');
+    }
+
+    async function updateAudioSuggestions() {
+      const query = podcastAudioInput.value.trim().toLowerCase();
+      const files = await getAudioLibrary();
+      const matches = query ? files.filter((f) => f.filename.toLowerCase().includes(query)) : files;
+      renderAudioSuggestions(matches);
+    }
+
+    podcastAudioInput.addEventListener('focus', updateAudioSuggestions);
+    podcastAudioInput.addEventListener('input', updateAudioSuggestions);
+    podcastAudioInput.addEventListener('blur', () => {
+      setTimeout(hideAudioSuggestions, 150);
+    });
+    podcastAudioInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideAudioSuggestions();
+    });
+
+    const podcastAudioUploadBtn = document.getElementById('podcast-audio-upload-btn');
+    const podcastAudioUploadInput = document.getElementById('podcast-audio-upload-input');
+    const podcastAudioUploadStatus = document.getElementById('podcast-audio-upload-status');
+
+    podcastAudioUploadBtn.addEventListener('click', () => podcastAudioUploadInput.click());
+
+    podcastAudioUploadInput.addEventListener('change', async () => {
+      const file = podcastAudioUploadInput.files && podcastAudioUploadInput.files[0];
+      if (!file) return;
+
+      podcastAudioUploadStatus.classList.remove('visible', 'success', 'error');
+      podcastAudioUploadStatus.classList.add('visible');
+      podcastAudioUploadStatus.textContent = 'Uploading…';
+
+      const res = await fetch('/api/media/audio', {
+        method: 'POST',
+        headers: {
+          'X-Filename': encodeURIComponent(file.name),
+          'Content-Type': file.type || 'application/octet-stream',
+        },
+        body: file,
+      });
+      let data = null;
+      try { data = await res.json(); } catch (_e) { /* no body */ }
+
+      if (res.ok) {
+        podcastAudioUploadStatus.classList.add('success');
+        podcastAudioUploadStatus.textContent = 'Uploaded — audio URL set below.';
+        podcastAudioInput.value = data.filename ? `/audio/${encodeURIComponent(data.filename)}` : podcastAudioInput.value;
+        audioLibraryCache = null;
+      } else {
+        podcastAudioUploadStatus.classList.add('error');
+        podcastAudioUploadStatus.textContent = (data && data.error) || 'Upload failed.';
+      }
+      podcastAudioUploadInput.value = '';
+    });
+
+    // --- media bank: images ---
+    let imageLibraryCache = null; // shared with the article/podcast editors' image pickers
+
+    async function getImageLibrary(forceRefresh) {
+      if (imageLibraryCache && !forceRefresh) return imageLibraryCache;
+      const { ok, data } = await api('/api/media/images');
+      imageLibraryCache = ok ? data : [];
+      return imageLibraryCache;
+    }
+
+    // --- media bank: headshots ---
+    let headshotLibraryCache = null; // shared with the article editor's author headshot picker
+
+    async function getHeadshotLibrary(forceRefresh) {
+      if (headshotLibraryCache && !forceRefresh) return headshotLibraryCache;
+      const { ok, data } = await api('/api/media/headshots');
+      headshotLibraryCache = ok ? data : [];
+      return headshotLibraryCache;
+    }
+
+    async function loadHeadshotTable() {
+      const wrap = document.getElementById('headshot-table-wrap');
+      wrap.innerHTML = '<p class="empty-note">Loading…</p>';
+      const { ok, data } = await api('/api/media/headshots');
+      if (!ok) { wrap.innerHTML = '<p class="empty-note">Couldn’t load headshots.</p>'; return; }
+      if (data.length === 0) { wrap.innerHTML = '<p class="empty-note">No headshots yet. Upload one above.</p>'; return; }
+
+      const rows = data.map((f) => `
+        <tr>
+          <td class="cell-image-thumb"><img src="${escapeHtml(f.url)}" alt="${escapeHtml(f.filename)}" loading="lazy"></td>
+          <td class="cell-headline" title="${escapeHtml(f.filename)}">${escapeHtml(f.filename)}</td>
+          <td class="cell-meta">${formatBytes(f.size)}</td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn-small btn-danger" data-delete-headshot="${f.filename}">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>Preview</th><th>Filename</th><th>Size</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      wrap.querySelectorAll('[data-delete-headshot]').forEach((btn) => {
+        const filename = btn.dataset.deleteHeadshot;
+        btn.addEventListener('click', () => {
+          confirmAction({
+            title: 'Delete headshot?',
+            message: `"${filename}" will be permanently deleted. This cannot be undone, and any story using it will lose its byline photo.`,
+            confirmLabel: 'Delete forever',
+            onConfirm: async () => {
+              await api(`/api/media/headshots/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+              headshotLibraryCache = null;
+              loadHeadshotTable();
+            },
+          });
+        });
+      });
+    }
+
+    async function uploadHeadshotFile(file) {
+      const result = await uploadMediaFile('/api/media/headshots', file);
+      if (result.ok) headshotLibraryCache = null;
+      return result;
+    }
+
+    const headshotUploadInput = document.getElementById('headshot-upload-input');
+    const headshotUploadStatus = document.getElementById('headshot-upload-status');
+
+    document.getElementById('headshot-upload-btn').addEventListener('click', async () => {
+      const file = headshotUploadInput.files && headshotUploadInput.files[0];
+      headshotUploadStatus.classList.remove('visible', 'success', 'error');
+      if (!file) {
+        headshotUploadStatus.classList.add('visible', 'error');
+        headshotUploadStatus.textContent = 'Choose a file first.';
+        return;
+      }
+
+      headshotUploadStatus.classList.add('visible');
+      headshotUploadStatus.textContent = 'Uploading…';
+
+      const { ok, data } = await uploadHeadshotFile(file);
+      if (ok) {
+        headshotUploadStatus.classList.add('success');
+        headshotUploadStatus.textContent = 'Uploaded.';
+        headshotUploadInput.value = '';
+        loadHeadshotTable();
+      } else {
+        headshotUploadStatus.classList.add('error');
+        headshotUploadStatus.textContent = (data && data.error) || 'Upload failed.';
+      }
+    });
+
+    async function loadImageTable() {
+      const wrap = document.getElementById('image-table-wrap');
+      wrap.innerHTML = '<p class="empty-note">Loading…</p>';
+      const { ok, data } = await api('/api/media/images');
+      if (!ok) { wrap.innerHTML = '<p class="empty-note">Couldn’t load images.</p>'; return; }
+      if (data.length === 0) { wrap.innerHTML = '<p class="empty-note">No images yet. Upload one above.</p>'; return; }
+
+      const rows = data.map((f) => `
+        <tr>
+          <td class="cell-image-thumb"><img src="${escapeHtml(f.url)}" alt="${escapeHtml(f.filename)}" loading="lazy"></td>
+          <td class="cell-headline" title="${escapeHtml(f.filename)}">${escapeHtml(f.filename)}</td>
+          <td class="cell-meta">${formatBytes(f.size)}</td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn-small btn-danger" data-delete-image="${f.filename}">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>Preview</th><th>Filename</th><th>Size</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      wrap.querySelectorAll('[data-delete-image]').forEach((btn) => {
+        const filename = btn.dataset.deleteImage;
+        btn.addEventListener('click', () => {
+          confirmAction({
+            title: 'Delete image?',
+            message: `"${filename}" will be permanently deleted. This cannot be undone, and anything linking to it will break.`,
+            confirmLabel: 'Delete forever',
+            onConfirm: async () => {
+              await api(`/api/media/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+              imageLibraryCache = null;
+              loadImageTable();
+            },
+          });
+        });
+      });
+    }
+
+    // Generic raw-body upload, shared by the images/headshots/audio upload flows.
+    async function uploadMediaFile(endpoint, file) {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'X-Filename': encodeURIComponent(file.name),
+          'Content-Type': file.type || 'application/octet-stream',
+        },
+        body: file,
+      });
+      let data = null;
+      try { data = await res.json(); } catch (_e) { /* no body */ }
+      return { ok: res.ok, data };
+    }
+
+    async function uploadImageFile(file) {
+      const result = await uploadMediaFile('/api/media/images', file);
+      if (result.ok) imageLibraryCache = null;
+      return result;
+    }
+
+    const imageUploadInput = document.getElementById('image-upload-input');
+    const imageUploadStatus = document.getElementById('image-upload-status');
+
+    document.getElementById('image-upload-btn').addEventListener('click', async () => {
+      const file = imageUploadInput.files && imageUploadInput.files[0];
+      imageUploadStatus.classList.remove('visible', 'success', 'error');
+      if (!file) {
+        imageUploadStatus.classList.add('visible', 'error');
+        imageUploadStatus.textContent = 'Choose a file first.';
+        return;
+      }
+
+      imageUploadStatus.classList.add('visible');
+      imageUploadStatus.textContent = 'Uploading…';
+
+      const { ok, data } = await uploadImageFile(file);
+      if (ok) {
+        imageUploadStatus.classList.add('success');
+        imageUploadStatus.textContent = 'Uploaded.';
+        imageUploadInput.value = '';
+        loadImageTable();
+      } else {
+        imageUploadStatus.classList.add('error');
+        imageUploadStatus.textContent = (data && data.error) || 'Upload failed.';
+      }
+    });
+
+    // Reusable search-as-you-type + inline-upload picker for an image/headshot URL field.
+    // getLibrary() returns the [{filename, url, size}] list to search; uploadFn(file)
+    // uploads and returns { ok, data }; urlPrefix builds the field value on upload success.
+    function setupImagePicker({ inputId, suggestionsId, uploadBtnId, uploadInputId, statusId, getLibrary, uploadFn, urlPrefix, emptyLabel }) {
+      const input = document.getElementById(inputId);
+      const suggestions = document.getElementById(suggestionsId);
+      const uploadBtn = document.getElementById(uploadBtnId);
+      const uploadInput = document.getElementById(uploadInputId);
+      const status = document.getElementById(statusId);
+
+      function hide() { suggestions.classList.remove('visible'); }
+
+      function render(files) {
+        if (files.length === 0) {
+          suggestions.innerHTML = `<div class="audio-suggestions-empty">${emptyLabel || 'No matching files.'}</div>`;
+        } else {
+          suggestions.innerHTML = files.slice(0, 8).map((f) => `
+            <div class="audio-suggestion" data-url="${escapeHtml(f.url)}">
+              <span>${escapeHtml(f.filename)}</span>
+              <span class="audio-suggestion-size">${formatBytes(f.size)}</span>
+            </div>
+          `).join('');
+          suggestions.querySelectorAll('.audio-suggestion').forEach((el) => {
+            el.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              input.value = el.dataset.url;
+              hide();
+            });
+          });
+        }
+        suggestions.classList.add('visible');
+      }
+
+      async function update() {
+        const query = input.value.trim().toLowerCase();
+        const files = await getLibrary();
+        const matches = query ? files.filter((f) => f.filename.toLowerCase().includes(query)) : files;
+        render(matches);
+      }
+
+      input.addEventListener('focus', update);
+      input.addEventListener('input', update);
+      input.addEventListener('blur', () => setTimeout(hide, 150));
+      input.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+
+      uploadBtn.addEventListener('click', () => uploadInput.click());
+
+      uploadInput.addEventListener('change', async () => {
+        const file = uploadInput.files && uploadInput.files[0];
+        if (!file) return;
+
+        status.classList.remove('visible', 'success', 'error');
+        status.classList.add('visible');
+        status.textContent = 'Uploading…';
+
+        const { ok, data } = await uploadFn(file);
+        if (ok) {
+          status.classList.add('success');
+          status.textContent = 'Uploaded — URL set below.';
+          input.value = data.filename ? `${urlPrefix}/${encodeURIComponent(data.filename)}` : input.value;
+        } else {
+          status.classList.add('error');
+          status.textContent = (data && data.error) || 'Upload failed.';
+        }
+        uploadInput.value = '';
+      });
+    }
+
+    // --- auth ---
+    function setAuthedUI(authed) {
+      document.body.classList.toggle('authed', authed);
+      loginScreen.style.display = authed ? 'none' : 'block';
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.classList.remove('visible');
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const { ok } = await api('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (ok) {
+        setAuthedUI(true);
+        showSection('articles');
+        refreshCounts();
+      } else {
+        loginError.classList.add('visible');
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await api('/api/logout', { method: 'POST' });
+      setAuthedUI(false);
+      loginForm.reset();
+    });
+
+    (async function init() {
+      setupImagePicker({
+        inputId: 'field-image',
+        suggestionsId: 'field-image-suggestions',
+        uploadBtnId: 'field-image-upload-btn',
+        uploadInputId: 'field-image-upload-input',
+        statusId: 'field-image-upload-status',
+        getLibrary: getImageLibrary,
+        uploadFn: uploadImageFile,
+        urlPrefix: '/images',
+        emptyLabel: 'No matching images.',
+      });
+      setupImagePicker({
+        inputId: 'podcast-field-thumb',
+        suggestionsId: 'podcast-field-thumb-suggestions',
+        uploadBtnId: 'podcast-field-thumb-upload-btn',
+        uploadInputId: 'podcast-field-thumb-upload-input',
+        statusId: 'podcast-field-thumb-upload-status',
+        getLibrary: getImageLibrary,
+        uploadFn: uploadImageFile,
+        urlPrefix: '/images',
+        emptyLabel: 'No matching images.',
+      });
+      setupImagePicker({
+        inputId: 'field-author-headshot',
+        suggestionsId: 'field-author-headshot-suggestions',
+        uploadBtnId: 'field-author-headshot-upload-btn',
+        uploadInputId: 'field-author-headshot-upload-input',
+        statusId: 'field-author-headshot-upload-status',
+        getLibrary: getHeadshotLibrary,
+        uploadFn: uploadHeadshotFile,
+        urlPrefix: '/headshots',
+        emptyLabel: 'No matching headshots.',
+      });
+      const { data } = await api('/api/session');
+      const authenticated = Boolean(data && data.authenticated);
+      setAuthedUI(authenticated);
+      if (authenticated) {
+        showSection('articles');
+        refreshCounts();
+      }
+    })();
+  </script>
+</body>
+</html>

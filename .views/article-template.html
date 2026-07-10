@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Story - Who Owns the Flavor</title>
+  <title>{{TITLE}}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,7 @@
       font-weight: 800;
       margin: 0 0 0.5rem;
       text-align: center;
-      max-width: 22ch;
+      max-width: 28ch;
     }
 
     .article-subtitle {
@@ -121,7 +121,17 @@
       margin-right: auto;
     }
 
-    /* NEW: Pull quote styling */
+    .section-label {
+      font-family: "Instrument Serif", serif;
+      font-size: 1.6rem;
+      color: var(--red1);
+      margin: 1.5rem auto 0.75rem;
+      max-width: 450px;
+      width: 100%;
+      font-style: italic;
+      font-weight: 800;
+    }
+
     .pull-quote {
       max-width: 520px;
       margin: 2.1rem auto 2.2rem;
@@ -150,96 +160,51 @@
       font-style: normal;
     }
 
+    .resource {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(0,0,0,0.7);
+      max-width: 450px;
+    }
+
+    .resource a {
+      color: var(--red1);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
     @media (max-width: 600px) {
       .article-container { max-width: 90%; }
       .article-title { font-size: 2rem; }
+      .article-subtitle { font-size: 0.95rem; }
       .byline { font-size: 1rem; }
       .dateline { font-size: 0.85rem; }
       .article-paragraph { font-size: 0.95rem; max-width: 75%; }
+      .section-label { font-size: 1.1rem; max-width: 75%; }
       .pull-quote { max-width: 78%; }
     }
   </style>
 </head>
 
 <body>
-  <script src="../nav.js"></script>
+  <script src="/nav.js"></script>
 
   <div class="article-container">
-    <h2 class="article-title">How Chef Frank Brigtsen preserves Creole roots while guiding its evolution</h2>
+    <h2 class="article-title">{{HEADLINE}}</h2>
+    {{SUBHEAD_BLOCK}}
+    {{IMAGE_BLOCK}}
 
     <p class="byline">
       <span class="byline-wrap">
-        <img class="byline-avatar" id="byline-avatar-lola" alt="Lola Jahant headshot" />
-        By Lola Jahant
+        <img class="byline-avatar" src="{{AUTHOR_HEADSHOT}}" alt="{{AUTHOR_NAME}} headshot" />
+        By {{AUTHOR_NAME}}
         <span class="byline-sep">•</span>
-        <span class="dateline">Dec. 15, 2025</span>
+        <span class="dateline">{{DATE}}</span>
       </span>
     </p>
 
-    <p class="article-paragraph">
-      For Chef Frank Brigtsen, every bowl of gumbo carries a story. Devoted to New Orleans’ deep-rooted heritage, he has built his restaurant Brigtsen’s by preserving the city’s culture while guiding its evolution.
-    </p>
-
-    <p class="article-paragraph">
-      Considered a local culinary celebrity in New Orleans, Brigtsen was named one of FOOD &amp; WINE’s Top Ten New Chefs in America in 1988 and the James Beard Foundation’s Best Chef: Southeast in 1998.
-    </p>
-
-    <p class="article-paragraph">
-      His restaurant is well-awarded as well, earning accolades ranging from Zagat honors to the Ivy Award and was named one of the Top Ten Restaurants in New Orleans by The Times-Picayune.
-    </p>
-
-    <p class="article-paragraph">
-      Although celebrated for his mastery of Creole cuisine, Brigtsen says his work is about more than the food on the plate.
-    </p>
-
-    <figure class="pull-quote" aria-label="Pull quote">
-      <p>“Food is not just something to fill a belly,” Brigtsen said. “Food represents a culture. Food nourishes our spirits… restores us.”</p>
-      <cite>— Frank Brigtsen</cite>
-    </figure>
-
-    <p class="article-paragraph">
-      Beyond food, Brigtsen describes his restaurant as a space rooted in comfort and community. When reflecting on some of New Orleans’ difficult times such as Hurricane Katrina, he believes restaurants took on an even larger role.
-    </p>
-
-    <p class="article-paragraph">
-      “The restaurants were beacons of hope,” he said in reference to Hurricane Katrina. “They’re not just places to eat, they’re symbols of our culture, and they carry our culture forward from generation to generation.”
-    </p>
-
-    <p class="article-paragraph">
-      While he holds deep respect for tradition, Brigtsen also embraces change. He acknowledges that humans don’t always embrace radical change, but he remains optimistic about the city’s food culture.
-    </p>
-
-    <p class="article-paragraph">
-      “Think of a tree,” he explained when describing New Orleans cuisine. “It has roots, that’s the foundation — and then all these beautiful limbs and leaves start to grow and blossom. That’s how our restaurant culture is.”
-    </p>
-
-    <p class="article-paragraph">
-      Beyond his work in the kitchen, Brigtsen is committed to educating the next generation of chefs. He has taught public cooking classes for years, serves as an adjunct professor at the John Folse Culinary Institute and is the inaugural Chef-in-Residence at NOCCA. His goal, he says, is to help preserve and pass down the skills and traditions that shaped him.
-    </p>
-
-    <p class="article-paragraph">
-      “Some of the best Creole chefs you’ve never heard of,” he said. “That’s how this cuisine has been passed down from generation to generation.”
-    </p>
+    {{BODY}}
   </div>
-
-  <script>
-    window.HEADSHOTS = {
-      amber: "https://i.postimg.cc/KjMXZhhb/amber.jpg",
-      paige: "https://i.postimg.cc/8c681gg5/paige.jpg",
-      ron: "https://i.postimg.cc/nrD8Hff8/ron.jpg",
-      shane: "https://i.postimg.cc/D0XV233F/shane.jpg",
-      sophia: "https://i.postimg.cc/9073WHH0/sophia.jpg",
-      tanvi: "https://i.postimg.cc/nrD8Hffn/tanvi.jpg",
-      toryionna: "https://i.postimg.cc/gJ5FFkQz/toryionna.jpg",
-      lola: "https://i.postimg.cc/d0fwvBZm/lola.jpg"
-    };
-
-    (function() {
-      const el = document.getElementById("byline-avatar-lola");
-      if (el && window.HEADSHOTS && window.HEADSHOTS.lola) {
-        el.src = window.HEADSHOTS.lola;
-      }
-    })();
-  </script>
 </body>
 </html>

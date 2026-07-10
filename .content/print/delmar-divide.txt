@@ -4,6 +4,7 @@ Author: Lola Jahant
 AuthorHeadshot: /headshots/headshot-lola.jpg
 Date: Dec. 15, 2025
 Order: 1
+Desc: How restaurants, businesses and residents navigate change along the Delmar Divide.
 Image: /images/delmar-divide-trolley.jpg
 ImageAlt: Loop Trolley car eastbound on Delmar Boulevard near Limit Avenue in St. Louis, December 2018
 ImageCredit: Paul Sableman, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Loop_Trolley_car_001_eastbound_on_Delmar_Blvd_near_Limit_Ave,_December_2018.jpg)

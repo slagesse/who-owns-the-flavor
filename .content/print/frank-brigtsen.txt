@@ -3,6 +3,7 @@ Author: Lola Jahant
 AuthorHeadshot: /headshots/headshot-lola.jpg
 Date: Dec. 15, 2025
 Order: 3
+Desc: For Chef Frank Brigtsen, every bowl of gumbo carries a story — one rooted in New Orleans tradition while embracing change.
 
 For Chef Frank Brigtsen, every bowl of gumbo carries a story. Devoted to New Orleans’ deep-rooted heritage, he has built his restaurant Brigtsen’s by preserving the city’s culture while guiding its evolution.
 

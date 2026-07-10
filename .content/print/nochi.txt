@@ -3,6 +3,7 @@ Author: Torryionna Miller
 AuthorHeadshot: /headshots/headshot-toryionna.jpg
 Date: Dec. 21, 2025
 Order: 5
+Desc: NOCHI's fast-paced culinary curriculum gives students the baseline they need to move up in the kitchen.
 
 The New Orleans Culinary and Hospitality Institute was founded on a simple idea: New Orleans deserved a place to train the next generation of cooks, bakers, and hospitality leaders. Situated in the Warehouse District, the institute became a home for people who wanted to learn the craft of cooking while staying grounded in the culture that makes Louisiana food what it is.
 

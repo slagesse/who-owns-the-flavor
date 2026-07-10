@@ -3,6 +3,7 @@ Author: Amber Roldan
 AuthorHeadshot: /headshots/headshot-amber.jpg
 Date: Dec. 15, 2025
 Order: 6
+Desc: In Orange Mound, Ballhoggerz BBQ serves more than ribs — it carries neighborhood pride, history, and a legacy of giving back.
 
 Ballhoggerz BBQ is more than just a menu, it's an extension of connection to a community long celebrated for its culture. When you buy a slab of ribs, you are purchasing pride and a taste of history that goes all the way back to the late 1800s.
 

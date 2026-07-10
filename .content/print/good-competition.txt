@@ -2,7 +2,8 @@ Headline: “It’s in good competition”: the fight over flavor on The Hill
 Author: Amber Roldan
 AuthorHeadshot: /headshots/headshot-amber.jpg
 Date: Dec. 15, 2025
-Order: 8
+Order: 7
+Desc: Two Hill institutions tell similar origin stories about toasted ravioli — and a trademark attorney explains why “who did it first” may never matter legally.
 Image: /images/toasted-ravioli-stl.jpg
 ImageAlt: Toasted ravioli in St. Louis
 

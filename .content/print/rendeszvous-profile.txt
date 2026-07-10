@@ -3,6 +3,7 @@ Author: Lola Jahant
 AuthorHeadshot: /headshots/headshot-lola.jpg
 Date: Dec. 15, 2025
 Order: 4
+Desc: Since 1948, the Vergos family has served locals, tourists and celebrities its signature dry ribs — and kept the recipe (and the restaurant’s character) largely unchanged.
 Image: /images/rendezvous-interior.jpg
 ImageAlt: Rendezvous restaurant interior in Memphis
 

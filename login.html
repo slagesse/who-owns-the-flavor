@@ -309,7 +309,8 @@
     }
 
     .data-table tr:last-child td { border-bottom: none; }
-    .data-table tr:hover td { background: rgba(255,255,255,0.025); }
+    .data-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    .data-table tr:hover td { background: rgba(255,255,255,0.07); }
 
     .cell-headline {
       max-width: 340px;
@@ -397,6 +398,9 @@
     .drag-handle:hover { color: var(--cms-text); }
 
     tr.dragging { opacity: 0.4; }
+
+    tr.drag-over-top td { box-shadow: inset 0 2px 0 0 var(--red1); }
+    tr.drag-over-bottom td { box-shadow: inset 0 -2px 0 0 var(--red1); }
 
     .audio-picker {
       display: flex;
@@ -1074,6 +1078,10 @@
       const tbody = wrap.querySelector('tbody');
       if (!tbody) return;
 
+      function clearDropIndicators() {
+        tbody.querySelectorAll('tr').forEach((r) => r.classList.remove('drag-over-top', 'drag-over-bottom'));
+      }
+
       tbody.querySelectorAll('.drag-handle').forEach((handle) => {
         handle.addEventListener('dragstart', (e) => {
           const row = handle.closest('tr');
@@ -1083,6 +1091,7 @@
         });
         handle.addEventListener('dragend', () => {
           tbody.querySelectorAll('tr.dragging').forEach((r) => r.classList.remove('dragging'));
+          clearDropIndicators();
           draggedArticleSlug = null;
         });
       });
@@ -1092,16 +1101,22 @@
           if (!draggedArticleSlug) return;
           e.preventDefault();
           e.dataTransfer.dropEffect = 'move';
+
+          clearDropIndicators();
+          if (row.dataset.slug === draggedArticleSlug) return;
+          const before = e.clientY - row.getBoundingClientRect().top < row.offsetHeight / 2;
+          row.classList.add(before ? 'drag-over-top' : 'drag-over-bottom');
         });
         row.addEventListener('drop', (e) => {
           e.preventDefault();
+          clearDropIndicators();
           if (!draggedArticleSlug || draggedArticleSlug === row.dataset.slug) return;
           const draggedRow = tbody.querySelector(`tr[data-slug="${draggedArticleSlug}"]`);
           if (!draggedRow) return;
 
-          const rows = Array.from(tbody.children);
-          if (rows.indexOf(draggedRow) < rows.indexOf(row)) row.after(draggedRow);
-          else row.before(draggedRow);
+          const before = e.clientY - row.getBoundingClientRect().top < row.offsetHeight / 2;
+          if (before) row.before(draggedRow);
+          else row.after(draggedRow);
 
           persistArticleOrder(tbody);
         });
@@ -1174,6 +1189,10 @@
       const tbody = wrap.querySelector('tbody');
       if (!tbody) return;
 
+      function clearDropIndicators() {
+        tbody.querySelectorAll('tr').forEach((r) => r.classList.remove('drag-over-top', 'drag-over-bottom'));
+      }
+
       tbody.querySelectorAll('.drag-handle').forEach((handle) => {
         handle.addEventListener('dragstart', (e) => {
           const row = handle.closest('tr');
@@ -1183,6 +1202,7 @@
         });
         handle.addEventListener('dragend', () => {
           tbody.querySelectorAll('tr.dragging').forEach((r) => r.classList.remove('dragging'));
+          clearDropIndicators();
           draggedPodcastSlug = null;
         });
       });
@@ -1192,16 +1212,22 @@
           if (!draggedPodcastSlug) return;
           e.preventDefault();
           e.dataTransfer.dropEffect = 'move';
+
+          clearDropIndicators();
+          if (row.dataset.slug === draggedPodcastSlug) return;
+          const before = e.clientY - row.getBoundingClientRect().top < row.offsetHeight / 2;
+          row.classList.add(before ? 'drag-over-top' : 'drag-over-bottom');
         });
         row.addEventListener('drop', (e) => {
           e.preventDefault();
+          clearDropIndicators();
           if (!draggedPodcastSlug || draggedPodcastSlug === row.dataset.slug) return;
           const draggedRow = tbody.querySelector(`tr[data-slug="${draggedPodcastSlug}"]`);
           if (!draggedRow) return;
 
-          const rows = Array.from(tbody.children);
-          if (rows.indexOf(draggedRow) < rows.indexOf(row)) row.after(draggedRow);
-          else row.before(draggedRow);
+          const before = e.clientY - row.getBoundingClientRect().top < row.offsetHeight / 2;
+          if (before) row.before(draggedRow);
+          else row.after(draggedRow);
 
           persistPodcastOrder(tbody);
         });
@@ -1462,19 +1488,11 @@
         });
       }
 
-      saveStatus.classList.add('visible');
       if (result.ok) {
-        saveStatus.classList.add('success');
-        saveStatus.textContent = editorMode === 'create' ? 'Created.' : 'Saved.';
         refreshCounts();
-        if (editorMode === 'create') {
-          editorMode = 'edit';
-          currentSlug = slugInput.value.trim();
-          slugField.style.display = 'none';
-          editorTitle.textContent = 'Edit story';
-        }
+        showSection('articles');
       } else {
-        saveStatus.classList.add('error');
+        saveStatus.classList.add('visible', 'error');
         saveStatus.textContent = (result.data && result.data.error) || 'Something went wrong saving this article.';
       }
     });
@@ -1592,19 +1610,11 @@
         });
       }
 
-      podcastSaveStatus.classList.add('visible');
       if (result.ok) {
-        podcastSaveStatus.classList.add('success');
-        podcastSaveStatus.textContent = podcastEditorMode === 'create' ? 'Created.' : 'Saved.';
         refreshCounts();
-        if (podcastEditorMode === 'create') {
-          podcastEditorMode = 'edit';
-          currentPodcastSlug = podcastSlugInput.value.trim();
-          podcastSlugField.style.display = 'none';
-          podcastEditorTitle.textContent = 'Edit episode';
-        }
+        showSection('podcasts');
       } else {
-        podcastSaveStatus.classList.add('error');
+        podcastSaveStatus.classList.add('visible', 'error');
         podcastSaveStatus.textContent = (result.data && result.data.error) || 'Something went wrong saving this episode.';
       }
     });

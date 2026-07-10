@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const {
   renderArticle,
+  renderPrintGrid,
   listArticles,
   listTrash: listArticleTrash,
   getArticle,
@@ -62,10 +63,12 @@ app.use(express.static(__dirname));
 // Top-level pages
 app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// news.html is mostly static, but the podcast grid is flowed in from .content/podcasts/*.txt
+// news.html's podcast grid and "Latest" print grid are both flowed in from content files
 app.get('/news', (_req, res) => {
   const template = fs.readFileSync(path.join(__dirname, 'news.html'), 'utf8');
-  res.send(template.replace('{{PODCAST_CARDS}}', renderPodcastGrid()));
+  res.send(template
+    .replace('{{PODCAST_CARDS}}', renderPodcastGrid())
+    .replace('{{PRINT_CARDS}}', renderPrintGrid()));
 });
 
 app.get('/about', (_req, res) => res.sendFile(path.join(__dirname, 'about.html')));

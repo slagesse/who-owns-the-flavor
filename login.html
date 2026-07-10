@@ -234,17 +234,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem 1rem;
       margin-bottom: 1.5rem;
     }
 
     .panel-title {
       font-size: 1.1rem;
+      font-weight: 500;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--cms-text);
       margin: 0;
     }
+
+    #app-shell h3, #app-shell h4, #app-shell h5 { font-weight: 500; }
 
     .btn {
       font-family: var(--cms-mono);
@@ -265,7 +269,7 @@
       background: var(--red1);
       border-color: var(--red1);
       color: white;
-      font-weight: bold;
+      font-weight: 600;
     }
 
     .btn-primary:hover { opacity: 0.88; border-color: var(--red1); }
@@ -346,6 +350,61 @@
 
     .placeholder-panel strong { color: var(--cms-text); }
 
+    .help-panel { max-width: 720px; }
+
+    .help-topic { margin-bottom: 2rem; }
+
+    .help-topic h4 {
+      font-size: 1rem;
+      color: var(--red1);
+      margin: 0 0 0.6rem;
+    }
+
+    .help-topic p {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--cms-text-dim);
+      margin: 0 0 0.75rem;
+    }
+
+    .help-topic h5 {
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--cms-text);
+      margin: 1.1rem 0 0.6rem;
+    }
+
+    .help-topic h5:first-of-type { margin-top: 0; }
+
+    .help-topic ul,
+    .help-topic ol {
+      margin: 0 0 0.75rem;
+      padding-left: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .help-topic li {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--cms-text-dim);
+      padding-left: 0.2rem;
+    }
+
+    .help-topic strong { color: var(--cms-text); }
+
+    .help-topic code {
+      font-family: var(--cms-mono);
+      font-size: 0.82rem;
+      color: var(--cms-text);
+      background: var(--cms-panel-raised);
+      border: 1px solid var(--cms-border);
+      border-radius: 4px;
+      padding: 0.05rem 0.35rem;
+    }
+
     .media-subsection { margin-bottom: 2.25rem; }
 
     .media-subheading {
@@ -359,6 +418,7 @@
     .media-upload {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 0.6rem;
     }
 
@@ -405,6 +465,7 @@
     .audio-picker {
       display: flex;
       align-items: flex-start;
+      flex-wrap: wrap;
       gap: 0.5rem;
     }
 
@@ -540,7 +601,7 @@
     .back-link:hover { color: var(--cms-text); }
 
     /* === MODAL === */
-    #modal-overlay {
+    #modal-overlay, #help-modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
@@ -550,7 +611,50 @@
       z-index: 1000;
     }
 
-    #modal-overlay.visible { display: flex; }
+    #modal-overlay.visible, #help-modal-overlay.visible { display: flex; }
+
+    .help-modal-box { max-width: 640px; }
+
+    .help-modal-content {
+      overflow-y: auto;
+      min-height: 0;
+      margin-bottom: 1rem;
+      padding-right: 0.5rem;
+    }
+
+    .help-modal-content .help-topic { margin-bottom: 0; }
+
+    .help-modal-scroll-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--cms-text-dim);
+      margin: 0 0 0.75rem;
+      flex-shrink: 0;
+      display: none;
+    }
+
+    .help-modal-scroll-hint.visible { display: block; }
+
+    .help-fab {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--red1);
+      color: white;
+      border: none;
+      font-family: var(--cms-mono);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      z-index: 200;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .help-fab:hover { transform: scale(1.06); }
 
     .modal-box {
       background: var(--cms-panel-raised);
@@ -559,6 +663,9 @@
       padding: 1.5rem;
       max-width: 380px;
       width: 90%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
       font-family: var(--cms-mono);
       color: var(--cms-text);
       box-shadow: 0 20px 50px rgba(0,0,0,0.4);
@@ -568,6 +675,7 @@
       font-size: 0.95rem;
       margin: 0 0 0.6rem;
       color: var(--red1);
+      flex-shrink: 0;
     }
 
     .modal-message {
@@ -575,12 +683,15 @@
       line-height: 1.5;
       color: var(--cms-text-dim);
       margin: 0 0 1.5rem;
+      overflow-y: auto;
+      min-height: 0;
     }
 
     .modal-actions {
       display: flex;
       justify-content: flex-end;
       gap: 0.6rem;
+      flex-shrink: 0;
     }
 
     @media (max-width: 800px) {
@@ -598,10 +709,21 @@
       .sidebar-link.active { border-left-color: transparent; border-bottom-color: var(--red1); }
       #main-panel { padding: 1.25rem; }
       .cell-headline { max-width: 160px; }
+      .panel-title { font-size: 1rem; }
+      .edit-panel, .help-panel { max-width: 100%; }
     }
 
     @media (max-width: 600px) {
       main { padding: 1.5rem 1rem 2rem; }
+      #main-panel { padding: 1rem; }
+      .data-table { font-size: 0.8rem; }
+      .data-table th, .data-table td { padding: 0.6rem 0.6rem; }
+      .cell-headline { max-width: 110px; }
+      .cell-meta { white-space: normal; }
+      .cell-actions { white-space: normal; }
+      .cell-actions .btn { margin: 0.25rem 0 0 0.25rem; }
+      .help-fab { width: 38px; height: 38px; right: 1rem; bottom: 1rem; font-size: 1rem; }
+      .drag-handle-cell { width: 1.5rem; }
       .dashboard-title { font-size: 2rem; }
     }
   </style>
@@ -639,6 +761,7 @@
         <li><button type="button" class="sidebar-link" data-section="podcasts">Podcasts <span class="sidebar-count" id="count-podcasts"></span></button></li>
         <li><button type="button" class="sidebar-link" data-section="trash">Trash <span class="sidebar-count" id="count-trash"></span></button></li>
         <li><button type="button" class="sidebar-link" data-section="mediabank">Media Bank</button></li>
+        <li><button type="button" class="sidebar-link" data-section="help">Help</button></li>
       </ul>
 
       <div class="sidebar-foot">
@@ -715,6 +838,119 @@
           </div>
           <p class="save-status" id="audio-upload-status"></p>
           <div id="audio-table-wrap"></div>
+        </div>
+      </section>
+
+      <!-- Help -->
+      <section id="section-help" style="display: none;">
+        <div class="panel-header">
+          <h3 class="panel-title">Help</h3>
+        </div>
+
+        <div class="help-panel">
+          <div class="help-topic" id="help-topic-articles">
+            <h4>Articles</h4>
+
+            <h5>Add a story</h5>
+            <ol>
+              <li>Click <strong>+ New Story</strong>.</li>
+              <li>Type a short, url-safe slug — lowercase letters, numbers, and hyphens only. This becomes the page's address (e.g. <code>dooky-chase</code> → <code>/print/dooky-chase</code>).</li>
+              <li>Fill in the <strong>Headline</strong>, <strong>Author</strong>, and <strong>Date</strong>.</li>
+              <li>Click into <strong>Author headshot</strong> and start typing to search, or click <strong>Upload</strong> to add a new photo on the spot.</li>
+              <li><em>(Optional)</em> Do the same for <strong>Feature image</strong>, and add a <strong>Subhead</strong> if you want a dek line under the headline.</li>
+              <li>Write the story in <strong>Body</strong>. Leave a blank line between paragraphs. To drop in a red subheading partway through, start a line with <code>## </code>, like <code>## The turning point</code>.</li>
+              <li>Click <strong>Save changes</strong>. You'll land back on the Articles list, and the story is already live at <code>/print/&lt;slug&gt;</code>.</li>
+            </ol>
+
+            <h5>Edit a story</h5>
+            <ol>
+              <li>Find it in the Articles list and click <strong>Edit</strong>.</li>
+              <li>Change whatever needs changing.</li>
+              <li>Click <strong>Save changes</strong> — you're sent back to the list, and the live page updates immediately.</li>
+            </ol>
+
+            <h5>Reorder stories</h5>
+            <ol>
+              <li>From the Articles list, click and hold the <strong>⠿</strong> handle on the left of a row.</li>
+              <li>Drag it up or down — a red line shows exactly where it'll land.</li>
+              <li>Let go. The new order saves automatically and shows up right away in the "Latest" section of the News page.</li>
+            </ol>
+
+            <h5>Delete a story</h5>
+            <ol>
+              <li>Click <strong>Delete</strong> next to it in the list.</li>
+              <li>Confirm in the popup.</li>
+              <li>It moves to Trash and disappears from the site immediately — see the Trash guide to bring it back or remove it for good.</li>
+            </ol>
+          </div>
+
+          <div class="help-topic" id="help-topic-podcasts">
+            <h4>Podcasts</h4>
+
+            <h5>Add an episode (just a card)</h5>
+            <ol>
+              <li>Click <strong>+ New Episode</strong>.</li>
+              <li>Fill in <strong>Title</strong> and <strong>Description</strong> — this is what shows on the card in the podcast section of the News page.</li>
+              <li>Add a <strong>Thumbnail</strong> (search or upload) and set <strong>Link</strong> to wherever the card should send people when clicked.</li>
+              <li><em>(Optional)</em> Attach an <strong>Audio file</strong> the same way — search your Media Bank library or upload a new one.</li>
+              <li>Set <strong>Order</strong> to control where it lands among the other episodes.</li>
+              <li>Click <strong>Save changes</strong>.</li>
+            </ol>
+
+            <h5>Turn an episode into a full transcript page</h5>
+            <ol>
+              <li>Open the episode and fill in <strong>Episode label</strong> (e.g. "Episode IV"), <strong>Written by</strong>, <strong>Voiced by</strong>, <strong>Research/Interviews</strong>, <strong>Produced by</strong>, and <strong>Music credit</strong>.</li>
+              <li>Write the <strong>Transcript</strong> using the same markup as articles, plus two extras for dialogue: a short line ending in <code>:</code> right above a paragraph (like <code>Halter:</code>) makes it a speaker tag, and <code>&gt; Speaker:</code> right above a paragraph turns it into a blockquote.</li>
+              <li>Make sure <strong>Link</strong> is set to the URL you want this page to live at (this is how <code>/stl</code>, <code>/memphis</code>, and <code>/nola</code> work).</li>
+              <li>Click <strong>Save changes</strong>. That URL now shows an audio player and the full transcript, not just a card.</li>
+            </ol>
+
+            <h5>Reorder or delete an episode</h5>
+            <p>Same as Articles: drag the <strong>⠿</strong> handle to reorder, click <strong>Delete</strong> to move it to Trash.</p>
+          </div>
+
+          <div class="help-topic" id="help-topic-trash">
+            <h4>Trash</h4>
+
+            <h5>Bring something back</h5>
+            <ol>
+              <li>Go to <strong>Trash</strong>.</li>
+              <li>Find the article or podcast.</li>
+              <li>Click <strong>Restore</strong>. It's back on its list and live on the site immediately.</li>
+            </ol>
+
+            <h5>Get rid of something for good</h5>
+            <ol>
+              <li>Go to <strong>Trash</strong>.</li>
+              <li>Click <strong>Delete Forever</strong> on one item, or <strong>Empty Trash</strong> to clear everything.</li>
+              <li>Confirm — this one can't be undone.</li>
+            </ol>
+          </div>
+
+          <div class="help-topic" id="help-topic-mediabank">
+            <h4>Media Bank</h4>
+
+            <h5>Upload a new image, headshot, or audio file</h5>
+            <ol>
+              <li>Go to <strong>Media Bank</strong>.</li>
+              <li>Find the right subsection — <strong>Images</strong>, <strong>Headshots</strong>, or <strong>Audio</strong>.</li>
+              <li>Click <strong>Choose File</strong>, pick a file from your computer, then click <strong>Upload</strong>.</li>
+              <li>It shows up in the list right away, and its URL (like <code>/images/my-photo.jpg</code>) is now searchable from any Article or Podcast field.</li>
+            </ol>
+
+            <h5>Use a file you already uploaded</h5>
+            <ol>
+              <li>While editing an Article or Podcast, click into the image, headshot, or audio field.</li>
+              <li>Start typing to filter, or leave it blank to see everything.</li>
+              <li>Click a result to fill in that file's URL.</li>
+            </ol>
+
+            <h5>Delete a file</h5>
+            <ol>
+              <li>Find it in Media Bank and click <strong>Delete</strong>.</li>
+              <li>Confirm — this is permanent, there's no trash step for media, so only do this for files nothing on the site is using anymore.</li>
+            </ol>
+          </div>
         </div>
       </section>
 
@@ -910,6 +1146,19 @@
     </div>
   </div>
 
+  <button type="button" class="help-fab" id="help-fab" title="Help for this section" style="display: none;">?</button>
+
+  <div id="help-modal-overlay">
+    <div class="modal-box help-modal-box">
+      <p class="modal-title" id="help-modal-title">Help</p>
+      <div class="help-modal-content" id="help-modal-content"></div>
+      <p class="help-modal-scroll-hint" id="help-modal-scroll-hint">↓ Scroll for more</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="help-modal-close">Got it</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const loginScreen = document.getElementById('login-screen');
     const loginForm = document.getElementById('login-form');
@@ -920,6 +1169,7 @@
       trash: document.getElementById('section-trash'),
       podcasts: document.getElementById('section-podcasts'),
       mediabank: document.getElementById('section-mediabank'),
+      help: document.getElementById('section-help'),
       editor: document.getElementById('section-editor'),
       podcastEditor: document.getElementById('section-podcast-editor'),
     };
@@ -992,8 +1242,59 @@
       if (handler) await handler();
     });
 
+    // --- contextual help ---
+    // Maps each dashboard section to the help-topic block that explains it —
+    // the editor sections fall back to their parent content type's topic.
+    const HELP_TOPIC_FOR_SECTION = {
+      articles: 'help-topic-articles',
+      editor: 'help-topic-articles',
+      podcasts: 'help-topic-podcasts',
+      podcastEditor: 'help-topic-podcasts',
+      trash: 'help-topic-trash',
+      mediabank: 'help-topic-mediabank',
+    };
+
+    const helpFab = document.getElementById('help-fab');
+    let currentSectionName = null;
+
+    const helpModalOverlay = document.getElementById('help-modal-overlay');
+    const helpModalTitle = document.getElementById('help-modal-title');
+    const helpModalContent = document.getElementById('help-modal-content');
+    const helpModalClose = document.getElementById('help-modal-close');
+    const helpModalScrollHint = document.getElementById('help-modal-scroll-hint');
+
+    function closeHelpModal() {
+      helpModalOverlay.classList.remove('visible');
+    }
+
+    // Shows "Scroll for more" only while there's content below the fold.
+    function updateHelpScrollHint() {
+      const overflowing = helpModalContent.scrollHeight > helpModalContent.clientHeight + 4;
+      const atBottom = helpModalContent.scrollTop + helpModalContent.clientHeight >= helpModalContent.scrollHeight - 4;
+      helpModalScrollHint.classList.toggle('visible', overflowing && !atBottom);
+    }
+
+    helpModalContent.addEventListener('scroll', updateHelpScrollHint);
+    window.addEventListener('resize', () => {
+      if (helpModalOverlay.classList.contains('visible')) updateHelpScrollHint();
+    });
+
+    helpFab.addEventListener('click', () => {
+      const topicId = HELP_TOPIC_FOR_SECTION[currentSectionName];
+      const topic = topicId && document.getElementById(topicId);
+      if (!topic) return;
+      helpModalTitle.textContent = topic.querySelector('h4')?.textContent || 'Help';
+      helpModalContent.innerHTML = topic.innerHTML;
+      helpModalContent.scrollTop = 0;
+      helpModalOverlay.classList.add('visible');
+      updateHelpScrollHint();
+    });
+    helpModalClose.addEventListener('click', closeHelpModal);
+    helpModalOverlay.addEventListener('click', (e) => { if (e.target === helpModalOverlay) closeHelpModal(); });
+
     // --- section switching ---
     function showSection(name) {
+      currentSectionName = name;
       Object.entries(sections).forEach(([key, el]) => {
         el.style.display = key === name ? 'block' : 'none';
       });
@@ -1004,6 +1305,7 @@
       if (name === 'podcasts') loadPodcastsTable();
       if (name === 'mediabank') { loadImageTable(); loadHeadshotTable(); loadAudioTable(); }
       if (name === 'trash') loadTrashTable();
+      helpFab.style.display = HELP_TOPIC_FOR_SECTION[name] ? 'block' : 'none';
     }
 
     sidebarLinks.forEach((link) => {
@@ -1958,6 +2260,7 @@
     function setAuthedUI(authed) {
       document.body.classList.toggle('authed', authed);
       loginScreen.style.display = authed ? 'none' : 'block';
+      if (!authed) helpFab.style.display = 'none';
     }
 
     loginForm.addEventListener('submit', async (e) => {
